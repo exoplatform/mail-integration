@@ -22,7 +22,7 @@ const config = {
     ]
   },
   entry: {
-    mailintegration: './src/main/webapp/vue-app/mail-integration/main.js',
+    mailIntegrationSettings: './src/main/webapp/vue-app/mail-integration/main.js',
   },
   output: {
     path: path.join(__dirname, 'target/mail-integration/'),
