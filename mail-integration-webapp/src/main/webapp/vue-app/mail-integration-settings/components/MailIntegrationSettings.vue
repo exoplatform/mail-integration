@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <v-app>
+  <v-app v-if="mailIntegrationEnabled">
     <v-card
       class="border-radius ma-4"
       flat>
@@ -39,3 +39,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </v-card>
   </v-app>
 </template>
+<script>
+export default {
+  data: () => ({
+    mailIntegrationEnabled: false,
+  }),
+  created() {
+    this.$featureService.isFeatureEnabled('mailIntegration')
+      .then(enabled => this.mailIntegrationEnabled = enabled);
+  }
+};
+</script>
