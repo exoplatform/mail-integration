@@ -15,9 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 import MailIntegrationSettings from './components/MailIntegrationSettings.vue';
+import MailIntegrationSettingsDrawer from './components/MailIntegrationSettingsDrawer.vue';
 
 const components = {
   'mail-integration-settings': MailIntegrationSettings,
+  'mail-integration-settings-drawer': MailIntegrationSettingsDrawer,
 };
 
 for (const key in components) {
