@@ -4,7 +4,7 @@
   "description": "eXo Mail Integration",
   "repository": {
     "type": "git",
-    "url": "https://github.com/meeds-io/mail-integration"
+    "url": "https://github.com/exoplatform/mail-integration"
   },
   "scripts": {
     "watch": "webpack --config webpack.watch.js --progress --colors --watch -d",
