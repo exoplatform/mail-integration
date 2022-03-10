@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <template>
   <v-app v-if="mailIntegrationEnabled">
     <v-card
-      class="border-radius ma-4"
+      class="border-radius ma-4 mailIntegrationSettings"
       flat>
       <v-list two-line>
         <v-list-item>
@@ -30,15 +30,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn icon>
+            <v-btn icon @click="openDrawer">
               <i class="uiIconEdit uiIconLightBlue pb-2"></i>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
       </v-list>
     </v-card>
+    <mail-integration-settings-drawer ref="mailIntegrationSettingDrawer" />
   </v-app>
 </template>
+
 <script>
 export default {
   data: () => ({
@@ -47,6 +49,11 @@ export default {
   created() {
     this.$featureService.isFeatureEnabled('mailIntegration')
       .then(enabled => this.mailIntegrationEnabled = enabled);
+  },
+  methods: {
+    openDrawer(){
+      this.$refs.mailIntegrationSettingDrawer.openDrawer();
+    },
   }
 };
 </script>
