@@ -16,24 +16,45 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
              version="2.0"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
-    <portlet>
-        <portlet-name>MailIntegrationSettings</portlet-name>
-        <display-name xml:lang="EN">Mail Integration Settings Application</display-name>
-        <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
-        <init-param>
-            <name>portlet-view-dispatched-file-path</name>
-            <value>/html/mailIntegrationSettings.html</value>
-        </init-param>
-        <expiration-cache>-1</expiration-cache>
-        <cache-scope>PUBLIC</cache-scope>
-        <supports>
-            <mime-type>text/html</mime-type>
-        </supports>
-        <supported-locale>en</supported-locale>
-        <resource-bundle>locale.portlet.MailIntegration</resource-bundle>
-        <portlet-info>
-            <title>Mail Settings Application</title>
-            <keywords>Mail Settings Application</keywords>
-        </portlet-info>
-    </portlet>
+  <portlet>
+    <portlet-name>MailIntegrationSettings</portlet-name>
+    <display-name xml:lang="EN">Mail Integration Settings Application</display-name>
+    <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+    <init-param>
+      <name>portlet-view-dispatched-file-path</name>
+      <value>/html/mailIntegrationSettings.html</value>
+    </init-param>
+    <expiration-cache>-1</expiration-cache>
+    <cache-scope>PUBLIC</cache-scope>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portlet.MailIntegration</resource-bundle>
+    <portlet-info>
+      <title>Mail Settings Application</title>
+      <keywords>Mail Settings Application</keywords>
+    </portlet-info>
+  </portlet>
+    
+  <portlet>
+    <portlet-name>MailIntegrationNotification</portlet-name>
+    <display-name>Mail Integration Notification</display-name>
+    <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+    <init-param>
+      <name>portlet-view-dispatched-file-path</name>
+      <value>/html/mailIntegrationNotification.html</value>
+    </init-param>
+    <expiration-cache>-1</expiration-cache>
+    <cache-scope>PUBLIC</cache-scope>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portlet.MailIntegration</resource-bundle>
+    <portlet-info>
+      <title>Mail Integration Notification</title>
+      <keywords>Mail Integration Notification</keywords>
+    </portlet-info>
+  </portlet>
 </portlet-app>

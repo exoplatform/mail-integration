@@ -1,0 +1,20 @@
+<%
+int newMessages = NEW_MESSAGES.split(";")[1].split(",").length;
+String mailIntegrationNotificationJobPeriod = String.valueOf(Long.parseLong(System.getProperty("exo.mailIntegration.MailIntegrationNotificationJob.period", "120000")) / 60000);
+%>
+
+<li class="$READ clearfix" data-id="">
+  <div class="media">
+      <div class="avatarXSmall pull-left">
+        <img src="/mail-integration/images/email.png" />
+      </div>
+      <div class="media-body">
+        <div class="contentSmall" data-link="">
+		  <a class="open-details-drawer" data-notification-details="$NEW_MESSAGES" href="javascript:void(0)">
+            <div class="status" style="color: #333333;">You recieved $newMessages emails within the last $mailIntegrationNotificationJobPeriod minutes</div>
+		  </a>
+          <div class="lastUpdatedTime">$LAST_UPDATED_TIME</div>
+        </div>
+      </div>
+  </div>
+</li>

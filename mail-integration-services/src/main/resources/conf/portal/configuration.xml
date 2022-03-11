@@ -15,7 +15,44 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd" xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
+               xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
-
+  <component>
+    <key>org.exoplatform.mailIntegration.service.MailIntegrationService</key>
+    <type>org.exoplatform.mailIntegration.service.MailIntegrationServiceImpl</type>
+  </component>
+  
+  <component>
+    <type>org.exoplatform.mailIntegration.rest.MailIntegrationRest</type>
+  </component>
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
+    <component-plugin>
+      <name>MailIntegrationNotificationJob</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.services.scheduler.PeriodJob</type>
+      <description>Job to send mail integration notifications</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>Configuration for mail integration notification job</description>
+          <!-- Start exceution: a minute after server startup -->
+          <property name="startTime" value="+60000" />
+          <!-- REPEAT_INDEFINITELY -->
+		  <property name="endTime" value="" />
+          <property name="jobName" value="MailIntegrationNotificationJob"/>
+          <property name="groupName" value="MailIntegration"/>
+          <property name="job" value="org.exoplatform.mailIntegration.notification.job.MailIntegrationNotificationJob"/>
+          <!-- REPEAT_INDEFINITELY -->
+          <property name="repeatCount" value="0" />
+          <!-- Runs every 30 minutes -->
+          <property name="period" value="${exo.mailIntegration.MailIntegrationNotificationJob.period:120000}"/>
+        </properties-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+  
 </configuration>
