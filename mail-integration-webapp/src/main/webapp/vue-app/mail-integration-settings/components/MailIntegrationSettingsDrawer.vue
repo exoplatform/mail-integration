@@ -157,7 +157,7 @@ export default {
   }),
   computed: {
     portRule() {
-      return this.port.length < 4 && this.port.match(/^[0-9]+$/);
+      return this.port.length < 4 && this.port.match(/^\d+$/);
     },
     portErrorMessage() {
       return this.portRule || this.port.length === 0 ? '': this.$t('mailIntegration.settings.name.errorPort');
