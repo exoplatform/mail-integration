@@ -18,8 +18,15 @@
  */
 package org.exoplatform.mailIntegration.utils;
 
+import org.apache.commons.lang.StringUtils;
+import org.exoplatform.mailIntegration.model.ConnectionInformation;
+import org.exoplatform.mailIntegration.rest.model.ConnectionInformationEntity;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.social.core.identity.model.Identity;
+import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
+import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.web.security.codec.CodecInitializer;
 import org.exoplatform.web.security.security.TokenServiceInitializationException;
 
@@ -31,13 +38,11 @@ public class MailIntegrationUtils {
   public MailIntegrationUtils() {
   }
 
-  public static String generateEncryptedToken(CodecInitializer codecInitializer, String tokenPlain, long userIdentityId) {
-    if (userIdentityId <= 0) {
-      throw new IllegalArgumentException("user identity id is mandatory");
+  public static String generateEncryptedToken(CodecInitializer codecInitializer, String tokenPlain, String remoteId) {
+    if (StringUtils.isBlank(remoteId)) {
+      throw new IllegalArgumentException("user remote id is mandatory");
     }
-    StringBuilder tokenFlatStringBuilder = new StringBuilder().append(String.valueOf(userIdentityId))
-                                                              .append(SEPARATOR)
-                                                              .append(tokenPlain);
+    StringBuilder tokenFlatStringBuilder = new StringBuilder().append(remoteId).append(SEPARATOR).append(tokenPlain);
     String tokenFlat = tokenFlatStringBuilder.toString();
     try {
       return codecInitializer.getCodec().encode(tokenFlat);
@@ -45,5 +50,28 @@ public class MailIntegrationUtils {
       LOG.warn("Error generating Token", e);
       return null;
     }
+  }
+
+  public static final long getCurrentUserIdentityId(IdentityManager identityManager) {
+    String currentUser = getCurrentUser();
+    Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, currentUser);
+    return identity == null ? 0 : Long.parseLong(identity.getId());
+  }
+
+  public static final String getCurrentUser() {
+    return ConversationState.getCurrent().getIdentity().getUserId();
+  }
+
+  public static final ConnectionInformation toConnectionInformation(ConnectionInformationEntity connectionInformationEntity,
+                                                                    long userIdentityId) {
+    ConnectionInformation connectionInformation = new ConnectionInformation();
+    connectionInformation.setEmailName(connectionInformationEntity.getEmailName());
+    connectionInformation.setImapUrl(connectionInformationEntity.getImapUrl());
+    connectionInformation.setPort(connectionInformationEntity.getPort());
+    connectionInformation.setEncryption(connectionInformationEntity.getEncryption());
+    connectionInformation.setAccount(connectionInformationEntity.getAccount());
+    connectionInformation.setPassword(connectionInformationEntity.getPassword());
+    connectionInformation.setCreatorId(userIdentityId);
+    return connectionInformation;
   }
 }

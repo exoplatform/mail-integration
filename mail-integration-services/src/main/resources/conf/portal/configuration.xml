@@ -26,6 +26,9 @@
     <component>
         <type>org.exoplatform.mailIntegration.storage.MailIntegrationStorage</type>
     </component>
+    <component>
+        <type>org.exoplatform.mailIntegration.rest.MailIntegrationRest</type>
+    </component>
     <external-component-plugins>
         <target-component>org.exoplatform.commons.api.persistence.DataInitializer</target-component>
         <component-plugin>

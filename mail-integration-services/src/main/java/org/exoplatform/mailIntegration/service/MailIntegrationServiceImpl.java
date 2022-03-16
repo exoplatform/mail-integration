@@ -7,6 +7,12 @@ import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.web.security.codec.CodecInitializer;
 
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Store;
+import java.util.Properties;
+
 public class MailIntegrationServiceImpl implements MailIntegrationService {
   private MailIntegrationStorage mailIntegrationStorage;
 
@@ -35,8 +41,27 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
       throw new IllegalArgumentException("Connection information is mandatory");
     }
     String tokenPlain = connectionInformation.getPassword();
-    String token = MailIntegrationUtils.generateEncryptedToken(codecInitializer, tokenPlain, userIdentityId);
+    String token = MailIntegrationUtils.generateEncryptedToken(codecInitializer, tokenPlain, userIdentity.getRemoteId());
     connectionInformation.setPassword(token);
     return mailIntegrationStorage.createMailIntegration(connectionInformation);
+  }
+
+  @Override
+  public Store imapConnect(ConnectionInformation connectionInformation) {
+    Properties props = new Properties();
+    props.setProperty("mail.store.protocol", "imaps");
+    String provider = "imaps";
+    // Connect to the server
+    Session session = Session.getDefaultInstance(props, null);
+    Store store = null;
+    try {
+      store = session.getStore(provider);
+      store.connect(connectionInformation.getImapUrl(), connectionInformation.getAccount(), connectionInformation.getPassword());
+    } catch (NoSuchProviderException nspe) {
+      throw new IllegalArgumentException("invalid provider name");
+    } catch (MessagingException me) {
+      throw new IllegalStateException("messaging exception");
+    }
+    return store;
   }
 }

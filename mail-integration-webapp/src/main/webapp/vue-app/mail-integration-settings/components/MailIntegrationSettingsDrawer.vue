@@ -135,7 +135,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </template>
         </v-btn>
         <v-btn :disabled="true" class="btn btn-primary">
-          {{ $t('mailIntegration.settings.connectMail.save') }}
+          {{ saveButtonLabel }}
         </v-btn>
       </div>
     </template>
@@ -154,6 +154,7 @@ export default {
     account: '',
     password: '',
     showPassWord: false,
+    connectionSuccess: false,
   }),
   computed: {
     portRule() {

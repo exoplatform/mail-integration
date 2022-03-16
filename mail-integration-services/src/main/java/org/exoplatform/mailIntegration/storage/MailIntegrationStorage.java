@@ -29,6 +29,7 @@ public class MailIntegrationStorage {
   public MailIntegrationStorage(MailIntegrationDAO mailIntegrationDAO) {
     this.mailIntegrationDAO = mailIntegrationDAO;
   }
+
   public ConnectionInformation createMailIntegration(ConnectionInformation connectionInformation) {
     ConnectionInformationEntity connectionInformationEntity = EntityMapper.toConnectionInformationEntity(connectionInformation);
     connectionInformationEntity = mailIntegrationDAO.create(connectionInformationEntity);

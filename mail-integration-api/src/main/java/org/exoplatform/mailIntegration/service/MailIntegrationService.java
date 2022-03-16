@@ -20,6 +20,8 @@ package org.exoplatform.mailIntegration.service;
 
 import org.exoplatform.mailIntegration.model.ConnectionInformation;
 
+import javax.mail.Store;
+
 public interface MailIntegrationService {
   /**
    * @param connectionInformation {@link ConnectionInformation} object to create
@@ -29,4 +31,11 @@ public interface MailIntegrationService {
    */
   ConnectionInformation createMailIntegration(ConnectionInformation connectionInformation,
                                               long identityId) throws IllegalAccessException;
+
+  /**
+   *
+   * @param connectionInformation {@link ConnectionInformation} object to connect
+   * @return
+   */
+  Store imapConnect(ConnectionInformation connectionInformation);
 }
