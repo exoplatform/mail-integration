@@ -16,23 +16,24 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.exoplatform.mailIntegration.entity;
+package org.exoplatform.mailintegration.entity;
 
 import org.exoplatform.commons.api.persistence.ExoEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "ConnectionInformation")
+@Entity(name = "MailIntegrationSetting")
 @ExoEntity
-@Table(name = "CONNECTION_INFORMATION")
-public class ConnectionInformationEntity implements Serializable {
+@Table(name = "MAIL_INTEGRATION_SETTING")
+@NamedQuery(name = "ConnectionInformation.findMailIntegrationSettingsByUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.creatorId = :creatorId")
+public class MailIntegrationSettingEntity implements Serializable {
   private static final long serialVersionUID = 3783783343530708418L;
 
   @Id
-  @SequenceGenerator(name = "SEQ_CONNECTION_INFORMATION_ID", sequenceName = "SEQ_CONNECTION_INFORMATION_ID", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_CONNECTION_INFORMATION_ID")
-  @Column(name = "CONNECTION_INFORMATION_ID", nullable = false)
+  @SequenceGenerator(name = "SEQ_MAIL_INTEGRATION_SETTING_ID", sequenceName = "SEQ_MAIL_INTEGRATION_SETTING_ID", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_MAIL_INTEGRATION_SETTING_ID")
+  @Column(name = "MAIL_INTEGRATION_SETTING_ID", nullable = false)
   private Long              id;
 
   @Column(name = "EMAIL_NAME", nullable = false)

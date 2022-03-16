@@ -16,9 +16,9 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.exoplatform.mailIntegration.service;
+package org.exoplatform.mailintegration.service;
 
-import org.exoplatform.mailIntegration.model.ConnectionInformation;
+import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -27,7 +27,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
 
   @Test
   public void testCreateConnectionInformation() throws IllegalAccessException {
-    ConnectionInformation connectionInformation = new ConnectionInformation();
+    MailIntegrationSetting connectionInformation = new MailIntegrationSetting();
     connectionInformation.setEmailName("emailName");
     connectionInformation.setImapUrl("imapUrl");
     connectionInformation.setPort(123);
@@ -37,7 +37,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
     connectionInformation.setCreatorId(Long.parseLong(user1Identity.getId()));
 
     // When
-    ConnectionInformation createdConnection = mailIntegrationService.createMailIntegration(connectionInformation,
+    MailIntegrationSetting createdConnection = mailIntegrationService.createMailIntegration(connectionInformation,
                                                                                            Long.parseLong(user1Identity.getId()));
 
     assertNotNull(createdConnection);

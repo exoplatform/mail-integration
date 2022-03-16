@@ -1,20 +1,23 @@
 /*
- * Copyright (C) 2022 eXo Platform SAS.
+ * This file is part of the Meeds project (https://meeds.io/).
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (C) 2022 Meeds Association contact@meeds.io
  *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.exoplatform.mailintegration.model;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,18 +27,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MailIntegrationSetting {
-  
-  long id;
-  
-  String name;
-  
-  String host;
-  
-  String port; 
-  
-  String userName;
-  
-  String password;
-  
-  String encryption;
+  private long   id;
+
+  private String emailName;
+
+  private String imapUrl;
+
+  private long   port;
+
+  private String encryption;
+
+  private String account;
+
+  private String password;
+
+  private long   creatorId;
 }
