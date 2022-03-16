@@ -16,11 +16,27 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.exoplatform.mailIntegration.dao;
+package org.exoplatform.mailintegration.rest.model;
 
-import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
-import org.exoplatform.mailIntegration.entity.ConnectionInformationEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class MailIntegrationDAO extends GenericDAOJPAImpl<ConnectionInformationEntity, Long> {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ConnectionInformationEntity {
+  private long   id;
 
+  private String emailName;
+
+  private String imapUrl;
+
+  private long   port;
+
+  private String encryption;
+
+  private String account;
+
+  private String password;
 }

@@ -28,6 +28,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <v-list-item-subtitle class="my-3 text-sub-title font-italic">
               {{ $t('mailIntegration.settings.connectMail.description') }}
             </v-list-item-subtitle>
+            <v-list-item-subtitle>
+              <a class="my-auto"> {{ account }} </a>
+            </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
             <v-btn icon @click="openDrawer">
@@ -37,19 +40,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item>
       </v-list>
     </v-card>
-    <mail-integration-settings-drawer ref="mailIntegrationSettingDrawer" />
+    <mail-integration-settings-drawer
+      ref="mailIntegrationSettingDrawer"
+      :mode-edit="modeEdit"
+      :mail-integration-setting="mailIntegrationSetting"
+      @display-alert="displayAlert"
+      @mail-integration-settings-save-success="getMailIntegrationSettingsByUserId" />
+    <mail-integration-notification-alert />
   </v-app>
 </template>
 
 <script>
+
 export default {
   data: () => ({
     mailIntegrationEnabled: false,
     displayed: true,
+    modeEdit: false,
+    account: '',
+    mailIntegrationSetting: null,
   }),
   created() {
     this.$featureService.isFeatureEnabled('mailIntegration')
       .then(enabled => this.mailIntegrationEnabled = enabled);
+    this.getMailIntegrationSettingsByUserId();
   },
   mounted() {
     document.addEventListener('hideSettingsApps', (event) => {
@@ -62,6 +76,21 @@ export default {
   methods: {
     openDrawer(){
       this.$refs.mailIntegrationSettingDrawer.openDrawer();
+    },
+    getMailIntegrationSettingsByUserId() {
+      this.$mailIntegrationService.getMailIntegrationSettingsByUserId().then(setting => {
+        if (setting && setting.length === 1) {
+          this.mailIntegrationSetting = setting[0];
+          this.account = setting[0].account;
+          this.modeEdit = true;
+        }
+      });
+    },
+    displayAlert(message, type) {
+      this.$root.$emit('mail-integration-connection', {
+        message,
+        type: type || 'success',
+      });
     },
   }
 };

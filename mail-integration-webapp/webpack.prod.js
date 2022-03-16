@@ -22,6 +22,7 @@ const config = {
     ]
   },
   entry: {
+    mailIntegrationNotificationComponent: './src/main/webapp/vue-app/common/main.js',
     mailIntegrationSettings: './src/main/webapp/vue-app/mail-integration-settings/main.js',
     mailIntegrationNotification: './src/main/webapp/vue-app/mail-integration-notification/main.js',
   },

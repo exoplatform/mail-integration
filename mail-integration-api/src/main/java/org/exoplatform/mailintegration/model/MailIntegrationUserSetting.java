@@ -29,5 +29,5 @@ public class MailIntegrationUserSetting {
   
   long userId;
   
-  long mailntegrationSettingId;
+  long mailIntegrationSettingId;
 }
