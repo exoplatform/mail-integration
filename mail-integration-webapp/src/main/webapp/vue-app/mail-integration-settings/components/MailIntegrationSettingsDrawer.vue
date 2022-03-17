@@ -16,8 +16,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <exo-drawer
-    ref="settingMailDrawer"
-    class="settingMailDrawer"
+    ref="mailIntegrationSettingDrawer"
+    class="mailIntegrationSettingDrawer"
     body-classes="hide-scroll decrease-z-index-more"
     right>
     <template slot="title">
@@ -26,32 +26,31 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <template slot="content">
       <form ref="form1" class="pa-2 ms-2 mt-4">
         <div class="d-flex flex-column flex-grow-1">
-          <div class="d-flex flex-column mb-5">
-            <label class="d-flex flex-row font-weight-bold my-2">{{ $t('mailIntegration.settings.connectMail.emailName.label') }}</label>
+          <div class="d-flex flex-column mb-2">
+            <label class="d-flex flex-row font-weight-bold my-2">{{ $t('mailIntegration.settings.connectMail.emailAccountName.label') }}</label>
             <div class="d-flex flex-row">
               <v-text-field
-                id="emailName"
-                ref="emailName"
-                v-model="emailName"
+                id="emailAccount"
+                ref="emailAccount"
+                v-model="emailAccount"
                 type="string"
-                name="newsHeader"
-                :placeholder="$t('news.publishTargets.managementDrawer.placeholder.name')"
+                name="emailAccount"
+                :placeholder="$t('mailIntegration.settings.connectMail.emailAccountName.placeholder')"
                 maxlength="50"
-                class="targetName input-block-level ignore-vuetify-classes"
+                class="input-block-level ignore-vuetify-classes pa-0"
                 counter
                 required
                 outlined
                 dense />
             </div>
           </div>
-          <div class="d-flex flex-column mb-5">
+          <div class="d-flex flex-column mb-2">
             <label class="d-flex flex-row font-weight-bold my-2">{{ $t('mailIntegration.settings.connectMail.imapUrl.label') }}</label>
             <div class="d-flex flex-row">
               <v-text-field
                 v-model="imapUrl"
                 type="string"
                 name="imapUrl"
-                :error-messages="imapErrorMessage"
                 :placeholder="$t('mailIntegration.settings.connectMail.imapUrl.placeholder')"
                 class="input-block-level ignore-vuetify-classes pa-0"
                 outlined
@@ -59,7 +58,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 dense />
             </div>
           </div>
-          <div class="d-flex flex-column mb-5">
+          <div class="d-flex flex-column mb-2">
             <label class="d-flex flex-row font-weight-bold my-2">{{ $t('mailIntegration.settings.connectMail.port.label') }}</label>
             <div class="d-flex flex-row">
               <v-text-field
@@ -75,7 +74,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 dense />
             </div>
           </div>
-          <div class="d-flex flex-column mb-5">
+          <div class="d-flex flex-column mb-2">
             <label class="d-flex flex-row font-weight-bold my-2">{{ $t('mailIntegration.settings.connectMail.encryption.label') }}</label>
             <div class="d-flex flex-row">
               <v-text-field
@@ -89,7 +88,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 dense />
             </div>
           </div>
-          <div class="d-flex flex-column mb-5">
+          <div class="d-flex flex-column mb-2">
             <label class="d-flex flex-row font-weight-bold my-2">{{ $t('mailIntegration.settings.connectMail.account.label') }}</label>
             <div class="d-flex flex-row">
               <v-text-field
@@ -104,7 +103,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 dense />
             </div>
           </div>
-          <div class="d-flex flex-column mb-5">
+          <div class="d-flex flex-column mb-2">
             <label class="d-flex flex-row font-weight-bold my-2">{{ $t('mailIntegration.settings.connectMail.password.label') }}</label>
             <div class="d-flex flex-row">
               <v-text-field
@@ -147,7 +146,7 @@ const MAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+")
 
 export default {
   data: () => ({
-    emailName: '',
+    emailAccount: '',
     imapUrl: '',
     port: '',
     encryption: 'SSL',
@@ -162,11 +161,11 @@ export default {
     portErrorMessage() {
       return this.portRule || this.port.length === 0 ? '': this.$t('mailIntegration.settings.name.errorPort');
     },
-    rulesEmail() {
+    accountRule() {
       return this.account && this.account.toLowerCase().match(MAIL_PATTERN);
     },
     accountErrorMessage() {
-      return this.rulesEmail || this.account.length === 0 ? '': this.$t('mailIntegration.settings.name.errorMail');
+      return this.accountRule || this.account.length === 0 ? '': this.$t('mailIntegration.settings.name.errorMail');
     },
     displayPasswordIcon() {
       return this.showPassWord ? 'mdi-eye': 'mdi-eye-off';
@@ -174,16 +173,13 @@ export default {
     toggleFieldType() {
       return this.showPassWord ? 'text': 'password';
     },
-    imapErrorMessage() {
-      return this.imapUrl.length === 0 || this.imapUrl === 'imap.gmail.com' || this.imapUrl === 'plus.imap.gmail.com' || this.imapUrl === 'imap.yahoo.com' || this.imapUrl === 'plus.imap.yahoo.com' ? '':this.$t('mailIntegration.settings.name.errorUrlImap');
-    }
   },
   methods: {
     openDrawer(){
-      this.$refs.settingMailDrawer.open();
+      this.$refs.mailIntegrationSettingDrawer.open();
     },
     close(){
-      this.$refs.settingMailDrawer.close();
+      this.$refs.mailIntegrationSettingDrawer.close();
     },
   }
 };
