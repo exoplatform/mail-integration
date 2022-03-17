@@ -59,7 +59,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               <string>MailIntegrationNotificationPlugin</string>
             </field>
             <field name="resourceBundleKey">
-              <string>UINotification.label.NewMail</string>
+              <string>UINotification.label.MailReceived</string>
             </field>
             <field name="order">
               <string>1</string>
