@@ -20,12 +20,12 @@
                xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
   <component>
-    <key>org.exoplatform.mailIntegration.service.MailIntegrationService</key>
-    <type>org.exoplatform.mailIntegration.service.MailIntegrationServiceImpl</type>
+    <key>org.exoplatform.mailintegration.service.MailIntegrationService</key>
+    <type>org.exoplatform.mailintegration.service.MailIntegrationServiceImpl</type>
   </component>
   
   <component>
-    <type>org.exoplatform.mailIntegration.rest.MailIntegrationRest</type>
+    <type>org.exoplatform.mailintegration.rest.MailIntegrationRest</type>
   </component>
   
   <external-component-plugins>
@@ -45,7 +45,7 @@
 		  <property name="endTime" value="" />
           <property name="jobName" value="MailIntegrationNotificationJob"/>
           <property name="groupName" value="MailIntegration"/>
-          <property name="job" value="org.exoplatform.mailIntegration.notification.job.MailIntegrationNotificationJob"/>
+          <property name="job" value="org.exoplatform.mailintegration.notification.job.MailIntegrationNotificationJob"/>
           <!-- REPEAT_INDEFINITELY -->
           <property name="repeatCount" value="0" />
           <!-- Runs every 30 minutes -->

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailIntegration.service;
+package org.exoplatform.mailintegration.service;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -35,25 +35,28 @@ import javax.mail.UIDFolder;
 import org.exoplatform.commons.api.notification.NotificationContext;
 import org.exoplatform.commons.api.notification.model.PluginKey;
 import org.exoplatform.commons.notification.impl.NotificationContextImpl;
-import org.exoplatform.mailIntegration.model.MailIntegrationSetting;
-import org.exoplatform.mailIntegration.model.MailIntegrationUserSetting;
-import org.exoplatform.mailIntegration.notification.plugin.MailIntegrationNotificationPlugin;
-import org.exoplatform.mailIntegration.notification.utils.NotificationConstants;
-import org.exoplatform.mailIntegration.rest.model.MessageRestEntity;
-import org.exoplatform.mailIntegration.utils.RestEntityBuilder;
+import org.exoplatform.mailintegration.model.MailIntegrationSetting;
+import org.exoplatform.mailintegration.model.MailIntegrationUserSetting;
+import org.exoplatform.mailintegration.notification.plugin.MailIntegrationNotificationPlugin;
+import org.exoplatform.mailintegration.notification.utils.NotificationConstants;
+import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
+import org.exoplatform.mailintegration.utils.RestEntityBuilder;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.user.UserStateService;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.web.security.codec.CodecInitializer;
-import org.exoplatform.web.security.security.TokenServiceInitializationException;
 
 public class MailIntegrationServiceImpl implements MailIntegrationService {
   
-  private CodecInitializer codecInitializer;
+  private CodecInitializer codecInitializer;// NOSONAR
   
   private IdentityManager identityManager;
   
   private UserStateService userService;
+  
+  private static final Log LOG = ExoLogger.getLogger(MailIntegrationServiceImpl.class);
   
   public MailIntegrationServiceImpl(CodecInitializer codecInitializer, IdentityManager identityManager, UserStateService userService) {
     this.userService = userService;
@@ -71,14 +74,13 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     Store store = null;
     try {
       store = session.getStore(provider);
-      //TODO to be added
-      //String password = codecInitializer.getCodec().decode(mailIntegrationSetting.getPassword());
+      //TODO to be added // NOSONAR
+      //String password = codecInitializer.getCodec().decode(mailIntegrationSetting.getPassword()); // NOSONAR
       store.connect(mailIntegrationSetting.getHost(), mailIntegrationSetting.getUserName(), mailIntegrationSetting.getPassword());
-    } catch (NoSuchProviderException nspe) {
-      System.err.println("invalid provider name");
-    } catch (MessagingException me) {
-      System.err.println("messaging exception");
-      me.printStackTrace();
+    } catch (NoSuchProviderException noSuchProviderException) {
+      LOG.error("Invalid provider name", noSuchProviderException);
+    } catch (MessagingException messagingException) {
+      LOG.error("Unable to connect to the store", messagingException);
     }
     return store;
   }
@@ -104,16 +106,15 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
             }
           }
 
-        } catch (MessagingException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+        } catch (MessagingException messagingException) {
+          LOG.error("unable to get new messages", messagingException);
         }
       }
     }
   }
   
   public List<MailIntegrationUserSetting> getMailIntegrationUserSettings() {
-    //TODO call MailIntegrationUserSettingStorage
+    //TODO call MailIntegrationUserSettingStorage // NOSONAR
     MailIntegrationUserSetting mailIntegrationUserSetting = new MailIntegrationUserSetting(1, 2, 1);
     List<MailIntegrationUserSetting> mailIntegrationUserSettings = new ArrayList<>();
     mailIntegrationUserSettings.add(mailIntegrationUserSetting);
@@ -126,7 +127,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     String password = System.getProperty("exo.mailIntegration.MailIntegrationSetting.password");
     MailIntegrationSetting mailIntegrationSetting = null;
     if (host != null && userName != null && password != null) {
-    //TODO call MailIntegrationSettingStorage
+    //TODO call MailIntegrationSettingStorage // NOSONAR
       mailIntegrationSetting = new MailIntegrationSetting(Long.parseLong(mailntegrationSettingId), "setting1", host, "666", userName, password, "ssl");
     }
     return mailIntegrationSetting;
@@ -142,20 +143,6 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
 
     // get a list of javamail messages as an array of messages
     Date now = new Date();
-//      SearchTerm searchTerm = new SearchTerm() {
-//        @Override
-//        public boolean match(Message message) {
-//          try {
-//            return isNewMessage(message.getSentDate(), now);
-//          } catch (MessagingException e) {
-//            return false;
-//          }
-//        }
-//      };
-//      newMessages = Arrays.asList(inbox.search(searchTerm)).stream().map(message -> String.valueOf(message.getMessageNumber())).collect(Collectors.toList());
-//      SortTerm[] sortTerms = new SortTerm[1];
-//      sortTerms[0] = SortTerm.ARRIVAL;
-//      Message[] messages = ((IMAPFolder)inbox).getSortedMessages(sortTerms);
     UIDFolder uidInbox = (UIDFolder) inbox;
     Message[] messages = inbox.getMessages();
     for (int i = inbox.getMessageCount() - 1; i > 0; i--) {
@@ -166,11 +153,9 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
         newMessages.add(String.valueOf(uidInbox.getUID(messages[i])));
       }
     }
-    // close the inbox folder but do not
-    // remove the messages from the server
+    // close the inbox folder but do not remove the messages from the server
     inbox.close(false);
     store.close();
-
     return newMessages;
   }
   
@@ -197,9 +182,8 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
       messageRestEntity = RestEntityBuilder.fromMessage(message);
       inbox.close(false);
       store.close();
-    } catch (MessagingException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    } catch (MessagingException messagingException) {
+      LOG.error("unable to get or open folder", messagingException);
     }
     return messageRestEntity;
   }

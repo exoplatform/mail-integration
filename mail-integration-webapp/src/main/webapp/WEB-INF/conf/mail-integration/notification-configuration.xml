@@ -17,8 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
   <external-component-plugins>
-    <target-component>org.exoplatform.commons.api.notification.service.setting.PluginSettingService
-    </target-component>
+    <target-component>org.exoplatform.commons.api.notification.service.setting.PluginSettingService</target-component>
     <component-plugin profiles="all">
       <name>notification.groups</name>
       <set-method>registerGroupConfig</set-method>
@@ -49,7 +48,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <component-plugin>
       <name>notification.plugins</name>
       <set-method>addPlugin</set-method>
-      <type>org.exoplatform.mailIntegration.notification.plugin.MailIntegrationNotificationPlugin</type>
+      <type>org.exoplatform.mailintegration.notification.plugin.MailIntegrationNotificationPlugin</type>
       <description>Initial information for plugin MailIntegrationNotificationPlugin</description>
       <init-params>
         <object-param>
@@ -89,7 +88,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <component-plugin>
       <name>web.channel.content</name>
       <set-method>registerTemplateProvider</set-method>
-      <type>org.exoplatform.mailIntegration.notification.provider.WebTemplateProvider</type>
+      <type>org.exoplatform.mailintegration.notification.provider.WebTemplateProvider</type>
       <init-params>
         <value-param>
           <name>channel-id</name>

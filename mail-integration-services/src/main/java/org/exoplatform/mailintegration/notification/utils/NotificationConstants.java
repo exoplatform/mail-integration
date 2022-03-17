@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailIntegration.notification.utils;
+package org.exoplatform.mailintegration.notification.utils;
 
 public class NotificationConstants {
 
@@ -29,8 +29,12 @@ public class NotificationConstants {
   public static final String READ              = "READ";
 
   public static final String RECEIVER          = "RECEIVER";
+  
+  private NotificationConstants () {
+    
+  }
 
-  public static enum NOTIFICATION_CONTEXT {
+  public enum NOTIFICATION_CONTEXT {
     NEW_EMAILS_RECIEVED("NEW EMAILS RECIEVED");
 
     private String context;

@@ -14,19 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailIntegration.service;
+package org.exoplatform.mailintegration.model;
 
-import javax.mail.Store;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import org.exoplatform.mailIntegration.model.MailIntegrationSetting;
-import org.exoplatform.mailIntegration.rest.model.MessageRestEntity;
-import org.exoplatform.services.security.Identity;
-
-public interface MailIntegrationService {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class MailIntegrationSetting {
   
-  Store imapConnect(MailIntegrationSetting mailIntegrationSetting);
+  long id;
   
-  void sendMailIntegrationNotifications();
+  String name;
   
-  MessageRestEntity getMessageById(String mailntegrationSettingId, String messageId, Identity currentIdentity) throws IllegalAccessException;
+  String host;
+  
+  String port; 
+  
+  String userName;
+  
+  String password;
+  
+  String encryption;
 }

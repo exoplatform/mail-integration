@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailIntegration.rest;
+package org.exoplatform.mailintegration.rest;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
@@ -27,8 +27,8 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.mailIntegration.rest.model.MessageRestEntity;
-import org.exoplatform.mailIntegration.service.MailIntegrationService;
+import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
+import org.exoplatform.mailintegration.service.MailIntegrationService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;

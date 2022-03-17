@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailIntegration.notification.provider;
+package org.exoplatform.mailintegration.notification.provider;
 
 import java.io.Writer;
 import java.util.Calendar;
@@ -35,8 +35,8 @@ import org.exoplatform.commons.api.notification.service.template.TemplateContext
 import org.exoplatform.commons.notification.template.TemplateUtils;
 import org.exoplatform.commons.utils.HTMLEntityEncoder;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.mailIntegration.notification.plugin.MailIntegrationNotificationPlugin;
-import org.exoplatform.mailIntegration.notification.utils.NotificationConstants;
+import org.exoplatform.mailintegration.notification.plugin.MailIntegrationNotificationPlugin;
+import org.exoplatform.mailintegration.notification.utils.NotificationConstants;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.utils.TimeConvertUtils;
@@ -64,17 +64,11 @@ public class WebTemplateProvider extends TemplateProvider {
       String context = notification.getValueOwnerParameter(NotificationConstants.CONTEXT);
       EntityEncoder encoder = HTMLEntityEncoder.getInstance();
       templateContext.put(NotificationConstants.CONTEXT, encoder.encode(context));
-      templateContext.put(NotificationConstants.READ,
-                          Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey())) ? "read"
-                                                                                                                                : "unread");
+      templateContext.put(NotificationConstants.READ, Boolean.TRUE.equals(Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey()))) ? "read" : "unread");
       templateContext.put(NotificationConstants.NOTIFICATION_ID, notification.getId());
       Calendar lastModified = Calendar.getInstance();
       lastModified.setTimeInMillis(notification.getLastModifiedDate());
-      templateContext.put(NotificationConstants.LAST_UPDATED_TIME,
-                          TimeConvertUtils.convertXTimeAgoByTimeServer(lastModified.getTime(),
-                                                                       "EE, dd yyyy",
-                                                                       new Locale(language),
-                                                                       TimeConvertUtils.YEAR));
+      templateContext.put(NotificationConstants.LAST_UPDATED_TIME, TimeConvertUtils.convertXTimeAgoByTimeServer(lastModified.getTime(), "EE, dd yyyy", new Locale(language), TimeConvertUtils.YEAR));
       templateContext.put(NotificationConstants.NEW_MESSAGES, notification.getValueOwnerParameter(NotificationConstants.NEW_MESSAGES));
       //
       String body = TemplateUtils.processGroovy(templateContext);
@@ -88,5 +82,5 @@ public class WebTemplateProvider extends TemplateProvider {
     protected boolean makeDigest(NotificationContext ctx, Writer writer) {
       return false;
     }
-  };
+  }
 }

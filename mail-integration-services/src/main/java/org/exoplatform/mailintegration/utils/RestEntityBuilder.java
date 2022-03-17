@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailIntegration.utils;
+package org.exoplatform.mailintegration.utils;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
-import org.exoplatform.mailIntegration.rest.model.MessageRestEntity;
+import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
 
 public class RestEntityBuilder {
   

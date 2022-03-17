@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailIntegration.notification.job;
+package org.exoplatform.mailintegration.notification.job;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -22,7 +22,7 @@ import org.quartz.JobExecutionException;
 
 import org.exoplatform.commons.api.settings.ExoFeatureService;
 import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.mailIntegration.service.MailIntegrationService;
+import org.exoplatform.mailintegration.service.MailIntegrationService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailIntegration.notification.plugin;
+package org.exoplatform.mailintegration.notification.plugin;
 
 import org.exoplatform.commons.api.notification.NotificationContext;
 import org.exoplatform.commons.api.notification.model.ArgumentLiteral;
 import org.exoplatform.commons.api.notification.model.NotificationInfo;
 import org.exoplatform.commons.api.notification.plugin.BaseNotificationPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.mailIntegration.notification.utils.NotificationConstants;
-import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.mailintegration.notification.utils.NotificationConstants;
 
 public class MailIntegrationNotificationPlugin extends BaseNotificationPlugin {
 
@@ -34,7 +33,7 @@ public class MailIntegrationNotificationPlugin extends BaseNotificationPlugin {
   
   public static final ArgumentLiteral<String> NEW_MESSAGES    = new ArgumentLiteral<>(String.class, NotificationConstants.NEW_MESSAGES);
   
-  public MailIntegrationNotificationPlugin(InitParams initParams, OrganizationService organizationService) {
+  public MailIntegrationNotificationPlugin(InitParams initParams) {
     super(initParams);
   }
 
