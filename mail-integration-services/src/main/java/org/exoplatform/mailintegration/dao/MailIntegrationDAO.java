@@ -29,8 +29,18 @@ public class MailIntegrationDAO extends GenericDAOJPAImpl<MailIntegrationSetting
 
   public List<MailIntegrationSettingEntity> findMailIntegrationSettingsByUserId(long userIdentityId) {
     TypedQuery<MailIntegrationSettingEntity> query =
-                                                   getEntityManager().createNamedQuery("ConnectionInformation.findMailIntegrationSettingsByUserId",
+                                                   getEntityManager().createNamedQuery("MailIntegrationSetting.findMailIntegrationSettingsByUserId",
                                                                                        MailIntegrationSettingEntity.class);
+    query.setParameter("creatorId", userIdentityId);
+    List<MailIntegrationSettingEntity> resultList = query.getResultList();
+    return resultList == null ? Collections.emptyList() : resultList;
+  }
+
+  public List<MailIntegrationSettingEntity> findMailIntegrationSettingsByIdAndUserId(long mailSettingId, long userIdentityId) {
+    TypedQuery<MailIntegrationSettingEntity> query =
+            getEntityManager().createNamedQuery("MailIntegrationSetting.findMailIntegrationSettingsByIdAndUserId",
+                    MailIntegrationSettingEntity.class);
+    query.setParameter("mailSettingId", mailSettingId);
     query.setParameter("creatorId", userIdentityId);
     List<MailIntegrationSettingEntity> resultList = query.getResultList();
     return resultList == null ? Collections.emptyList() : resultList;

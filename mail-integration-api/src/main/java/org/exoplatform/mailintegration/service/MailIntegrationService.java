@@ -53,7 +53,7 @@ public interface MailIntegrationService {
 
   void sendMailIntegrationNotifications();
 
-  MessageRestEntity getMessageById(long mailIntegrationSettingId, String messageId, Identity currentIdentity) throws IllegalAccessException;
+  MessageRestEntity getMessageById(long mailIntegrationSettingId, String messageId, long identityId) throws IllegalAccessException;
 
   /**
    * Check if user already connected
