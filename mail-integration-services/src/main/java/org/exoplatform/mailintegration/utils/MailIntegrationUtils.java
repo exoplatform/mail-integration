@@ -1,26 +1,24 @@
 /*
- * This file is part of the Meeds project (https://meeds.io/).
+ * Copyright (C) 2022 eXo Platform SAS.
  *
- * Copyright (C) 2022 Meeds Association contact@meeds.io
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.mailintegration.utils;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.rest.model.ConnectionInformationEntity;
+import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingEntity;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -69,15 +67,15 @@ public class MailIntegrationUtils {
     return ConversationState.getCurrent().getIdentity().getUserId();
   }
 
-  public static final MailIntegrationSetting toConnectionInformation(ConnectionInformationEntity connectionInformationEntity,
+  public static final MailIntegrationSetting toConnectionInformation(MailIntegrationSettingEntity mailIntegrationSettingEntity,
                                                                      long userIdentityId) {
     MailIntegrationSetting connectionInformation = new MailIntegrationSetting();
-    connectionInformation.setEmailName(connectionInformationEntity.getEmailName());
-    connectionInformation.setImapUrl(connectionInformationEntity.getImapUrl());
-    connectionInformation.setPort(connectionInformationEntity.getPort());
-    connectionInformation.setEncryption(connectionInformationEntity.getEncryption());
-    connectionInformation.setAccount(connectionInformationEntity.getAccount());
-    connectionInformation.setPassword(connectionInformationEntity.getPassword());
+    connectionInformation.setEmailName(mailIntegrationSettingEntity.getEmailName());
+    connectionInformation.setImapUrl(mailIntegrationSettingEntity.getImapUrl());
+    connectionInformation.setPort(mailIntegrationSettingEntity.getPort());
+    connectionInformation.setEncryption(mailIntegrationSettingEntity.getEncryption());
+    connectionInformation.setAccount(mailIntegrationSettingEntity.getAccount());
+    connectionInformation.setPassword(mailIntegrationSettingEntity.getPassword());
     connectionInformation.setCreatorId(userIdentityId);
     return connectionInformation;
   }

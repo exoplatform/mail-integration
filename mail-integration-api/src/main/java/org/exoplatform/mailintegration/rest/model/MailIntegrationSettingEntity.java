@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * Copyright (C) 2022 eXo Platform SAS.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,13 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
--->
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+package org.exoplatform.mailintegration.rest.model;
 
-    <include file="db/changelog/mail-integration-rdbms.db.changelog-1.0.0.xml"/>
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-</databaseChangeLog>
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class MailIntegrationSettingEntity {
+  private long   id;
+
+  private String emailName;
+
+  private String imapUrl;
+
+  private long   port;
+
+  private String encryption;
+
+  private String account;
+
+  private String password;
+}

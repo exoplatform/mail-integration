@@ -1,20 +1,18 @@
 /*
- * This file is part of the Meeds project (https://meeds.io/).
+ * Copyright (C) 2022 eXo Platform SAS.
  *
- * Copyright (C) 2022 Meeds Association contact@meeds.io
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.mailintegration.rest;
 
@@ -22,15 +20,13 @@ import io.swagger.annotations.*;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.rest.model.ConnectionInformationEntity;
+import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingEntity;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
 import org.exoplatform.mailintegration.service.MailIntegrationService;
 import org.exoplatform.mailintegration.utils.MailIntegrationUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 import org.exoplatform.social.core.manager.IdentityManager;
 
 import javax.annotation.security.RolesAllowed;
@@ -63,13 +59,13 @@ public class MailIntegrationRest implements ResourceContainer {
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
           @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),})
   public Response createMailIntegrationConnection(@ApiParam(value = "Connection information object to create", required = true)
-                                                          ConnectionInformationEntity connectionInformationEntity) {
-    if (connectionInformationEntity == null) {
+                                                          MailIntegrationSettingEntity mailIntegrationSettingEntity) {
+    if (mailIntegrationSettingEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
     try {
-      MailIntegrationSetting mailIntegrationSetting = MailIntegrationUtils.toConnectionInformation(connectionInformationEntity, userIdentityId);
+      MailIntegrationSetting mailIntegrationSetting = MailIntegrationUtils.toConnectionInformation(mailIntegrationSettingEntity, userIdentityId);
       MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegration(mailIntegrationSetting, userIdentityId);
       return Response.ok(createdMailIntegrationSetting).build();
     } catch (IllegalAccessException e) {
@@ -91,14 +87,14 @@ public class MailIntegrationRest implements ResourceContainer {
           @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),})
   public Response checkMailConnection(@ApiParam(value = "Connection information object to create", required = true)
-                                      ConnectionInformationEntity connectionInformationEntity) {
-    if (connectionInformationEntity == null) {
+                                      MailIntegrationSettingEntity mailIntegrationSettingEntity) {
+    if (mailIntegrationSettingEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
 
     try {
-      MailIntegrationSetting mailIntegrationSetting = MailIntegrationUtils.toConnectionInformation(connectionInformationEntity, userIdentityId);
+      MailIntegrationSetting mailIntegrationSetting = MailIntegrationUtils.toConnectionInformation(mailIntegrationSettingEntity, userIdentityId);
       boolean connectionStatus = mailIntegrationService.isConnected(mailIntegrationSetting);
       String storedUserEmail = null;
       if (!connectionStatus) {
