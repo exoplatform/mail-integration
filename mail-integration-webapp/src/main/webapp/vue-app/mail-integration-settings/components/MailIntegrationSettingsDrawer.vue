@@ -204,16 +204,16 @@ export default {
       }
     },
     imapUrl(newVal, oldVal) {
-      this.disabled = newVal.length === oldVal.length || this.error === 'error';
+      this.disabled = newVal.length === oldVal.length;
     },
     port(newVal, oldVal) {
-      this.disabled = newVal.length === oldVal.length || this.error === 'error';
+      this.disabled = newVal.length === oldVal.length;
     },
     encryption(newVal, oldVal) {
-      this.disabled = newVal.length === oldVal.length || this.error === 'error';
+      this.disabled = newVal.length === oldVal.length;
     },
     password(newVal, oldVal) {
-      this.disabled = newVal.length === oldVal.length || this.error === 'error';
+      this.disabled = newVal.length === oldVal.length;
     }
   },
   methods: {
@@ -226,6 +226,12 @@ export default {
         this.encryption = this.mailIntegrationSetting.encryption;
         this.account = this.mailIntegrationSetting.account;
         this.password = this.mailIntegrationSetting.password;
+        this.storedEmailAccount = this.mailIntegrationSetting.account;
+        this.storedImapUrl = this.mailIntegrationSetting.imapUrl;
+        this.storedPort = this.mailIntegrationSetting.port.toString();
+        this.storedEncryption = this.mailIntegrationSetting.encryption;
+        this.storedAccount = this.mailIntegrationSetting.account;
+        this.storedPassword = this.mailIntegrationSetting.password;
       }
       this.$refs.mailIntegrationSettingDrawer.open();
     },
@@ -251,6 +257,7 @@ export default {
         }).catch(() => {
           this.error = 'error';
           this.connectionSuccess = this.error !== 'error';
+          this.disabled = true;
           this.$emit('display-alert', this.$t('mailIntegration.settings.connection.errorMessage'), this.error);
         })
           .finally(() => {
