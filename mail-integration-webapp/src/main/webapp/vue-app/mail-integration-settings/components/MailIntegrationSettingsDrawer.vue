@@ -135,6 +135,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-btn>
         <v-btn
           :loading="saving"
+          :disabled="disabled"
           class="btn btn-primary"
           @click="checkConnection">
           {{ saveButtonLabel }}
@@ -169,6 +170,7 @@ export default {
     connectionSuccess: false,
     saving: false,
     error: '',
+    disabled: false,
   }),
   computed: {
     portRule() {
@@ -191,7 +193,7 @@ export default {
     },
     saveButtonLabel() {
       return this.connectionSuccess ? this.$t('mailIntegration.settings.connectMail.confirm'): this.$t('mailIntegration.settings.connectMail.test');
-    }
+    },
   },
   watch: {
     saving() {
@@ -201,6 +203,18 @@ export default {
         this.$refs.mailIntegrationSettingDrawer.endLoading();
       }
     },
+    imapUrl(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length || this.error === 'error';
+    },
+    port(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length || this.error === 'error';
+    },
+    encryption(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length || this.error === 'error';
+    },
+    password(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length || this.error === 'error';
+    }
   },
   methods: {
     openDrawer(){
@@ -231,16 +245,17 @@ export default {
       if (!this.connectionSuccess) {
         this.$mailIntegrationService.checkMailConnection(connectionInformationEntity).then((connection) => {
           if (connection) {
-            this.$emit('display-alert', 'successful connection');
+            this.$emit('display-alert', this.$t('mailIntegration.settings.connection.successMessage'));
+            this.connectionSuccess = true;
           }
         }).catch(() => {
           this.error = 'error';
-          this.$emit('display-alert', 'mail-integration-connection-error', this.error);
+          this.connectionSuccess = this.error !== 'error';
+          this.$emit('display-alert', this.$t('mailIntegration.settings.connection.errorMessage'), this.error);
         })
           .finally(() => {
             window.setTimeout(() => {
               this.saving = false;
-              this.connectionSuccess = this.error !== 'error';
             }, 200);
           });
       } else if (!this.modeEdit) {
@@ -249,12 +264,13 @@ export default {
             this.close();
             this.$emit('mail-integration-settings-save-success');
           }
-        }).catch(() => this.$emit('display-alert','mail-integration-settings-save-error', 'error'))
+        }).catch(() => this.$emit('display-alert',this.$('mailIntegration.settings.connectMail.errorMessage'), 'error'))
           .finally(() => {
             this.saving = false;
           });
       } else {
         this.saving = false;
+        this.close();
       }
     },
   },

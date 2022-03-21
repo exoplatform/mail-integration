@@ -21,6 +21,7 @@ package org.exoplatform.mailintegration.storage;
 import org.exoplatform.mailintegration.dao.MailIntegrationDAO;
 import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
+import org.exoplatform.mailintegration.model.MailIntegrationUserSetting;
 import org.exoplatform.mailintegration.utils.EntityMapper;
 
 import java.util.List;
@@ -33,13 +34,13 @@ public class MailIntegrationStorage {
     this.mailIntegrationDAO = mailIntegrationDAO;
   }
 
-  public org.exoplatform.mailintegration.model.MailIntegrationSetting createMailIntegration(org.exoplatform.mailintegration.model.MailIntegrationSetting connectionInformation) {
+  public MailIntegrationSetting createMailIntegration(MailIntegrationSetting connectionInformation) {
     MailIntegrationSettingEntity mailIntegrationSettingEntity = EntityMapper.toMailIntegrationSettingEntity(connectionInformation);
     mailIntegrationSettingEntity = mailIntegrationDAO.create(mailIntegrationSettingEntity);
     return EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity);
   }
 
-  public List<org.exoplatform.mailintegration.model.MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId) {
+  public List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId) {
     List<MailIntegrationSettingEntity> mailIntegrationSettingEntities =
                                                                       mailIntegrationDAO.findMailIntegrationSettingsByUserId(userIdentityId);
     return mailIntegrationSettingEntities.stream()
@@ -47,7 +48,7 @@ public class MailIntegrationStorage {
                                          .collect(Collectors.toList());
   }
 
-  public List<org.exoplatform.mailintegration.model.MailIntegrationUserSetting> getMailIntegrationUserSettings() {
+  public List<MailIntegrationUserSetting> getMailIntegrationUserSettings() {
     List<MailIntegrationSettingEntity> mailIntegrationSettingEntities = mailIntegrationDAO.findAll();
     return mailIntegrationSettingEntities.stream()
                                          .map(EntityMapper::fromMailIntegrationUserSettingEntity)
@@ -56,6 +57,15 @@ public class MailIntegrationStorage {
 
   public MailIntegrationSetting getMailIntegrationSettingById(long mailIntegrationSettingId) {
     return EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationDAO.find(mailIntegrationSettingId));
+  }
+
+  public List<MailIntegrationSetting> getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(long mailIntegrationSettingId, long userId) {
+    List<MailIntegrationSettingEntity> mailIntegrationSettingEntities =
+                                                                      mailIntegrationDAO.findMailIntegrationSettingsByIdAndUserId(mailIntegrationSettingId,
+                                                                                                                                  userId);
+    return mailIntegrationSettingEntities.stream()
+                                         .map(EntityMapper::fromMailIntegrationSettingEntity)
+                                         .collect(Collectors.toList());
   }
 
 }

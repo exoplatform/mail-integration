@@ -153,18 +153,18 @@ public class MailIntegrationRest implements ResourceContainer {
           @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"), })
   public Response getMessageById(@ApiParam(value = "Message id", required = true) @PathParam("id") String messageId,
                                  @ApiParam(value = "Message integration setting id", required = true) @PathParam("mailntegrationSettingId") long mailIntegrationSettingId) {
-    Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+    long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
     try {
       if (StringUtils.isBlank(messageId)) {
         return Response.status(Response.Status.BAD_REQUEST).build();
       }
-      MessageRestEntity message = mailIntegrationService.getMessageById(mailIntegrationSettingId, messageId, currentIdentity);
+      MessageRestEntity message = mailIntegrationService.getMessageById(mailIntegrationSettingId, messageId, userIdentityId);
       if (message == null) {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
       return Response.ok(message).build();
     } catch (IllegalAccessException e) {
-      LOG.warn("User '{}' attempts to get a non authorized message", currentIdentity.getUserId(), e);
+      LOG.warn("User '{}' attempts to get a non authorized message", userIdentityId, e);
       return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

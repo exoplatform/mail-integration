@@ -64,6 +64,9 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
       throw new IllegalArgumentException("Mail integration setting is mandatory");
     }
     String tokenPlain = mailIntegrationSetting.getPassword();
+    if (tokenPlain.isBlank()) {
+      throw new IllegalArgumentException("Mail password setting is mandatory");
+    }
     String token = MailIntegrationUtils.generateEncryptedToken(codecInitializer, tokenPlain, userIdentity.getRemoteId());
     mailIntegrationSetting.setPassword(token);
     return mailIntegrationStorage.createMailIntegration(mailIntegrationSetting);
@@ -122,6 +125,8 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
         List<String> newMessages = new ArrayList<>();
         try {
           if (mailIntegrationSetting != null) {
+            mailIntegrationSetting.setPassword(MailIntegrationUtils.decryptUserIdentity(codecInitializer,
+                                                                                        mailIntegrationSetting.getPassword()));
             newMessages = getNewMessages(mailIntegrationSetting);
             if (!newMessages.isEmpty()) {
               NotificationContext ctx = NotificationContextImpl.cloneInstance()
@@ -180,9 +185,9 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
 
 
   @Override
-  public MessageRestEntity getMessageById(long mailIntegrationSettingId, String messageId, org.exoplatform.services.security.Identity currentIdentity) throws IllegalAccessException {
-    if (!hasMailIntegrationUserSetting()) {
-      throw new IllegalAccessException("User " + currentIdentity.getUserId() + "is not allowed to get a message with id "
+  public MessageRestEntity getMessageById(long mailIntegrationSettingId, String messageId, long identityId) throws IllegalAccessException {
+    if (!hasMailIntegrationUserSetting(mailIntegrationSettingId, identityId)) {
+      throw new IllegalAccessException("User " + identityId + "is not allowed to get a message with id "
               + messageId);
     }
     MailIntegrationSetting mailIntegrationSetting = getMailIntegrationSettingById(mailIntegrationSettingId);
@@ -223,9 +228,11 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     return connectionStatus;
   }
 
-  private boolean hasMailIntegrationUserSetting() {
-    //TODO check from storage  if there is a MailIntegrationUserSetting with userId and mailIntegrationSettingId
-    return true;
+  private boolean hasMailIntegrationUserSetting(long mailIntegrationSettingId, long userId) {
+    List<MailIntegrationSetting> mailIntegrationSettings =
+                                                         mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSettingId,
+                                                                                                                                             userId);
+    return !mailIntegrationSettings.isEmpty();
   }
 
 }
