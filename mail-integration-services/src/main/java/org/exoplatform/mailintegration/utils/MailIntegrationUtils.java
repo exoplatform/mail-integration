@@ -31,7 +31,7 @@ import org.exoplatform.web.security.security.TokenServiceInitializationException
 public class MailIntegrationUtils {
   private static Log          LOG       = ExoLogger.getLogger(MailIntegrationUtils.class);
 
-  public MailIntegrationUtils() {
+  private MailIntegrationUtils() {
   }
 
   public static String generateEncryptedToken(CodecInitializer codecInitializer, String tokenPlain, String remoteId) {

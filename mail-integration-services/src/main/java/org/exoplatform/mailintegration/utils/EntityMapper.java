@@ -21,7 +21,7 @@ import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.model.MailIntegrationUserSetting;
 
 public class EntityMapper {
-  public EntityMapper() {
+  private EntityMapper() {
   }
   
   public static MailIntegrationSetting fromMailIntegrationSettingEntity(MailIntegrationSettingEntity connectionInformationEntity) {

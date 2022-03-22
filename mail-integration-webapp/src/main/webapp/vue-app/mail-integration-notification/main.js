@@ -15,7 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 import './initComponents.js';
-import * as mailIntegrationService from './mailIntegrationService.js';
+import * as mailIntegrationService from '../service/mailIntegrationService.js';
 
 // get overridden components if exists
 if (extensionRegistry) {

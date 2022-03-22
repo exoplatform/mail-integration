@@ -126,10 +126,10 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     }
     List<MailIntegrationSetting> mailIntegrationSettings =
                                                          mailIntegrationStorage.getMailIntegrationSettingsByUserId(userIdentityId);
-    return mailIntegrationSettings.stream()
-                                  .peek(m -> m.setPassword(MailIntegrationUtils.decryptUserIdentity(codecInitializer,
-                                                                                                    m.getPassword())))
-                                  .collect(Collectors.toList());
+    return mailIntegrationSettings.stream().map(m -> {
+      m.setPassword(MailIntegrationUtils.decryptUserIdentity(codecInitializer, m.getPassword()));
+      return m;
+    }).collect(Collectors.toList());
   }
 
   @Override
@@ -209,6 +209,8 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
               + messageId);
     }
     MailIntegrationSetting mailIntegrationSetting = getMailIntegrationSettingById(mailIntegrationSettingId);
+    mailIntegrationSetting.setPassword(MailIntegrationUtils.decryptUserIdentity(codecInitializer,
+                                                                                mailIntegrationSetting.getPassword()));
     Store store = imapConnect(mailIntegrationSetting);
     Folder inbox;
     MessageRestEntity messageRestEntity = null;

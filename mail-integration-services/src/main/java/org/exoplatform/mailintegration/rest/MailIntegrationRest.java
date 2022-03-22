@@ -105,9 +105,10 @@ public class MailIntegrationRest implements ResourceContainer {
       }
       return Response.ok(storedUserEmail).type(MediaType.TEXT_PLAIN).build();
     } catch (IllegalArgumentException e) {
-      LOG.warn("User '{}' attempts to create a non authorized mail integration", e);
+      LOG.warn("User '{}' attempts to create a non authorized mail integration", userIdentityId, e);
       return Response.status(Response.Status.NO_CONTENT).build();
     } catch (Exception e) {
+      LOG.warn("An internal error when make connection", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
@@ -122,17 +123,18 @@ public class MailIntegrationRest implements ResourceContainer {
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
           @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"), })
   public Response getMailIntegrationSettingsByUserId() {
+    long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
     try {
-      long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
       List<MailIntegrationSetting> connectionInformationList = mailIntegrationService.getMailIntegrationSettingsByUserId(userIdentityId);
       if (connectionInformationList == null) {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
       return Response.ok(connectionInformationList).build();
     } catch (IllegalAccessException e) {
-      LOG.warn("User '{}' attempts to get a non authorized poll", e);
+      LOG.warn("User '{}' attempts to get a non authorized poll", userIdentityId, e);
       return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
+      LOG.warn("An internal error when getting mail integration settings", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
@@ -163,6 +165,7 @@ public class MailIntegrationRest implements ResourceContainer {
       LOG.warn("User '{}' attempts to get a non authorized message", userIdentityId, e);
       return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
+      LOG.warn("An internal error when getting message", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
