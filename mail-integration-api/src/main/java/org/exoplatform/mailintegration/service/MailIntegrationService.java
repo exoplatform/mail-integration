@@ -18,7 +18,6 @@ package org.exoplatform.mailintegration.service;
 
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
-import org.exoplatform.services.security.Identity;
 
 import javax.mail.Store;
 import java.util.List;

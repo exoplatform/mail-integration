@@ -20,14 +20,12 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.api.notification.NotificationContext;
 import org.exoplatform.commons.api.notification.model.PluginKey;
 import org.exoplatform.commons.notification.impl.NotificationContextImpl;
-import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.model.MailIntegrationUserSetting;
 import org.exoplatform.mailintegration.notification.plugin.MailIntegrationNotificationPlugin;
 import org.exoplatform.mailintegration.notification.utils.NotificationConstants;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
 import org.exoplatform.mailintegration.storage.MailIntegrationStorage;
-import org.exoplatform.mailintegration.utils.EntityMapper;
 import org.exoplatform.mailintegration.utils.MailIntegrationUtils;
 import org.exoplatform.mailintegration.utils.RestEntityBuilder;
 import org.exoplatform.services.log.ExoLogger;
@@ -47,7 +45,11 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class MailIntegrationServiceImpl implements MailIntegrationService {
-  private static final Log LOG = ExoLogger.getLogger(MailIntegrationServiceImpl.class);
+  private static final Log       LOG        = ExoLogger.getLogger(MailIntegrationServiceImpl.class);
+
+  public static final String     MAIL_IMAPS = "imaps";
+
+  public static final String     MAIL_SSL   = "SSL";
 
   private MailIntegrationStorage mailIntegrationStorage;
 
@@ -92,12 +94,12 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   public Store imapConnect(MailIntegrationSetting mailIntegrationSetting) {
     Properties props = new Properties();
     String usedPort = String.valueOf(mailIntegrationSetting.getPort());
-    if (StringUtils.equals(mailIntegrationSetting.getEncryption(), "SSL")) {
+    if (StringUtils.equals(mailIntegrationSetting.getEncryption(), MAIL_SSL)) {
       props.setProperty("mail.imap.ssl.enable", "true");
     }
-    props.setProperty("mail.store.protocol", "imaps");
+    props.setProperty("mail.store.protocol", MAIL_IMAPS);
     props.setProperty("mail.imaps.port", usedPort);
-    String provider = "imaps";
+    String provider = MAIL_IMAPS;
     // Connect to the server
     Session session = Session.getDefaultInstance(props, null);
     Store store = null;
@@ -227,8 +229,8 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   @Override
   public boolean isConnected(MailIntegrationSetting mailIntegrationSetting) {
     Properties props = new Properties();
-    props.setProperty("mail.store.protocol", "imaps");
-    String provider = "imaps";
+    props.setProperty("mail.store.protocol", MAIL_IMAPS);
+    String provider = MAIL_IMAPS;
     // Connect to the server
     Session session = Session.getDefaultInstance(props, null);
     Store store = null;
@@ -238,8 +240,6 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
       connectionStatus = store.isConnected();
     } catch (NoSuchProviderException nspe) {
       throw new IllegalArgumentException("invalid provider name");
-    } catch (MessagingException me) {
-      throw new IllegalStateException("messaging exception");
     }
     return connectionStatus;
   }
