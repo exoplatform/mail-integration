@@ -15,9 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 import MailIntegrationNotification from './components/MailIntegrationNotification.vue';
+import MailIntegrationNotificationContentItem from './components/MailIntegrationNotificationContentItem.vue';
 
 const components = {
   'mail-integration-notification': MailIntegrationNotification,
+  'mail-integration-notification-content-item': MailIntegrationNotificationContentItem,
 };
 
 for (const key in components) {
