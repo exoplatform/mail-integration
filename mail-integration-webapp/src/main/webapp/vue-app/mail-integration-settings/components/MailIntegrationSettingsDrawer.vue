@@ -240,7 +240,7 @@ export default {
     },
     checkConnection() {
       this.saving = true;
-      const connectionInformationEntity = {
+      const mailIntegrationSetting = {
         'emailName': this.emailAccount,
         'imapUrl': this.imapUrl,
         'port': this.port,
@@ -249,8 +249,8 @@ export default {
         'password': this.password,
       };
       if (!this.connectionSuccess) {
-        this.$mailIntegrationService.checkMailConnection(connectionInformationEntity).then((connection) => {
-          if (connection) {
+        this.$mailIntegrationService.checkMailConnection(mailIntegrationSetting).then((integrationSetting) => {
+          if (integrationSetting) {
             this.$emit('display-alert', this.$t('mailIntegration.settings.connection.successMessage'));
             this.connectionSuccess = true;
           }
@@ -266,8 +266,8 @@ export default {
             }, 200);
           });
       } else if (!this.modeEdit) {
-        this.$mailIntegrationService.createMailIntegrationSettings(connectionInformationEntity).then((connection) => {
-          if (connection) {
+        this.$mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting).then((integrationSetting) => {
+          if (integrationSetting) {
             this.close();
             this.$emit('mail-integration-settings-save-success');
           }

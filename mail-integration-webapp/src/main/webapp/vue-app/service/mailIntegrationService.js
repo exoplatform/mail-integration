@@ -31,14 +31,14 @@ export function checkMailConnection(connectionInformationEntity) {
   });
 }
 
-export function createMailIntegrationSettings(mailIntegrationSettings) {
+export function createMailIntegrationSetting(mailIntegrationSetting) {
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/mailIntegration`, {
     headers: {
       'Content-Type': 'application/json'
     },
     credentials: 'include',
     method: 'POST',
-    body: JSON.stringify(mailIntegrationSettings)
+    body: JSON.stringify(mailIntegrationSetting)
   }).then(resp => {
     if (resp && resp.ok) {
       return resp.text();

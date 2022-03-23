@@ -18,7 +18,7 @@ package org.exoplatform.mailintegration.utils;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingEntity;
+import org.exoplatform.mailintegration.rest.model.MailIntegrationRestEntity;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -34,24 +34,21 @@ public class MailIntegrationUtils {
   private MailIntegrationUtils() {
   }
 
-  public static String generateEncryptedToken(CodecInitializer codecInitializer, String tokenPlain, String remoteId) {
-    if (StringUtils.isBlank(remoteId)) {
-      throw new IllegalArgumentException("user remote id is mandatory");
-    }
+  public static String encode(CodecInitializer codecInitializer, String password) {
     try {
-      return codecInitializer.getCodec().encode(tokenPlain);
+      return codecInitializer.getCodec().encode(password);
     } catch (TokenServiceInitializationException e) {
-      LOG.warn("Error generating Token", e);
+      LOG.warn("Error when encoding", e);
       return null;
     }
   }
 
-  public static String decryptUserIdentity(CodecInitializer codecInitializer, String token) {
+  public static String decode(CodecInitializer codecInitializer, String password) {
     String tokenFlat;
     try {
-      tokenFlat = codecInitializer.getCodec().decode(token);
+      tokenFlat = codecInitializer.getCodec().decode(password);
     } catch (TokenServiceInitializationException e) {
-      LOG.warn("Error decrypting Token", e);
+      LOG.warn("Error when decoding", e);
       return null;
     }
     return tokenFlat;
@@ -67,7 +64,7 @@ public class MailIntegrationUtils {
     return ConversationState.getCurrent().getIdentity().getUserId();
   }
 
-  public static final MailIntegrationSetting toConnectionInformation(MailIntegrationSettingEntity mailIntegrationSettingEntity,
+  public static final MailIntegrationSetting toConnectionInformation(MailIntegrationRestEntity mailIntegrationSettingEntity,
                                                                      long userIdentityId) {
     MailIntegrationSetting connectionInformation = new MailIntegrationSetting();
     connectionInformation.setEmailName(mailIntegrationSettingEntity.getEmailName());

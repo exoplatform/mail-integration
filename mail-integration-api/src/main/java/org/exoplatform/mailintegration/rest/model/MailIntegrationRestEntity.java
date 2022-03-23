@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MailIntegrationSettingEntity {
+public class MailIntegrationRestEntity {
   private long   id;
 
   private String emailName;

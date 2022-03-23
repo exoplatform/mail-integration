@@ -68,7 +68,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   }
 
   @Override
-  public MailIntegrationSetting createMailIntegration(MailIntegrationSetting mailIntegrationSetting,
+  public MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting,
                                                       long userIdentityId) throws IllegalAccessException {
     if (userIdentityId <= 0) {
       throw new IllegalArgumentException("userIdentityId is mandatory");
@@ -85,7 +85,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     if (tokenPlain.isBlank()) {
       throw new IllegalArgumentException("Mail password setting is mandatory");
     }
-    String token = MailIntegrationUtils.generateEncryptedToken(codecInitializer, tokenPlain, userIdentity.getRemoteId());
+    String token = MailIntegrationUtils.encode(codecInitializer, tokenPlain);
     mailIntegrationSetting.setPassword(token);
     return mailIntegrationStorage.createMailIntegration(mailIntegrationSetting);
   }
@@ -127,7 +127,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     List<MailIntegrationSetting> mailIntegrationSettings =
                                                          mailIntegrationStorage.getMailIntegrationSettingsByUserId(userIdentityId);
     return mailIntegrationSettings.stream().map(m -> {
-      m.setPassword(MailIntegrationUtils.decryptUserIdentity(codecInitializer, m.getPassword()));
+      m.setPassword(MailIntegrationUtils.decode(codecInitializer, m.getPassword()));
       return m;
     }).collect(Collectors.toList());
   }
@@ -143,7 +143,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
         List<String> newMessages = new ArrayList<>();
         try {
           if (mailIntegrationSetting != null) {
-            mailIntegrationSetting.setPassword(MailIntegrationUtils.decryptUserIdentity(codecInitializer,
+            mailIntegrationSetting.setPassword(MailIntegrationUtils.encode(codecInitializer,
                                                                                         mailIntegrationSetting.getPassword()));
             newMessages = getNewMessages(mailIntegrationSetting);
             if (!newMessages.isEmpty()) {
@@ -209,8 +209,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
               + messageId);
     }
     MailIntegrationSetting mailIntegrationSetting = getMailIntegrationSettingById(mailIntegrationSettingId);
-    mailIntegrationSetting.setPassword(MailIntegrationUtils.decryptUserIdentity(codecInitializer,
-                                                                                mailIntegrationSetting.getPassword()));
+    mailIntegrationSetting.setPassword(MailIntegrationUtils.decode(codecInitializer, mailIntegrationSetting.getPassword()));
     Store store = imapConnect(mailIntegrationSetting);
     Folder inbox;
     MessageRestEntity messageRestEntity = null;

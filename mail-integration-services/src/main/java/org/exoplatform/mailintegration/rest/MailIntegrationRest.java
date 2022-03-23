@@ -20,7 +20,7 @@ import io.swagger.annotations.*;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingEntity;
+import org.exoplatform.mailintegration.rest.model.MailIntegrationRestEntity;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
 import org.exoplatform.mailintegration.service.MailIntegrationService;
 import org.exoplatform.mailintegration.utils.MailIntegrationUtils;
@@ -58,15 +58,15 @@ public class MailIntegrationRest implements ResourceContainer {
   @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
           @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),})
-  public Response createMailIntegrationConnection(@ApiParam(value = "Connection information object to create", required = true)
-                                                          MailIntegrationSettingEntity mailIntegrationSettingEntity) {
+  public Response createMailIntegrationSetting(@ApiParam(value = "Connection information object to create", required = true)
+                                                          MailIntegrationRestEntity mailIntegrationSettingEntity) {
     if (mailIntegrationSettingEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
     try {
       MailIntegrationSetting mailIntegrationSetting = MailIntegrationUtils.toConnectionInformation(mailIntegrationSettingEntity, userIdentityId);
-      MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegration(mailIntegrationSetting, userIdentityId);
+      MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting, userIdentityId);
       return Response.ok(createdMailIntegrationSetting).build();
     } catch (IllegalAccessException e) {
       LOG.warn("User '{}' attempts to create a non authorized mail integration", e);
@@ -87,7 +87,7 @@ public class MailIntegrationRest implements ResourceContainer {
           @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),})
   public Response checkMailConnection(@ApiParam(value = "Connection information object to create", required = true)
-                                      MailIntegrationSettingEntity mailIntegrationSettingEntity) {
+                                              MailIntegrationRestEntity mailIntegrationSettingEntity) {
     if (mailIntegrationSettingEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }

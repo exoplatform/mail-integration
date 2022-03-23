@@ -29,7 +29,7 @@ public interface MailIntegrationService {
    * @return created {@link MailIntegrationSetting} with generated technical identifier
    * @throws IllegalAccessException
    */
-  MailIntegrationSetting createMailIntegration(MailIntegrationSetting connectionInformation,
+  MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting,
                                                long identityId) throws IllegalAccessException;
 
   /**
