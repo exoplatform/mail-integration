@@ -21,7 +21,7 @@
         xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
         xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
-    <import>jar:/conf/exo.mail.service-dependencies-configuration.xml</import>
-    <import>jar:/conf/exo.mail.service-local-configuration.xml</import>
+    <import>jar:/conf/exo.mailIntegration.service-dependencies-configuration.xml</import>
+    <import>jar:/conf/exo.mailIntegration.service-local-configuration.xml</import>
 
 </configuration>

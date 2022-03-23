@@ -24,7 +24,7 @@ import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
 import org.exoplatform.services.naming.InitialContextInitializer;
 
-public class MailIntegrationTest extends TestCase {
+public class MailIntegrationDaoTest extends TestCase {
   private PortalContainer    container;
 
   private String             emailName  = "user1@exo.tn";
@@ -47,30 +47,32 @@ public class MailIntegrationTest extends TestCase {
   protected void setUp() throws Exception {
     RootContainer rootContainer = RootContainer.getInstance();
     rootContainer.getComponentInstanceOfType(InitialContextInitializer.class);
-
     container = PortalContainer.getInstance();
     mailIntegrationDAO = container.getComponentInstanceOfType(MailIntegrationDAO.class);
     ExoContainerContext.setCurrentContainer(container);
     begin();
   }
 
-  public void testCreatePoll() {
+  public void testCreateMailIntegrationSetting() {
+    //Given
+    MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
+    
     // When
-    MailIntegrationSettingEntity connectionInformationEntity = createMailIntegrationSettingEntityy();
-
+    mailIntegrationSettingEntity = mailIntegrationDAO.create(mailIntegrationSettingEntity);
+    
     // Then
-    assertNotNull(connectionInformationEntity);
-    assertNotNull(connectionInformationEntity.getId());
-    assertEquals(emailName, connectionInformationEntity.getEmailName());
-    assertEquals(imapUrl, connectionInformationEntity.getImapUrl());
-    assertEquals(port, connectionInformationEntity.getPort());
-    assertEquals(encryption, connectionInformationEntity.getEncryption());
-    assertEquals(account, connectionInformationEntity.getAccount());
-    assertEquals(password, connectionInformationEntity.getPassword());
-    assertEquals(creatorId, connectionInformationEntity.getCreatorId());
+    assertNotNull(mailIntegrationSettingEntity);
+    assertNotNull(mailIntegrationSettingEntity.getId());
+    assertEquals(emailName, mailIntegrationSettingEntity.getEmailName());
+    assertEquals(imapUrl, mailIntegrationSettingEntity.getImapUrl());
+    assertEquals(port, mailIntegrationSettingEntity.getPort());
+    assertEquals(encryption, mailIntegrationSettingEntity.getEncryption());
+    assertEquals(account, mailIntegrationSettingEntity.getAccount());
+    assertEquals(password, mailIntegrationSettingEntity.getPassword());
+    assertEquals(creatorId, mailIntegrationSettingEntity.getCreatorId());
   }
 
-  protected MailIntegrationSettingEntity createMailIntegrationSettingEntityy() {
+  protected MailIntegrationSettingEntity createMailIntegrationSettingEntity() {
     MailIntegrationSettingEntity mailIntegrationSettingEntity = new MailIntegrationSettingEntity();
     mailIntegrationSettingEntity.setEmailName(emailName);
     mailIntegrationSettingEntity.setImapUrl(imapUrl);
@@ -79,7 +81,7 @@ public class MailIntegrationTest extends TestCase {
     mailIntegrationSettingEntity.setAccount(account);
     mailIntegrationSettingEntity.setPassword(password);
     mailIntegrationSettingEntity.setCreatorId(creatorId);
-    return mailIntegrationDAO.create(mailIntegrationSettingEntity);
+    return mailIntegrationSettingEntity;
   }
 
   @Override
@@ -94,5 +96,4 @@ public class MailIntegrationTest extends TestCase {
   private void end() {
     RequestLifeCycle.end();
   }
-
 }

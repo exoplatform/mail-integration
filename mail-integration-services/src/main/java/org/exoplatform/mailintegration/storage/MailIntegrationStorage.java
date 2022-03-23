@@ -19,7 +19,6 @@ package org.exoplatform.mailintegration.storage;
 import org.exoplatform.mailintegration.dao.MailIntegrationDAO;
 import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.model.MailIntegrationUserSetting;
 import org.exoplatform.mailintegration.utils.EntityMapper;
 
 import java.util.List;
@@ -32,8 +31,9 @@ public class MailIntegrationStorage {
     this.mailIntegrationDAO = mailIntegrationDAO;
   }
 
-  public MailIntegrationSetting createMailIntegration(MailIntegrationSetting connectionInformation) {
-    MailIntegrationSettingEntity mailIntegrationSettingEntity = EntityMapper.toMailIntegrationSettingEntity(connectionInformation);
+  public MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) {
+    MailIntegrationSettingEntity mailIntegrationSettingEntity =
+                                                              EntityMapper.toMailIntegrationSettingEntity(mailIntegrationSetting);
     mailIntegrationSettingEntity = mailIntegrationDAO.create(mailIntegrationSettingEntity);
     return EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity);
   }
@@ -46,10 +46,10 @@ public class MailIntegrationStorage {
                                          .collect(Collectors.toList());
   }
 
-  public List<MailIntegrationUserSetting> getMailIntegrationUserSettings() {
+  public List<MailIntegrationSetting> getMailIntegrationSettings() {
     List<MailIntegrationSettingEntity> mailIntegrationSettingEntities = mailIntegrationDAO.findAll();
     return mailIntegrationSettingEntities.stream()
-                                         .map(EntityMapper::fromMailIntegrationUserSettingEntity)
+                                         .map(EntityMapper::fromMailIntegrationSettingEntity)
                                          .collect(Collectors.toList());
   }
 
@@ -57,7 +57,8 @@ public class MailIntegrationStorage {
     return EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationDAO.find(mailIntegrationSettingId));
   }
 
-  public List<MailIntegrationSetting> getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(long mailIntegrationSettingId, long userId) {
+  public List<MailIntegrationSetting> getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(long mailIntegrationSettingId,
+                                                                                                   long userId) {
     List<MailIntegrationSettingEntity> mailIntegrationSettingEntities =
                                                                       mailIntegrationDAO.findMailIntegrationSettingsByIdAndUserId(mailIntegrationSettingId,
                                                                                                                                   userId);

@@ -19,22 +19,28 @@ package org.exoplatform.mailintegration.service;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.services.user.UserStateService;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.web.security.codec.CodecInitializer;
+
 import org.hibernate.ObjectNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 
 public abstract class BaseMailIntegrationTest {
-  protected IdentityManager        identityManager;
-
   protected Identity               user1Identity;
 
   protected PortalContainer        container;
 
   protected MailIntegrationService mailIntegrationService;
 
+  protected IdentityManager        identityManager;
+
+  protected UserStateService       userStateService;
+
+  protected CodecInitializer       codecInitializer;
 
   @Before
   public void setUp() throws ObjectNotFoundException {
@@ -66,5 +72,4 @@ public abstract class BaseMailIntegrationTest {
   protected void end() {
     RequestLifeCycle.end();
   }
-
 }

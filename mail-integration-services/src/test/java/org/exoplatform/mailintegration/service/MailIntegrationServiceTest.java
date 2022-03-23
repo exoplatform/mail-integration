@@ -25,27 +25,27 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
 
   @Test
   public void testCreateConnectionInformation() throws IllegalAccessException {
-    MailIntegrationSetting connectionInformation = new MailIntegrationSetting();
-    connectionInformation.setEmailName("emailName");
-    connectionInformation.setImapUrl("imapUrl");
-    connectionInformation.setPort(123);
-    connectionInformation.setEncryption("encryption");
-    connectionInformation.setAccount("account");
-    connectionInformation.setPassword("password");
-    connectionInformation.setCreatorId(Long.parseLong(user1Identity.getId()));
+    MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
+    mailIntegrationSetting.setEmailName("emailName");
+    mailIntegrationSetting.setImapUrl("imapUrl");
+    mailIntegrationSetting.setPort(123);
+    mailIntegrationSetting.setEncryption("encryption");
+    mailIntegrationSetting.setAccount("account");
+    mailIntegrationSetting.setPassword("password");
+    mailIntegrationSetting.setCreatorId(Long.parseLong(user1Identity.getId()));
 
     // When
-    MailIntegrationSetting createdConnection = mailIntegrationService.createMailIntegrationSetting(connectionInformation,
+    MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting,
                                                                                            Long.parseLong(user1Identity.getId()));
 
-    assertNotNull(createdConnection);
-    assertEquals(connectionInformation.getEmailName(), createdConnection.getEmailName());
-    assertEquals(connectionInformation.getImapUrl(), createdConnection.getImapUrl());
-    assertEquals(connectionInformation.getPort(), createdConnection.getPort());
-    assertEquals(connectionInformation.getEncryption(), createdConnection.getEncryption());
-    assertEquals(connectionInformation.getAccount(), createdConnection.getAccount());
-    assertEquals(connectionInformation.getPassword(), createdConnection.getPassword());
-    assertEquals(connectionInformation.getCreatorId(), createdConnection.getCreatorId());
+    assertNotNull(createdMailIntegrationSetting);
+    assertEquals(mailIntegrationSetting.getEmailName(), createdMailIntegrationSetting.getEmailName());
+    assertEquals(mailIntegrationSetting.getImapUrl(), createdMailIntegrationSetting.getImapUrl());
+    assertEquals(mailIntegrationSetting.getPort(), createdMailIntegrationSetting.getPort());
+    assertEquals(mailIntegrationSetting.getEncryption(), createdMailIntegrationSetting.getEncryption());
+    assertEquals(mailIntegrationSetting.getAccount(), createdMailIntegrationSetting.getAccount());
+    assertEquals(mailIntegrationSetting.getPassword(), createdMailIntegrationSetting.getPassword());
+    assertEquals(mailIntegrationSetting.getCreatorId(), createdMailIntegrationSetting.getCreatorId());
 
   }
 }

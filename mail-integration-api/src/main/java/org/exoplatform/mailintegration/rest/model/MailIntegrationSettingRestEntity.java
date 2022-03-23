@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailintegration.model;
+package org.exoplatform.mailintegration.rest.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,11 +23,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MailIntegrationUserSetting {
-  
-  long id;
-  
-  long userId;
-  
-  long mailIntegrationSettingId;
+public class MailIntegrationSettingRestEntity {
+  private long   id;
+
+  private String emailName;
+
+  private String imapUrl;
+
+  private long   port;
+
+  private String encryption;
+
+  private String account;
+
+  private String password;
 }

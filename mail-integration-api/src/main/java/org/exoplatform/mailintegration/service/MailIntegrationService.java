@@ -25,38 +25,31 @@ import java.util.List;
 public interface MailIntegrationService {
   /**
    * @param connectionInformation {@link MailIntegrationSetting} object to create
-   * @param identityId User identity creating the poll
+   * @param identityId User identity creating the mail integration setting
    * @return created {@link MailIntegrationSetting} with generated technical identifier
    * @throws IllegalAccessException
    */
   MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting,
                                                long identityId) throws IllegalAccessException;
+  
+  /**
+   * Retrieves mail integration setting by its technical user identity identifier.
+   *
+   * @param currentIdentityId User identity  the mail integration setting
+   * @return A {@link MailIntegrationSetting} object
+   * @throws IllegalAccessException when user is not authorized to get mail integration settings
+   */
+  List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long currentIdentityId) throws IllegalAccessException;
 
   /**
    *
    * @param mailIntegrationSetting {@link MailIntegrationSetting} object to connect
    * @return
    */
-  Store imapConnect(MailIntegrationSetting mailIntegrationSetting);
+  Store imapconnect(MailIntegrationSetting mailIntegrationSetting);
 
-  /**
-   * Retrieves connection information by its technical user identity identifier.
-   *
-   * @param currentIdentityId User identity creating the poll
-   * @return A {@link MailIntegrationSetting} object
-   * @throws IllegalAccessException when user is not authorized to get a poll options
-   */
-  List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long currentIdentityId) throws IllegalAccessException;
 
   void sendMailIntegrationNotifications();
 
   MessageRestEntity getMessageById(long mailIntegrationSettingId, String messageId, long identityId) throws IllegalAccessException;
-
-  /**
-   * Check if user already connected
-   * 
-   * @param mailIntegrationSetting
-   * @return flag to identify connection status
-   */
-  boolean isConnected(MailIntegrationSetting mailIntegrationSetting);
 }

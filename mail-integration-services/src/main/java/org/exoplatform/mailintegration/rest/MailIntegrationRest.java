@@ -16,25 +16,39 @@
  */
 package org.exoplatform.mailintegration.rest;
 
-import io.swagger.annotations.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.security.RolesAllowed;
+import javax.mail.Store;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang.StringUtils;
+
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.rest.model.MailIntegrationRestEntity;
+import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingRestEntity;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
 import org.exoplatform.mailintegration.service.MailIntegrationService;
 import org.exoplatform.mailintegration.utils.MailIntegrationUtils;
+import org.exoplatform.mailintegration.utils.RestEntityBuilder;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.social.core.manager.IdentityManager;
 
-import javax.annotation.security.RolesAllowed;
-import javax.mail.Store;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.List;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/v1/mailIntegration")
 @Api(value = "/v1/mailIntegration", description = "Managing mail Integration") // NOSONAR
@@ -54,91 +68,82 @@ public class MailIntegrationRest implements ResourceContainer {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @ApiOperation(value = "Create a new mail integration", httpMethod = "POST", response = Response.class, consumes = "application/json")
+  @ApiOperation(value = "Create a mail integration setting", httpMethod = "POST", response = Response.class, consumes = "application/json")
   @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
           @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),})
-  public Response createMailIntegrationSetting(@ApiParam(value = "Connection information object to create", required = true)
-                                                          MailIntegrationRestEntity mailIntegrationSettingEntity) {
+  public Response createMailIntegrationSetting(@ApiParam(value = "Mail integration setting object to create", required = true)
+                                                          MailIntegrationSettingRestEntity mailIntegrationSettingEntity) {
     if (mailIntegrationSettingEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
     try {
-      MailIntegrationSetting mailIntegrationSetting = MailIntegrationUtils.toConnectionInformation(mailIntegrationSettingEntity, userIdentityId);
+      MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingEntity, userIdentityId);
       MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting, userIdentityId);
       return Response.ok(createdMailIntegrationSetting).build();
     } catch (IllegalAccessException e) {
       LOG.warn("User '{}' attempts to create a non authorized mail integration", e);
       return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
+      LOG.error("Error when creating mail integration setting ", e);
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+  
+  @GET
+  @Path("mailIntegrationSettings")
+  @RolesAllowed("users")
+  @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Get mail integration settings", httpMethod = "GET", response = Response.class, notes = "This gets the mail integration settings of the authenticated user")
+  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
+          @ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
+          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
+          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"), })
+  public Response getMailIntegrationSettings() {
+    long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
+    try {
+      List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationService.getMailIntegrationSettingsByUserId(userIdentityId);
+      List<MailIntegrationSettingRestEntity> mailIntegrationSettigRestEntities = mailIntegrationSettings.stream().map(RestEntityBuilder::fromMailIntegrationSetting).collect(Collectors.toList());
+      return Response.ok(mailIntegrationSettigRestEntities).build();
+    } catch (IllegalAccessException e) {
+      LOG.warn("User '{}' attempts to get a non authorized mail integration settings", userIdentityId, e);
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    } catch (Exception e) {
+      LOG.error("Error when getting mail integration settings ", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
 
-  @Path("checkMailConnection")
+  @Path("connect")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.TEXT_PLAIN)
   @RolesAllowed("users")
-  @ApiOperation(value = "Check mail connection", httpMethod = "POST", response = Response.class, consumes = "application/json")
+  @ApiOperation(value = "Check mail integration connection", httpMethod = "POST", response = Response.class, consumes = "application/json")
   @ApiResponses(value = {
           @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),})
-  public Response checkMailConnection(@ApiParam(value = "Connection information object to create", required = true)
-                                              MailIntegrationRestEntity mailIntegrationSettingEntity) {
-    if (mailIntegrationSettingEntity == null) {
+  public Response connect(@ApiParam(value = "Connection information object to create", required = true)
+                                              MailIntegrationSettingRestEntity mailIntegrationSettingRestEntity) {
+    if (mailIntegrationSettingRestEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
 
     try {
-      MailIntegrationSetting mailIntegrationSetting = MailIntegrationUtils.toConnectionInformation(mailIntegrationSettingEntity, userIdentityId);
-      boolean connectionStatus = mailIntegrationService.isConnected(mailIntegrationSetting);
-      String storedUserEmail = null;
-      if (!connectionStatus) {
-        Store connection = mailIntegrationService.imapConnect(mailIntegrationSetting);
-        storedUserEmail = connection.getURLName().getUsername();
-      } else {
-        storedUserEmail = "already connected";
-      }
-      return Response.ok(storedUserEmail).type(MediaType.TEXT_PLAIN).build();
+      MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingRestEntity, userIdentityId);
+      Store connectedStore = mailIntegrationService.imapconnect(mailIntegrationSetting);
+      return Response.ok(connectedStore != null).type(MediaType.TEXT_PLAIN).build();
     } catch (IllegalArgumentException e) {
       LOG.warn("User '{}' attempts to create a non authorized mail integration", userIdentityId, e);
       return Response.status(Response.Status.NO_CONTENT).build();
     } catch (Exception e) {
-      LOG.warn("An internal error when make connection", e);
+      LOG.error("Error when checking mail connection ", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
-
-  @GET
-  @Path("mailIntegrationSettings")
-  @RolesAllowed("users")
-  @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Get a poll", httpMethod = "GET", response = Response.class, notes = "This gets the poll with the given id if the authenticated user is a member of the space.")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"), })
-  public Response getMailIntegrationSettingsByUserId() {
-    long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
-    try {
-      List<MailIntegrationSetting> connectionInformationList = mailIntegrationService.getMailIntegrationSettingsByUserId(userIdentityId);
-      if (connectionInformationList == null) {
-        return Response.status(Response.Status.NOT_FOUND).build();
-      }
-      return Response.ok(connectionInformationList).build();
-    } catch (IllegalAccessException e) {
-      LOG.warn("User '{}' attempts to get a non authorized poll", userIdentityId, e);
-      return Response.status(Response.Status.UNAUTHORIZED).build();
-    } catch (Exception e) {
-      LOG.warn("An internal error when getting mail integration settings", e);
-      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-    }
-  }
-
 
   @GET
   @Path("/{mailntegrationSettingId}/message/{id}")
@@ -165,7 +170,7 @@ public class MailIntegrationRest implements ResourceContainer {
       LOG.warn("User '{}' attempts to get a non authorized message", userIdentityId, e);
       return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
-      LOG.warn("An internal error when getting message", e);
+      LOG.error("Error when getting message ", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }

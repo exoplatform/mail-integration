@@ -16,7 +16,6 @@
  */
 package org.exoplatform.mailintegration.rest.model;
 
-
 import java.util.Date;
 
 import lombok.AllArgsConstructor;

@@ -18,20 +18,22 @@ package org.exoplatform.mailintegration.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.exoplatform.mailintegration.dao.MailIntegrationDAO;
-import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
-import org.exoplatform.mailintegration.utils.EntityMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import org.exoplatform.mailintegration.dao.MailIntegrationDAO;
+import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
+import org.exoplatform.mailintegration.model.MailIntegrationSetting;
+import org.exoplatform.mailintegration.utils.EntityMapper;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({ "javax.management.*", "javax.xml.*", "org.xml.*" })
@@ -50,33 +52,32 @@ public class MailIntegrationStorageTest {
   @Test
   public void testCreatePoll() throws Exception { // NOSONAR
     // Given
-    org.exoplatform.mailintegration.model.MailIntegrationSetting connectionInformation = createConnectionInformation();
+    MailIntegrationSetting mailIntegrationSetting = createMailIntegrationSetting();
     MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
+    when(mailIntegrationDAO.create(Mockito.any())).thenReturn(mailIntegrationSettingEntity);
+    PowerMockito.mockStatic(EntityMapper.class);
+    when(EntityMapper.toMailIntegrationSettingEntity(mailIntegrationSetting)).thenReturn(mailIntegrationSettingEntity);
+    when(EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity)).thenReturn(mailIntegrationSetting);
 
     // When
-    when(mailIntegrationDAO.create(anyObject())).thenReturn(mailIntegrationSettingEntity);
-    PowerMockito.mockStatic(EntityMapper.class);
-    when(EntityMapper.toMailIntegrationSettingEntity(connectionInformation)).thenReturn(mailIntegrationSettingEntity);
-    when(EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity)).thenReturn(connectionInformation);
+    MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationStorage.createMailIntegrationSetting(mailIntegrationSetting);
 
     // Then
-    org.exoplatform.mailintegration.model.MailIntegrationSetting connectionCreated = mailIntegrationStorage.createMailIntegration(connectionInformation);
-    assertNotNull(connectionCreated);
-    assertEquals(1L, connectionCreated.getId());
-    assertEquals(connectionInformation, connectionCreated);
+    assertNotNull(createdMailIntegrationSetting);
+    assertEquals(1L, createdMailIntegrationSetting.getId());
   }
 
-  protected org.exoplatform.mailintegration.model.MailIntegrationSetting createConnectionInformation() {
-    org.exoplatform.mailintegration.model.MailIntegrationSetting connectionInformation = new org.exoplatform.mailintegration.model.MailIntegrationSetting();
-    connectionInformation.setId(1L);
-    connectionInformation.setEmailName("emailName");
-    connectionInformation.setImapUrl("imapUrl");
-    connectionInformation.setPort(123);
-    connectionInformation.setEncryption("encryption");
-    connectionInformation.setAccount("account");
-    connectionInformation.setPassword("password");
-    connectionInformation.setCreatorId(1L);
-    return connectionInformation;
+  protected MailIntegrationSetting createMailIntegrationSetting() {
+    MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
+    mailIntegrationSetting.setId(1L);
+    mailIntegrationSetting.setEmailName("emailName");
+    mailIntegrationSetting.setImapUrl("imapUrl");
+    mailIntegrationSetting.setPort(123);
+    mailIntegrationSetting.setEncryption("encryption");
+    mailIntegrationSetting.setAccount("account");
+    mailIntegrationSetting.setPassword("password");
+    mailIntegrationSetting.setCreatorId(1L);
+    return mailIntegrationSetting;
   }
 
   protected MailIntegrationSettingEntity createMailIntegrationSettingEntity() {

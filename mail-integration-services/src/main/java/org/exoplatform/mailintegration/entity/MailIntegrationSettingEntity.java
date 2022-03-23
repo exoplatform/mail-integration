@@ -24,10 +24,8 @@ import java.io.Serializable;
 @Entity(name = "MailIntegrationSetting")
 @ExoEntity
 @Table(name = "MAIL_INTEGRATION_SETTING")
-@NamedQueries({
-    @NamedQuery(name = "MailIntegrationSetting.findMailIntegrationSettingsByUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.creatorId = :creatorId"),
-    @NamedQuery(name = "MailIntegrationSetting.findMailIntegrationSettingsByIdAndUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.id = :mailSettingId AND mailIntegrationSetting.creatorId = :creatorId")
-})
+@NamedQuery(name = "MailIntegrationSetting.findMailIntegrationSettingsByUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.creatorId = :creatorId")
+@NamedQuery(name = "MailIntegrationSetting.findMailIntegrationSettingsByIdAndUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.id = :mailSettingId AND mailIntegrationSetting.creatorId = :creatorId")
 public class MailIntegrationSettingEntity implements Serializable {
   private static final long serialVersionUID = 3783783343530708418L;
 

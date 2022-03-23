@@ -18,7 +18,6 @@ package org.exoplatform.mailintegration.utils;
 
 import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.model.MailIntegrationUserSetting;
 
 public class EntityMapper {
   private EntityMapper() {
@@ -44,7 +43,9 @@ public class EntityMapper {
           return null;
       }
       MailIntegrationSettingEntity mailIntegrationSettingEntity = new MailIntegrationSettingEntity();
-      mailIntegrationSettingEntity.setId(mailIntegrationSetting.getId() == 0 ? null : mailIntegrationSetting.getId());
+      if(mailIntegrationSetting.getId() != 0) {
+        mailIntegrationSettingEntity.setId(mailIntegrationSetting.getId());
+      }
       mailIntegrationSettingEntity.setEmailName(mailIntegrationSetting.getEmailName());
       mailIntegrationSettingEntity.setImapUrl(mailIntegrationSetting.getImapUrl());
       mailIntegrationSettingEntity.setPort(mailIntegrationSetting.getPort());
@@ -54,15 +55,4 @@ public class EntityMapper {
       mailIntegrationSettingEntity.setCreatorId(mailIntegrationSetting.getCreatorId());
       return mailIntegrationSettingEntity;
   }
-
-  public static MailIntegrationUserSetting fromMailIntegrationUserSettingEntity(MailIntegrationSettingEntity mailIntegrationSettingEntity) {
-    if (mailIntegrationSettingEntity == null) {
-      return null;
-    }
-    return new MailIntegrationUserSetting(mailIntegrationSettingEntity.getId(),
-                                          mailIntegrationSettingEntity.getCreatorId(),
-                                          mailIntegrationSettingEntity.getId());
-
-  }
-
 }

@@ -16,9 +16,7 @@
  */
 package org.exoplatform.mailintegration.utils;
 
-import org.apache.commons.lang.StringUtils;
-import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.rest.model.MailIntegrationRestEntity;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -29,29 +27,29 @@ import org.exoplatform.web.security.codec.CodecInitializer;
 import org.exoplatform.web.security.security.TokenServiceInitializationException;
 
 public class MailIntegrationUtils {
-  private static Log          LOG       = ExoLogger.getLogger(MailIntegrationUtils.class);
+  private static final Log LOG = ExoLogger.getLogger(MailIntegrationUtils.class);
 
   private MailIntegrationUtils() {
   }
 
-  public static String encode(CodecInitializer codecInitializer, String password) {
+  public static String encode(String password) {
     try {
+      CodecInitializer codecInitializer = CommonsUtils.getService(CodecInitializer.class);
       return codecInitializer.getCodec().encode(password);
     } catch (TokenServiceInitializationException e) {
-      LOG.warn("Error when encoding", e);
+      LOG.warn("Error when encoding password", e);
       return null;
     }
   }
 
-  public static String decode(CodecInitializer codecInitializer, String password) {
-    String tokenFlat;
+  public static String decode(String password) {
     try {
-      tokenFlat = codecInitializer.getCodec().decode(password);
+      CodecInitializer codecInitializer = CommonsUtils.getService(CodecInitializer.class);
+      return codecInitializer.getCodec().decode(password);
     } catch (TokenServiceInitializationException e) {
-      LOG.warn("Error when decoding", e);
+      LOG.warn("Error when decoding password", e);
       return null;
     }
-    return tokenFlat;
   }
 
   public static final long getCurrentUserIdentityId(IdentityManager identityManager) {
@@ -62,18 +60,5 @@ public class MailIntegrationUtils {
 
   public static final String getCurrentUser() {
     return ConversationState.getCurrent().getIdentity().getUserId();
-  }
-
-  public static final MailIntegrationSetting toConnectionInformation(MailIntegrationRestEntity mailIntegrationSettingEntity,
-                                                                     long userIdentityId) {
-    MailIntegrationSetting connectionInformation = new MailIntegrationSetting();
-    connectionInformation.setEmailName(mailIntegrationSettingEntity.getEmailName());
-    connectionInformation.setImapUrl(mailIntegrationSettingEntity.getImapUrl());
-    connectionInformation.setPort(mailIntegrationSettingEntity.getPort());
-    connectionInformation.setEncryption(mailIntegrationSettingEntity.getEncryption());
-    connectionInformation.setAccount(mailIntegrationSettingEntity.getAccount());
-    connectionInformation.setPassword(mailIntegrationSettingEntity.getPassword());
-    connectionInformation.setCreatorId(userIdentityId);
-    return connectionInformation;
   }
 }
