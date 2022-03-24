@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
-import javax.mail.Store;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -80,11 +79,8 @@ public class MailIntegrationRest implements ResourceContainer {
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
     try {
       MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingEntity, userIdentityId);
-      MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting, userIdentityId);
+      MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting);
       return Response.ok(createdMailIntegrationSetting).build();
-    } catch (IllegalAccessException e) {
-      LOG.warn("User '{}' attempts to create a non authorized mail integration", e);
-      return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
       LOG.error("Error when creating mail integration setting ", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -106,9 +102,6 @@ public class MailIntegrationRest implements ResourceContainer {
       List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationService.getMailIntegrationSettingsByUserId(userIdentityId);
       List<MailIntegrationSettingRestEntity> mailIntegrationSettigRestEntities = mailIntegrationSettings.stream().map(RestEntityBuilder::fromMailIntegrationSetting).collect(Collectors.toList());
       return Response.ok(mailIntegrationSettigRestEntities).build();
-    } catch (IllegalAccessException e) {
-      LOG.warn("User '{}' attempts to get a non authorized mail integration settings", userIdentityId, e);
-      return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
       LOG.error("Error when getting mail integration settings ", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -134,7 +127,7 @@ public class MailIntegrationRest implements ResourceContainer {
 
     try {
       MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingRestEntity, userIdentityId);
-      mailIntegrationService.imapconnect(mailIntegrationSetting);
+      mailIntegrationService.connect(mailIntegrationSetting);
       return Response.ok().build();
     } catch (IllegalArgumentException e) {
       LOG.warn("User '{}' attempts to create a non authorized mail integration", userIdentityId, e);

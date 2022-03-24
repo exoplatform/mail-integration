@@ -72,35 +72,19 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   }
 
   @Override
-  public MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting,
-                                                             long userIdentityId) throws IllegalAccessException {
-    if (userIdentityId <= 0) {
-      throw new IllegalArgumentException("userIdentityId is mandatory");
-    }
-
-    Identity userIdentity = identityManager.getIdentity(String.valueOf(userIdentityId));
-    if (userIdentity == null) {
-      throw new IllegalAccessException("User '" + userIdentityId + "' doesn't exist");
-    }
-    String password = mailIntegrationSetting.getPassword();
-    if (password.isBlank()) {
-      throw new IllegalArgumentException("Mail password setting is mandatory");
-    }
-    String encodedPassword = MailIntegrationUtils.encode(password);
+  public MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) {
+    String encodedPassword = MailIntegrationUtils.encode(mailIntegrationSetting.getPassword());
     mailIntegrationSetting.setPassword(encodedPassword);
     return mailIntegrationStorage.createMailIntegrationSetting(mailIntegrationSetting);
   }
 
   @Override
-  public List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId) throws IllegalAccessException {
-    if (userIdentityId <= 0) {
-      throw new IllegalArgumentException("userIdentityId is mandatory");
-    }
+  public List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId) {
     return mailIntegrationStorage.getMailIntegrationSettingsByUserId(userIdentityId);
   }
 
   @Override
-  public Store imapconnect(MailIntegrationSetting mailIntegrationSetting) {
+  public Store connect(MailIntegrationSetting mailIntegrationSetting) {
     Properties props = new Properties();
     String usedPort = String.valueOf(mailIntegrationSetting.getPort());
     if (StringUtils.equals(mailIntegrationSetting.getEncryption(), MAIL_SSL)) {
@@ -160,17 +144,15 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   public MessageRestEntity getMessageById(long mailIntegrationSettingId,
                                           String messageId,
                                           long identityId) throws IllegalAccessException {
-    // TODO to be checked if necessary
-    List<MailIntegrationSetting> mailIntegrationSettings =
-                                                         mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSettingId,
+    List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSettingId,
                                                                                                                                              identityId);
-    if (!mailIntegrationSettings.isEmpty()) {
-      throw new IllegalAccessException("User " + identityId + "is not allowed to get a message with id " + messageId);
+    if (mailIntegrationSettings.isEmpty()) {
+      throw new IllegalAccessException("User " + identityId + " is not allowed to get mail integration settings with id " + mailIntegrationSettingId);
     }
     MailIntegrationSetting mailIntegrationSetting =
                                                   mailIntegrationStorage.getMailIntegrationSettingById(mailIntegrationSettingId);
     mailIntegrationSetting.setPassword(MailIntegrationUtils.decode(mailIntegrationSetting.getPassword()));
-    Store store = imapconnect(mailIntegrationSetting);
+    Store store = connect(mailIntegrationSetting);
     Folder inbox;
     MessageRestEntity messageRestEntity = null;
     try {
@@ -189,7 +171,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
 
   private List<String> getNewMessages(MailIntegrationSetting mailIntegrationSetting) throws MessagingException {
 
-    Store store = imapconnect(mailIntegrationSetting);
+    Store store = connect(mailIntegrationSetting);
     List<String> newMessages = new ArrayList<>();
 
     Folder inbox = store.getFolder("INBOX");
@@ -213,7 +195,6 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     return newMessages;
   }
 
-  // TODO utils ?
   private boolean isNewMessage(Date messageSentDate, Date now) {
     String mailIntegrationNotificationJobPeriod = System.getProperty("exo.mailIntegration.MailIntegrationNotificationJob.period",
                                                                      "120000");

@@ -35,8 +35,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
     mailIntegrationSetting.setUserId(Long.parseLong(user1Identity.getId()));
 
     // When
-    MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting,
-                                                                                           Long.parseLong(user1Identity.getId()));
+    MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting);
 
     assertNotNull(createdMailIntegrationSetting);
     assertEquals(mailIntegrationSetting.getEmailName(), createdMailIntegrationSetting.getEmailName());

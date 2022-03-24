@@ -24,32 +24,46 @@ import java.util.List;
 
 public interface MailIntegrationService {
   /**
+   * Creates a new mail integration setting
+   *
    * @param mailIntegrationSetting {@link MailIntegrationSetting} object to create
-   * @param identityId User identity creating the mail integration setting
    * @return created {@link MailIntegrationSetting} with generated technical identifier
-   * @throws IllegalAccessException
    */
-  MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting,
-                                               long identityId) throws IllegalAccessException;
-  
+  MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting);
+
   /**
    * Retrieves mail integration setting by its technical user identity identifier.
    *
-   * @param currentIdentityId User identity  the mail integration setting
-   * @return A {@link MailIntegrationSetting} object
-   * @throws IllegalAccessException when user is not authorized to get mail integration settings
+   * @param userIdentityId User identity owner of the mail integration setting
+   * 
+   * @return A {@link List} of {@link MailIntegrationSetting} objects
    */
-  List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long currentIdentityId) throws IllegalAccessException;
+  List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId);
 
   /**
+   * Connect to a mail integration setting
    *
    * @param mailIntegrationSetting {@link MailIntegrationSetting} object to connect
-   * @return
+   * @return connected store
    */
-  Store imapconnect(MailIntegrationSetting mailIntegrationSetting);
+  Store connect(MailIntegrationSetting mailIntegrationSetting);
 
-
+  /**
+   * Send mail integration notification
+   * 
+   */
   void sendMailIntegrationNotifications();
 
-  MessageRestEntity getMessageById(long mailIntegrationSettingId, String messageId, long identityId) throws IllegalAccessException;
+  /**
+   * Retrieves message object by its technical identifier and the mail integration setting technical identifier
+   *
+   * @param mailIntegrationSettingId {@link MailIntegrationSetting} technical identifier
+   * @param messageId {@link Message} technical identifier
+   * @param userIdentityId User identity getting the message
+   * @return {@link Message} object
+   * @throws IllegalAccessException when the user is not authorized to get message
+   */
+  MessageRestEntity getMessageById(long mailIntegrationSettingId,
+                                   String messageId,
+                                   long userIdentityId) throws IllegalAccessException;
 }
