@@ -49,7 +49,7 @@ public class RestEntityBuilder {
     mailIntegrationSetting.setEncryption(mailIntegrationSettingRestEntity.getEncryption());
     mailIntegrationSetting.setAccount(mailIntegrationSettingRestEntity.getAccount());
     mailIntegrationSetting.setPassword(mailIntegrationSettingRestEntity.getPassword());
-    mailIntegrationSetting.setCreatorId(userIdentityId);
+    mailIntegrationSetting.setUserId(userIdentityId);
     return mailIntegrationSetting;
   }
 

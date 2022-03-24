@@ -131,10 +131,10 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettings();
     // Send Notifications
     for (MailIntegrationSetting mailIntegrationSetting : mailIntegrationSettings) {
-      Identity userIdentity = identityManager.getIdentity(String.valueOf(mailIntegrationSetting.getCreatorId()));
+      Identity userIdentity = identityManager.getIdentity(String.valueOf(mailIntegrationSetting.getUserId()));
       if (userIdentity != null && userStateService.isOnline(userIdentity.getRemoteId())) {
         try {
-          mailIntegrationSetting.setPassword(MailIntegrationUtils.encode(mailIntegrationSetting.getPassword()));
+          mailIntegrationSetting.setPassword(MailIntegrationUtils.decode(mailIntegrationSetting.getPassword()));
           List<String> newMessages = getNewMessages(mailIntegrationSetting);
           if (!newMessages.isEmpty()) {
             NotificationContext ctx = NotificationContextImpl.cloneInstance()

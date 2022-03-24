@@ -39,7 +39,7 @@ public class MailIntegrationDaoTest extends TestCase {
 
   private String             password   = "123456";
 
-  private long               creatorId  = 1L;
+  private long               userId     = 1L;
 
   private MailIntegrationDAO mailIntegrationDAO;
 
@@ -69,7 +69,7 @@ public class MailIntegrationDaoTest extends TestCase {
     assertEquals(encryption, mailIntegrationSettingEntity.getEncryption());
     assertEquals(account, mailIntegrationSettingEntity.getAccount());
     assertEquals(password, mailIntegrationSettingEntity.getPassword());
-    assertEquals(creatorId, mailIntegrationSettingEntity.getCreatorId());
+    assertEquals(userId, mailIntegrationSettingEntity.getUserId());
   }
 
   protected MailIntegrationSettingEntity createMailIntegrationSettingEntity() {
@@ -80,7 +80,7 @@ public class MailIntegrationDaoTest extends TestCase {
     mailIntegrationSettingEntity.setEncryption(encryption);
     mailIntegrationSettingEntity.setAccount(account);
     mailIntegrationSettingEntity.setPassword(password);
-    mailIntegrationSettingEntity.setCreatorId(creatorId);
+    mailIntegrationSettingEntity.setUserId(userId);
     return mailIntegrationSettingEntity;
   }
 

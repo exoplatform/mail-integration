@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-export function checkMailConnection(connectionInformationEntity) {
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/mailIntegration/checkMailConnection`, {
+export function checkConnection(connectionInformationEntity) {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/mailIntegration/connect`, {
     headers: {
       'Content-Type': 'application/json'
     },
@@ -24,7 +24,7 @@ export function checkMailConnection(connectionInformationEntity) {
     body: JSON.stringify(connectionInformationEntity)
   }).then(resp => {
     if (resp && resp.ok) {
-      return resp.text();
+      return resp.status;
     } else {
       throw new Error('Response code indicates a server error', resp);
     }
@@ -48,7 +48,7 @@ export function createMailIntegrationSetting(mailIntegrationSetting) {
   });
 }
 
-export function getMailIntegrationSettingsByUserId() {
+export function getMailIntegrationSettings() {
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/mailIntegration/mailIntegrationSettings`, {
     credentials: 'include',
     method: 'GET',

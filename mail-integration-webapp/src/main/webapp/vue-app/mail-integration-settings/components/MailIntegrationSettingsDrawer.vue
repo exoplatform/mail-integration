@@ -150,7 +150,7 @@ const MAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+")
 
 export default {
   props: {
-    modeEdit: {
+    editMode: {
       type: Boolean,
       default: false,
     },
@@ -226,12 +226,6 @@ export default {
         this.encryption = this.mailIntegrationSetting.encryption;
         this.account = this.mailIntegrationSetting.account;
         this.password = this.mailIntegrationSetting.password;
-        this.storedEmailAccount = this.mailIntegrationSetting.account;
-        this.storedImapUrl = this.mailIntegrationSetting.imapUrl;
-        this.storedPort = this.mailIntegrationSetting.port.toString();
-        this.storedEncryption = this.mailIntegrationSetting.encryption;
-        this.storedAccount = this.mailIntegrationSetting.account;
-        this.storedPassword = this.mailIntegrationSetting.password;
       }
       this.$refs.mailIntegrationSettingDrawer.open();
     },
@@ -249,8 +243,8 @@ export default {
         'password': this.password,
       };
       if (!this.connectionSuccess) {
-        this.$mailIntegrationService.checkMailConnection(mailIntegrationSetting).then((integrationSetting) => {
-          if (integrationSetting) {
+        this.$mailIntegrationService.checkConnection(mailIntegrationSetting).then((respStatus) => {
+          if (respStatus === 200) {
             this.$emit('display-alert', this.$t('mailIntegration.settings.connection.successMessage'));
             this.connectionSuccess = true;
           }
@@ -265,7 +259,7 @@ export default {
               this.saving = false;
             }, 200);
           });
-      } else if (!this.modeEdit) {
+      } else if (!this.editMode) {
         this.$mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting).then((integrationSetting) => {
           if (integrationSetting) {
             this.close();

@@ -118,7 +118,7 @@ public class MailIntegrationRest implements ResourceContainer {
   @Path("connect")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.TEXT_PLAIN)
+  @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
   @ApiOperation(value = "Check mail integration connection", httpMethod = "POST", response = Response.class, consumes = "application/json")
   @ApiResponses(value = {
@@ -134,8 +134,8 @@ public class MailIntegrationRest implements ResourceContainer {
 
     try {
       MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingRestEntity, userIdentityId);
-      Store connectedStore = mailIntegrationService.imapconnect(mailIntegrationSetting);
-      return Response.ok(connectedStore != null).type(MediaType.TEXT_PLAIN).build();
+      mailIntegrationService.imapconnect(mailIntegrationSetting);
+      return Response.ok().build();
     } catch (IllegalArgumentException e) {
       LOG.warn("User '{}' attempts to create a non authorized mail integration", userIdentityId, e);
       return Response.status(Response.Status.NO_CONTENT).build();

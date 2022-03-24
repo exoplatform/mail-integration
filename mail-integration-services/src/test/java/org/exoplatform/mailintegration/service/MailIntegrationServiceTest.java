@@ -32,7 +32,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
     mailIntegrationSetting.setEncryption("encryption");
     mailIntegrationSetting.setAccount("account");
     mailIntegrationSetting.setPassword("password");
-    mailIntegrationSetting.setCreatorId(Long.parseLong(user1Identity.getId()));
+    mailIntegrationSetting.setUserId(Long.parseLong(user1Identity.getId()));
 
     // When
     MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting,
@@ -45,7 +45,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
     assertEquals(mailIntegrationSetting.getEncryption(), createdMailIntegrationSetting.getEncryption());
     assertEquals(mailIntegrationSetting.getAccount(), createdMailIntegrationSetting.getAccount());
     assertEquals(mailIntegrationSetting.getPassword(), createdMailIntegrationSetting.getPassword());
-    assertEquals(mailIntegrationSetting.getCreatorId(), createdMailIntegrationSetting.getCreatorId());
+    assertEquals(mailIntegrationSetting.getUserId(), createdMailIntegrationSetting.getUserId());
 
   }
 }

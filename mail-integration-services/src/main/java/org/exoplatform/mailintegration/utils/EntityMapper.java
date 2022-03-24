@@ -34,7 +34,7 @@ public class EntityMapper {
                                        connectionInformationEntity.getEncryption(),
                                        connectionInformationEntity.getAccount(),
                                        connectionInformationEntity.getPassword(),
-                                       connectionInformationEntity.getCreatorId());
+                                       connectionInformationEntity.getUserId());
       
   }
 
@@ -52,7 +52,7 @@ public class EntityMapper {
       mailIntegrationSettingEntity.setEncryption(mailIntegrationSetting.getEncryption());
       mailIntegrationSettingEntity.setAccount(mailIntegrationSetting.getAccount());
       mailIntegrationSettingEntity.setPassword(mailIntegrationSetting.getPassword());
-      mailIntegrationSettingEntity.setCreatorId(mailIntegrationSetting.getCreatorId());
+      mailIntegrationSettingEntity.setUserId(mailIntegrationSetting.getUserId());
       return mailIntegrationSettingEntity;
   }
 }

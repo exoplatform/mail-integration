@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import MailIntegrationNotificationAlert from './MailIntegrationNotificationAlert.vue';
+import MailIntegrationAlert from './MailIntegrationNotificationAlert.vue';
 
 const components = {
-  'mail-integration-notification-alert': MailIntegrationNotificationAlert,
+  'mail-integration-alert': MailIntegrationAlert,
 };
 
 for (const key in components) {

@@ -29,7 +29,7 @@ public class MailIntegrationDAO extends GenericDAOJPAImpl<MailIntegrationSetting
     TypedQuery<MailIntegrationSettingEntity> query =
                                                    getEntityManager().createNamedQuery("MailIntegrationSetting.findMailIntegrationSettingsByUserId",
                                                                                        MailIntegrationSettingEntity.class);
-    query.setParameter("creatorId", userIdentityId);
+    query.setParameter("userId", userIdentityId);
     List<MailIntegrationSettingEntity> resultList = query.getResultList();
     return resultList == null ? Collections.emptyList() : resultList;
   }
@@ -39,7 +39,7 @@ public class MailIntegrationDAO extends GenericDAOJPAImpl<MailIntegrationSetting
             getEntityManager().createNamedQuery("MailIntegrationSetting.findMailIntegrationSettingsByIdAndUserId",
                     MailIntegrationSettingEntity.class);
     query.setParameter("mailSettingId", mailSettingId);
-    query.setParameter("creatorId", userIdentityId);
+    query.setParameter("userId", userIdentityId);
     List<MailIntegrationSettingEntity> resultList = query.getResultList();
     return resultList == null ? Collections.emptyList() : resultList;
   }

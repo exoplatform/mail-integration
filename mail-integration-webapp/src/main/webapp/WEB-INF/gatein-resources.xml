@@ -45,7 +45,7 @@
         <as>$</as>
       </depends>
       <depends>
-        <module>mailIntegrationNotificationComponent</module>
+        <module>mailIntegrationCommonComponents</module>
       </depends>
     </module>
   </portlet>
@@ -78,10 +78,10 @@
     </module>
   </portlet>
   <module>
-    <name>mailIntegrationNotificationComponent</name>
+    <name>mailIntegrationCommonComponents</name>
     <script>
       <minify>false</minify>
-      <path>/js/mailIntegrationNotificationComponent.bundle.js</path>
+      <path>/js/mailIntegrationCommonComponents.bundle.js</path>
     </script>
     <depends>
       <module>vue</module>

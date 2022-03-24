@@ -24,7 +24,7 @@ import java.util.List;
 
 public interface MailIntegrationService {
   /**
-   * @param connectionInformation {@link MailIntegrationSetting} object to create
+   * @param mailIntegrationSetting {@link MailIntegrationSetting} object to create
    * @param identityId User identity creating the mail integration setting
    * @return created {@link MailIntegrationSetting} with generated technical identifier
    * @throws IllegalAccessException

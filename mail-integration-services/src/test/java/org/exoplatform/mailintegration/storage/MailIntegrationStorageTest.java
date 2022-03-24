@@ -76,7 +76,7 @@ public class MailIntegrationStorageTest {
     mailIntegrationSetting.setEncryption("encryption");
     mailIntegrationSetting.setAccount("account");
     mailIntegrationSetting.setPassword("password");
-    mailIntegrationSetting.setCreatorId(1L);
+    mailIntegrationSetting.setUserId(1L);
     return mailIntegrationSetting;
   }
 
@@ -89,7 +89,7 @@ public class MailIntegrationStorageTest {
     mailIntegrationSettingEntity.setEncryption("encryption");
     mailIntegrationSettingEntity.setAccount("account");
     mailIntegrationSettingEntity.setPassword("password");
-    mailIntegrationSettingEntity.setCreatorId(1L);
+    mailIntegrationSettingEntity.setUserId(1L);
     return mailIntegrationDAO.create(mailIntegrationSettingEntity);
   }
 

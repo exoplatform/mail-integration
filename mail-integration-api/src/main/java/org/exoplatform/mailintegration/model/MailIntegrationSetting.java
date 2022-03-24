@@ -39,5 +39,5 @@ public class MailIntegrationSetting {
 
   private String password;
 
-  private long   creatorId;
+  private long   userId;
 }

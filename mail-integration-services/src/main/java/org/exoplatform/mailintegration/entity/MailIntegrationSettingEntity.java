@@ -24,8 +24,8 @@ import java.io.Serializable;
 @Entity(name = "MailIntegrationSetting")
 @ExoEntity
 @Table(name = "MAIL_INTEGRATION_SETTING")
-@NamedQuery(name = "MailIntegrationSetting.findMailIntegrationSettingsByUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.creatorId = :creatorId")
-@NamedQuery(name = "MailIntegrationSetting.findMailIntegrationSettingsByIdAndUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.id = :mailSettingId AND mailIntegrationSetting.creatorId = :creatorId")
+@NamedQuery(name = "MailIntegrationSetting.findMailIntegrationSettingsByUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.userId = :userId")
+@NamedQuery(name = "MailIntegrationSetting.findMailIntegrationSettingsByIdAndUserId", query = "SELECT mailIntegrationSetting FROM MailIntegrationSetting mailIntegrationSetting where mailIntegrationSetting.id = :mailSettingId AND mailIntegrationSetting.userId = :userId")
 public class MailIntegrationSettingEntity implements Serializable {
   private static final long serialVersionUID = 3783783343530708418L;
 
@@ -35,7 +35,7 @@ public class MailIntegrationSettingEntity implements Serializable {
   @Column(name = "MAIL_INTEGRATION_SETTING_ID", nullable = false)
   private Long              id;
 
-  @Column(name = "EMAIL_NAME", nullable = false)
+  @Column(name = "NAME", nullable = false)
   private String            emailName;
 
   @Column(name = "IMAP_URL", nullable = false)
@@ -53,8 +53,8 @@ public class MailIntegrationSettingEntity implements Serializable {
   @Column(name = "PASSWORD", nullable = false)
   private String            password;
 
-  @Column(name = "CREATOR_ID", nullable = false)
-  private long              creatorId;
+  @Column(name = "USER_ID", nullable = false)
+  private long              userId;
 
   public Long getId() {
     return id;
@@ -112,11 +112,11 @@ public class MailIntegrationSettingEntity implements Serializable {
     this.password = password;
   }
 
-  public long getCreatorId() {
-    return creatorId;
+  public long getUserId() {
+    return userId;
   }
 
-  public void setCreatorId(long creatorId) {
-    this.creatorId = creatorId;
+  public void setUserId(long userId) {
+    this.userId = userId;
   }
 }

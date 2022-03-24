@@ -42,11 +42,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </v-card>
     <mail-integration-settings-drawer
       ref="mailIntegrationSettingDrawer"
-      :mode-edit="modeEdit"
+      :edit-mode="editMode"
       :mail-integration-setting="mailIntegrationSetting"
       @display-alert="displayAlert"
-      @mail-integration-settings-save-success="getMailIntegrationSettingsByUserId" />
-    <mail-integration-notification-alert />
+      @mail-integration-settings-save-success="getMailIntegrationSettings" />
+    <mail-integration-alert />
   </v-app>
 </template>
 
@@ -56,14 +56,14 @@ export default {
   data: () => ({
     mailIntegrationEnabled: false,
     displayed: true,
-    modeEdit: false,
+    editMode: false,
     account: '',
     mailIntegrationSetting: null,
   }),
   created() {
     this.$featureService.isFeatureEnabled('mailIntegration')
       .then(enabled => this.mailIntegrationEnabled = enabled);
-    this.getMailIntegrationSettingsByUserId();
+    this.getMailIntegrationSettings();
   },
   mounted() {
     document.addEventListener('hideSettingsApps', (event) => {
@@ -77,13 +77,11 @@ export default {
     openDrawer(){
       this.$refs.mailIntegrationSettingDrawer.openDrawer();
     },
-    getMailIntegrationSettingsByUserId() {
-      this.$mailIntegrationService.getMailIntegrationSettingsByUserId().then(setting => {
-        if (setting && setting.length === 1) {
-          this.mailIntegrationSetting = setting[0];
-          this.account = setting[0].account;
-          this.modeEdit = true;
-        }
+    getMailIntegrationSettings() {
+      this.$mailIntegrationService.getMailIntegrationSettings().then(setting => {
+        this.mailIntegrationSetting = setting[0];
+        this.account = setting[0].account;
+        this.editMode = true;
       });
     },
     displayAlert(message, type) {
