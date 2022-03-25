@@ -15,6 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 import './initComponents.js';
+import * as mailIntegrationService from '../service/mailIntegrationService.js';
 
 // get overridden components if exists
 if (extensionRegistry) {
@@ -38,6 +39,12 @@ const lang = eXo && eXo.env.portal.language || 'en';
 
 //should expose the locale ressources as REST API
 const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale.portlet.MailIntegration-${lang}.json`;
+
+if (!Vue.prototype.$mailIntegrationService) {
+  window.Object.defineProperty(Vue.prototype, '$mailIntegrationService', {
+    value: mailIntegrationService,
+  });
+}
 
 export function init() {
   exoi18n.loadLanguageAsync(lang, url).then(i18n => {

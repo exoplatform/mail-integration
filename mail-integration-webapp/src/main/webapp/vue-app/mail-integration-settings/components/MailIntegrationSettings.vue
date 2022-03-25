@@ -28,28 +28,48 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <v-list-item-subtitle class="my-3 text-sub-title font-italic">
               {{ $t('mailIntegration.settings.connectMail.description') }}
             </v-list-item-subtitle>
+            <v-list-item-subtitle>
+              <span class="my-auto text-capitalize text-truncate" :title="emailName"> {{ emailName }} </span>
+            </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
             <v-btn icon @click="openDrawer">
               <i class="uiIconEdit uiIconLightBlue pb-2"></i>
             </v-btn>
+            <v-btn
+              v-if="editMode"
+              icon
+              class="mt-6">
+              <i class="uiIconTrash uiIconLightBlue"></i>
+            </v-btn>
           </v-list-item-action>
         </v-list-item>
       </v-list>
     </v-card>
-    <mail-integration-settings-drawer ref="mailIntegrationSettingDrawer" />
+    <mail-integration-settings-drawer
+      ref="mailIntegrationSettingDrawer"
+      :edit-mode="editMode"
+      :mail-integration-setting="mailIntegrationSetting"
+      @display-alert="displayAlert"
+      @mail-integration-settings-save-success="getMailIntegrationSettings" />
+    <mail-integration-alert />
   </v-app>
 </template>
 
 <script>
+
 export default {
   data: () => ({
     mailIntegrationEnabled: false,
     displayed: true,
+    editMode: false,
+    emailName: '',
+    mailIntegrationSetting: null,
   }),
   created() {
     this.$featureService.isFeatureEnabled('mailIntegration')
       .then(enabled => this.mailIntegrationEnabled = enabled);
+    this.getMailIntegrationSettings();
   },
   mounted() {
     document.addEventListener('hideSettingsApps', (event) => {
@@ -62,6 +82,19 @@ export default {
   methods: {
     openDrawer(){
       this.$refs.mailIntegrationSettingDrawer.openDrawer();
+    },
+    getMailIntegrationSettings() {
+      this.$mailIntegrationService.getMailIntegrationSettings().then(setting => {
+        this.mailIntegrationSetting = setting[0];
+        this.emailName = setting[0].emailName;
+        this.editMode = true;
+      });
+    },
+    displayAlert(message, type) {
+      this.$root.$emit('mail-integration-connection', {
+        message,
+        type: type || 'success',
+      });
     },
   }
 };

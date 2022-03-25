@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.Flags.Flag;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -32,78 +32,104 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.UIDFolder;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.exoplatform.commons.api.notification.NotificationContext;
 import org.exoplatform.commons.api.notification.model.PluginKey;
 import org.exoplatform.commons.notification.impl.NotificationContextImpl;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
-import org.exoplatform.mailintegration.model.MailIntegrationUserSetting;
 import org.exoplatform.mailintegration.notification.plugin.MailIntegrationNotificationPlugin;
 import org.exoplatform.mailintegration.notification.utils.NotificationConstants;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
+import org.exoplatform.mailintegration.storage.MailIntegrationStorage;
+import org.exoplatform.mailintegration.utils.MailIntegrationUtils;
 import org.exoplatform.mailintegration.utils.RestEntityBuilder;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.user.UserStateService;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.web.security.codec.CodecInitializer;
 
 public class MailIntegrationServiceImpl implements MailIntegrationService {
-  
-  private CodecInitializer codecInitializer;// NOSONAR
-  
-  private IdentityManager identityManager;
-  
-  private UserStateService userService;
-  
-  private static final Log LOG = ExoLogger.getLogger(MailIntegrationServiceImpl.class);
-  
-  public MailIntegrationServiceImpl(CodecInitializer codecInitializer, IdentityManager identityManager, UserStateService userService) {
-    this.userService = userService;
+  private static final Log       LOG        = ExoLogger.getLogger(MailIntegrationServiceImpl.class);
+
+  public static final String     MAIL_IMAPS = "imaps";
+
+  public static final String     MAIL_SSL   = "SSL";
+
+  private MailIntegrationStorage mailIntegrationStorage;
+
+  private IdentityManager        identityManager;
+
+  private UserStateService       userStateService;
+
+  public MailIntegrationServiceImpl(MailIntegrationStorage mailIntegrationStorage,
+                                    IdentityManager identityManager,
+                                    UserStateService userStateService) {
+    this.mailIntegrationStorage = mailIntegrationStorage;
     this.identityManager = identityManager;
-    this.codecInitializer = codecInitializer;
+    this.userStateService = userStateService;
   }
-  
+
   @Override
-  public Store imapConnect(MailIntegrationSetting mailIntegrationSetting) {
+  public MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) {
+    String encodedPassword = MailIntegrationUtils.encode(mailIntegrationSetting.getPassword());
+    mailIntegrationSetting.setPassword(encodedPassword);
+    return mailIntegrationStorage.createMailIntegrationSetting(mailIntegrationSetting);
+  }
+
+  @Override
+  public List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId) {
+    return mailIntegrationStorage.getMailIntegrationSettingsByUserId(userIdentityId);
+  }
+
+  @Override
+  public Store connect(MailIntegrationSetting mailIntegrationSetting) {
     Properties props = new Properties();
-    props.setProperty("mail.store.protocol", "imaps");
-    String provider = "imaps";
+    String usedPort = String.valueOf(mailIntegrationSetting.getPort());
+    if (StringUtils.equals(mailIntegrationSetting.getEncryption(), MAIL_SSL)) {
+      props.setProperty("mail.imaps.ssl.enable", "true");
+      props.setProperty("mail.store.protocol", MAIL_IMAPS);
+      props.setProperty("mail.imaps.port", usedPort);
+    }
     // Connect to the server
     Session session = Session.getDefaultInstance(props, null);
     Store store = null;
     try {
-      store = session.getStore(provider);
-      //TODO to be added // NOSONAR
-      //String password = codecInitializer.getCodec().decode(mailIntegrationSetting.getPassword()); // NOSONAR
-      store.connect(mailIntegrationSetting.getHost(), mailIntegrationSetting.getUserName(), mailIntegrationSetting.getPassword());
-    } catch (NoSuchProviderException noSuchProviderException) {
-      LOG.error("Invalid provider name", noSuchProviderException);
-    } catch (MessagingException messagingException) {
-      LOG.error("Unable to connect to the store", messagingException);
+      store = session.getStore();
+      store.connect(mailIntegrationSetting.getImapUrl(),
+                    (int) mailIntegrationSetting.getPort(),
+                    mailIntegrationSetting.getAccount(),
+                    mailIntegrationSetting.getPassword());
+    } catch (NoSuchProviderException nspe) {
+      throw new IllegalArgumentException("invalid provider name");
+    } catch (MessagingException me) {
+      throw new IllegalStateException("messaging exception");
     }
     return store;
   }
 
   @Override
   public void sendMailIntegrationNotifications() {
-    List<MailIntegrationUserSetting> mailIntegrationUserSettings = getMailIntegrationUserSettings();
+    List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettings();
     // Send Notifications
-    for (MailIntegrationUserSetting mailIntegrationUserSetting : mailIntegrationUserSettings) {
-      Identity userIdentity = identityManager.getIdentity(String.valueOf(mailIntegrationUserSetting.getUserId()));
-      if (userIdentity != null && userService.isOnline(userIdentity.getRemoteId())) {
-        MailIntegrationSetting mailIntegrationSetting = getMailIntegrationSettingById(String.valueOf(mailIntegrationUserSetting.getMailntegrationSettingId()));
-        List<String> newMessages = new ArrayList<>();
+    for (MailIntegrationSetting mailIntegrationSetting : mailIntegrationSettings) {
+      Identity userIdentity = identityManager.getIdentity(String.valueOf(mailIntegrationSetting.getUserId()));
+      if (userIdentity != null && userStateService.isOnline(userIdentity.getRemoteId())) {
         try {
-          if (mailIntegrationSetting != null) {
-            newMessages = getNewMessages(mailIntegrationSetting);
-            if (!newMessages.isEmpty()) {
-              NotificationContext ctx = NotificationContextImpl.cloneInstance()
-                                                               .append(MailIntegrationNotificationPlugin.CONTEXT, NotificationConstants.NOTIFICATION_CONTEXT.NEW_EMAILS_RECIEVED)
-                                                               .append(MailIntegrationNotificationPlugin.RECEIVER, userIdentity.getRemoteId())
-                                                               .append(MailIntegrationNotificationPlugin.NEW_MESSAGES, String.valueOf(mailIntegrationSetting.getId()).concat(";").concat(String.join(",", newMessages)));
-              ctx.getNotificationExecutor().with(ctx.makeCommand(PluginKey.key(MailIntegrationNotificationPlugin.ID))).execute(ctx);
-            }
+          mailIntegrationSetting.setPassword(MailIntegrationUtils.decode(mailIntegrationSetting.getPassword()));
+          List<String> newMessages = getNewMessages(mailIntegrationSetting);
+          if (!newMessages.isEmpty()) {
+            NotificationContext ctx = NotificationContextImpl.cloneInstance()
+                                                           .append(MailIntegrationNotificationPlugin.CONTEXT,
+                                                                   NotificationConstants.NOTIFICATION_CONTEXT.NEW_EMAILS_RECIEVED)
+                                                           .append(MailIntegrationNotificationPlugin.RECEIVER,
+                                                                   userIdentity.getRemoteId())
+                                                           .append(MailIntegrationNotificationPlugin.NEW_MESSAGES,
+                                                                   String.valueOf(mailIntegrationSetting.getId())
+                                                                         .concat(";")
+                                                                         .concat(String.join(",", newMessages)));
+            ctx.getNotificationExecutor().with(ctx.makeCommand(PluginKey.key(MailIntegrationNotificationPlugin.ID))).execute(ctx);
           }
 
         } catch (MessagingException messagingException) {
@@ -112,66 +138,20 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
       }
     }
   }
-  
-  public List<MailIntegrationUserSetting> getMailIntegrationUserSettings() {
-    //TODO call MailIntegrationUserSettingStorage // NOSONAR
-    MailIntegrationUserSetting mailIntegrationUserSetting = new MailIntegrationUserSetting(1, 2, 1);
-    List<MailIntegrationUserSetting> mailIntegrationUserSettings = new ArrayList<>();
-    mailIntegrationUserSettings.add(mailIntegrationUserSetting);
-    return mailIntegrationUserSettings;
-  }
-  
-  public MailIntegrationSetting getMailIntegrationSettingById(String mailntegrationSettingId) {
-    String host = System.getProperty("exo.mailIntegration.MailIntegrationSetting.host");
-    String userName = System.getProperty("exo.mailIntegration.MailIntegrationSetting.userName");
-    String password = System.getProperty("exo.mailIntegration.MailIntegrationSetting.password");
-    MailIntegrationSetting mailIntegrationSetting = null;
-    if (host != null && userName != null && password != null) {
-    //TODO call MailIntegrationSettingStorage // NOSONAR
-      mailIntegrationSetting = new MailIntegrationSetting(Long.parseLong(mailntegrationSettingId), "setting1", host, "666", userName, password, "ssl");
-    }
-    return mailIntegrationSetting;
-  }
-  
-  public List<String> getNewMessages(MailIntegrationSetting mailIntegrationSetting) throws MessagingException {
-
-    Store store = imapConnect(mailIntegrationSetting);
-    List<String> newMessages = new ArrayList<>();
-
-    Folder inbox = store.getFolder("INBOX");
-    inbox.open(Folder.READ_ONLY);
-
-    // get a list of javamail messages as an array of messages
-    Date now = new Date();
-    UIDFolder uidInbox = (UIDFolder) inbox;
-    Message[] messages = inbox.getMessages();
-    for (int i = inbox.getMessageCount() - 1; i > 0; i--) {
-      if (!isNewMessage(messages[i].getSentDate(), now)) {
-        break;
-      }
-      if (!messages[i].isSet(Flag.SEEN)) {
-        newMessages.add(String.valueOf(uidInbox.getUID(messages[i])));
-      }
-    }
-    // close the inbox folder but do not remove the messages from the server
-    inbox.close(false);
-    store.close();
-    return newMessages;
-  }
-  
-  public boolean isNewMessage(Date messageSentDate, Date now) {
-    String mailIntegrationNotificationJobPeriod = System.getProperty("exo.mailIntegration.MailIntegrationNotificationJob.period", "120000");
-    return ZonedDateTime.ofInstant(messageSentDate.toInstant(), ZoneOffset.UTC).isAfter(ZonedDateTime.ofInstant(now.toInstant(), ZoneOffset.UTC).minusMinutes(Long.parseLong(mailIntegrationNotificationJobPeriod) / 60000));
-  }
 
   @Override
-  public MessageRestEntity getMessageById(String mailntegrationSettingId, String messageId, org.exoplatform.services.security.Identity currentIdentity) throws IllegalAccessException {
-    if (!hasMailIntegrationUserSetting()) {
-      throw new IllegalAccessException("User " + currentIdentity.getUserId() + "is not allowed to get a message with id "
-          + messageId);
+  public MessageRestEntity getMessageById(long mailIntegrationSettingId,
+                                          String messageId,
+                                          long identityId) throws IllegalAccessException {
+    List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSettingId,
+                                                                                                                                             identityId);
+    if (mailIntegrationSettings.isEmpty()) {
+      throw new IllegalAccessException("User " + identityId + " is not allowed to get mail integration settings with id " + mailIntegrationSettingId);
     }
-    MailIntegrationSetting mailIntegrationSetting = getMailIntegrationSettingById(mailntegrationSettingId);
-    Store store = imapConnect(mailIntegrationSetting);
+    MailIntegrationSetting mailIntegrationSetting =
+                                                  mailIntegrationStorage.getMailIntegrationSettingById(mailIntegrationSettingId);
+    mailIntegrationSetting.setPassword(MailIntegrationUtils.decode(mailIntegrationSetting.getPassword()));
+    Store store = connect(mailIntegrationSetting);
     Folder inbox;
     MessageRestEntity messageRestEntity = null;
     try {
@@ -187,11 +167,38 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     }
     return messageRestEntity;
   }
-  
-  private boolean hasMailIntegrationUserSetting() {
-    //TODO check from storage  if there is a MailIntegrationUserSetting with userId and mailntegrationSettingId
-    return true;
+
+  private List<String> getNewMessages(MailIntegrationSetting mailIntegrationSetting) throws MessagingException {
+
+    Store store = connect(mailIntegrationSetting);
+    List<String> newMessages = new ArrayList<>();
+
+    Folder inbox = store.getFolder("INBOX");
+    inbox.open(Folder.READ_ONLY);
+
+    // get a list of javamail messages as an array of messages
+    Date now = new Date();
+    UIDFolder uidInbox = (UIDFolder) inbox;
+    Message[] messages = inbox.getMessages();
+    for (int i = inbox.getMessageCount() - 1; i > 0; i--) {
+      if (!isNewMessage(messages[i].getSentDate(), now)) {
+        break;
+      }
+      if (!messages[i].isSet(Flags.Flag.SEEN)) {
+        newMessages.add(String.valueOf(uidInbox.getUID(messages[i])));
+      }
+    }
+    // close the inbox folder but do not remove the messages from the server
+    inbox.close(false);
+    store.close();
+    return newMessages;
   }
-  
-  
+
+  private boolean isNewMessage(Date messageSentDate, Date now) {
+    String mailIntegrationNotificationJobPeriod = System.getProperty("exo.mailIntegration.MailIntegrationNotificationJob.period",
+                                                                     "120000");
+    return ZonedDateTime.ofInstant(messageSentDate.toInstant(), ZoneOffset.UTC)
+                        .isAfter(ZonedDateTime.ofInstant(now.toInstant(), ZoneOffset.UTC)
+                                              .minusMinutes(Long.parseLong(mailIntegrationNotificationJobPeriod) / 60000));
+  }
 }

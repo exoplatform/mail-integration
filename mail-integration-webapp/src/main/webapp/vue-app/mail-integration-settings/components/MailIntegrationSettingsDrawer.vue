@@ -133,8 +133,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             {{ $t('mailIntegration.settings.connectMail.cancel') }}
           </template>
         </v-btn>
-        <v-btn :disabled="true" class="btn btn-primary">
-          {{ $t('mailIntegration.settings.connectMail.save') }}
+        <v-btn
+          :loading="saving"
+          :disabled="disabled"
+          class="btn btn-primary"
+          @click="checkConnection">
+          {{ saveButtonLabel }}
         </v-btn>
       </div>
     </template>
@@ -145,6 +149,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 const MAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default {
+  props: {
+    editMode: {
+      type: Boolean,
+      default: false,
+    },
+    mailIntegrationSetting: {
+      type: Object,
+      default: null,
+    }
+  },
   data: () => ({
     emailAccount: '',
     imapUrl: '',
@@ -153,10 +167,14 @@ export default {
     account: '',
     password: '',
     showPassWord: false,
+    connectionSuccess: false,
+    saving: false,
+    error: '',
+    disabled: false,
   }),
   computed: {
     portRule() {
-      return this.port.length < 4 && this.port.match(/^\d+$/);
+      return this.port && this.port.length < 4 && this.port.match(/^\d+$/);
     },
     portErrorMessage() {
       return this.portRule || this.port.length === 0 ? '': this.$t('mailIntegration.settings.name.errorPort');
@@ -173,14 +191,89 @@ export default {
     toggleFieldType() {
       return this.showPassWord ? 'text': 'password';
     },
+    saveButtonLabel() {
+      return this.connectionSuccess ? this.$t('mailIntegration.settings.connectMail.add'): this.$t('mailIntegration.settings.connectMail.test');
+    },
+  },
+  watch: {
+    saving() {
+      if (this.saving) {
+        this.$refs.mailIntegrationSettingDrawer.startLoading();
+      } else {
+        this.$refs.mailIntegrationSettingDrawer.endLoading();
+      }
+    },
+    imapUrl(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length;
+    },
+    port(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length;
+    },
+    encryption(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length;
+    },
+    password(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length;
+    }
   },
   methods: {
     openDrawer(){
+      this.connectionSuccess = false;
+      if (this.mailIntegrationSetting) {
+        this.emailAccount = this.mailIntegrationSetting.emailName;
+        this.imapUrl = this.mailIntegrationSetting.imapUrl;
+        this.port = this.mailIntegrationSetting.port.toString();
+        this.encryption = this.mailIntegrationSetting.encryption;
+        this.account = this.mailIntegrationSetting.account;
+        this.password = this.mailIntegrationSetting.password;
+      }
       this.$refs.mailIntegrationSettingDrawer.open();
     },
     close(){
       this.$refs.mailIntegrationSettingDrawer.close();
     },
-  }
+    checkConnection() {
+      this.saving = true;
+      const mailIntegrationSetting = {
+        'emailName': this.emailAccount,
+        'imapUrl': this.imapUrl,
+        'port': this.port,
+        'encryption': this.encryption,
+        'account': this.account,
+        'password': this.password,
+      };
+      if (!this.connectionSuccess) {
+        this.$mailIntegrationService.checkConnection(mailIntegrationSetting).then((respStatus) => {
+          if (respStatus === 200) {
+            this.$emit('display-alert', this.$t('mailIntegration.settings.connection.successMessage'));
+            this.connectionSuccess = true;
+          }
+        }).catch(() => {
+          this.error = 'error';
+          this.connectionSuccess = this.error !== 'error';
+          this.disabled = true;
+          this.$emit('display-alert', this.$t('mailIntegration.settings.connection.errorMessage'), this.error);
+        })
+          .finally(() => {
+            window.setTimeout(() => {
+              this.saving = false;
+            }, 200);
+          });
+      } else if (!this.editMode) {
+        this.$mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting).then((integrationSetting) => {
+          if (integrationSetting) {
+            this.close();
+            this.$emit('mail-integration-settings-save-success');
+          }
+        }).catch(() => this.$emit('display-alert',this.$('mailIntegration.settings.connectMail.errorMessage'), 'error'))
+          .finally(() => {
+            this.saving = false;
+          });
+      } else {
+        this.saving = false;
+        this.close();
+      }
+    },
+  },
 };
 </script>

@@ -20,6 +20,8 @@ import java.io.Writer;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.exoplatform.mailintegration.notification.plugin.MailIntegrationNotificationPlugin;
+import org.exoplatform.mailintegration.notification.utils.NotificationConstants;
 import org.gatein.common.text.EntityEncoder;
 
 import org.exoplatform.commons.api.notification.NotificationContext;
@@ -35,8 +37,6 @@ import org.exoplatform.commons.api.notification.service.template.TemplateContext
 import org.exoplatform.commons.notification.template.TemplateUtils;
 import org.exoplatform.commons.utils.HTMLEntityEncoder;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.mailintegration.notification.plugin.MailIntegrationNotificationPlugin;
-import org.exoplatform.mailintegration.notification.utils.NotificationConstants;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.utils.TimeConvertUtils;

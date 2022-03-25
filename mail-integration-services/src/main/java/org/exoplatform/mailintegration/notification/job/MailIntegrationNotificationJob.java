@@ -16,13 +16,13 @@
  */
 package org.exoplatform.mailintegration.notification.job;
 
+import org.exoplatform.mailintegration.service.MailIntegrationService;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import org.exoplatform.commons.api.settings.ExoFeatureService;
 import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.mailintegration.service.MailIntegrationService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

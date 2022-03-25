@@ -16,17 +16,54 @@
  */
 package org.exoplatform.mailintegration.service;
 
-import javax.mail.Store;
-
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
-import org.exoplatform.services.security.Identity;
+
+import javax.mail.Store;
+import java.util.List;
 
 public interface MailIntegrationService {
-  
-  Store imapConnect(MailIntegrationSetting mailIntegrationSetting);
-  
+  /**
+   * Creates a new mail integration setting
+   *
+   * @param mailIntegrationSetting {@link MailIntegrationSetting} object to create
+   * @return created {@link MailIntegrationSetting} with generated technical identifier
+   */
+  MailIntegrationSetting createMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting);
+
+  /**
+   * Retrieves mail integration setting by its technical user identity identifier.
+   *
+   * @param userIdentityId User identity owner of the mail integration setting
+   * 
+   * @return A {@link List} of {@link MailIntegrationSetting} objects
+   */
+  List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId);
+
+  /**
+   * Connect to a mail integration setting
+   *
+   * @param mailIntegrationSetting {@link MailIntegrationSetting} object to connect
+   * @return connected store
+   */
+  Store connect(MailIntegrationSetting mailIntegrationSetting);
+
+  /**
+   * Send mail integration notification
+   * 
+   */
   void sendMailIntegrationNotifications();
-  
-  MessageRestEntity getMessageById(String mailntegrationSettingId, String messageId, Identity currentIdentity) throws IllegalAccessException;
+
+  /**
+   * Retrieves message object by its technical identifier and the mail integration setting technical identifier
+   *
+   * @param mailIntegrationSettingId {@link MailIntegrationSetting} technical identifier
+   * @param messageId {@link Message} technical identifier
+   * @param userIdentityId User identity getting the message
+   * @return {@link Message} object
+   * @throws IllegalAccessException when the user is not authorized to get message
+   */
+  MessageRestEntity getMessageById(long mailIntegrationSettingId,
+                                   String messageId,
+                                   long userIdentityId) throws IllegalAccessException;
 }

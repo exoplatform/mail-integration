@@ -44,6 +44,9 @@
         <module>jquery</module>
         <as>$</as>
       </depends>
+      <depends>
+        <module>mailIntegrationCommonComponents</module>
+      </depends>
     </module>
   </portlet>
   <portlet>
@@ -74,4 +77,14 @@
       </depends>
     </module>
   </portlet>
+  <module>
+    <name>mailIntegrationCommonComponents</name>
+    <script>
+      <minify>false</minify>
+      <path>/js/mailIntegrationCommonComponents.bundle.js</path>
+    </script>
+    <depends>
+      <module>vue</module>
+    </depends>
+  </module>
 </gatein-resources>

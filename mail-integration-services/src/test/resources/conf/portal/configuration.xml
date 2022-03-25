@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
  * Copyright (C) 2022 eXo Platform SAS.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,20 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailintegration.model;
+-->
+<configuration
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
+        xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+    <import>jar:/conf/exo.mailIntegration.service-dependencies-configuration.xml</import>
+    <import>jar:/conf/exo.mailIntegration.service-local-configuration.xml</import>
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class MailIntegrationUserSetting {
-  
-  long id;
-  
-  long userId;
-  
-  long mailntegrationSettingId;
-}
+</configuration>

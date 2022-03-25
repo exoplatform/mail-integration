@@ -19,17 +19,45 @@ package org.exoplatform.mailintegration.utils;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
+import org.exoplatform.mailintegration.model.MailIntegrationSetting;
+import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingRestEntity;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
 
 public class RestEntityBuilder {
-  
+
   private RestEntityBuilder() {
   }
   
+  public static final MailIntegrationSettingRestEntity fromMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) {
+    MailIntegrationSettingRestEntity mailIntegrationSettingRestEntity = new MailIntegrationSettingRestEntity();
+    mailIntegrationSettingRestEntity.setId(mailIntegrationSetting.getId());
+    mailIntegrationSettingRestEntity.setEmailName(mailIntegrationSetting.getEmailName());
+    mailIntegrationSettingRestEntity.setImapUrl(mailIntegrationSetting.getImapUrl());
+    mailIntegrationSettingRestEntity.setPort(mailIntegrationSetting.getPort());
+    mailIntegrationSettingRestEntity.setEncryption(mailIntegrationSetting.getEncryption());
+    mailIntegrationSettingRestEntity.setAccount(mailIntegrationSetting.getAccount());
+    mailIntegrationSettingRestEntity.setPassword(MailIntegrationUtils.decode(mailIntegrationSetting.getPassword()));
+    return mailIntegrationSettingRestEntity;
+  }
+
+  public static final MailIntegrationSetting toMailIntegrationSetting(MailIntegrationSettingRestEntity mailIntegrationSettingRestEntity,
+                                                                      long userIdentityId) {
+    MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
+    mailIntegrationSetting.setEmailName(mailIntegrationSettingRestEntity.getEmailName());
+    mailIntegrationSetting.setImapUrl(mailIntegrationSettingRestEntity.getImapUrl());
+    mailIntegrationSetting.setPort(mailIntegrationSettingRestEntity.getPort());
+    mailIntegrationSetting.setEncryption(mailIntegrationSettingRestEntity.getEncryption());
+    mailIntegrationSetting.setAccount(mailIntegrationSettingRestEntity.getAccount());
+    mailIntegrationSetting.setPassword(mailIntegrationSettingRestEntity.getPassword());
+    mailIntegrationSetting.setUserId(userIdentityId);
+    return mailIntegrationSetting;
+  }
+
   public static final MessageRestEntity fromMessage(Message message) throws MessagingException {
     if (message != null) {
       return new MessageRestEntity(message.getSubject(), message.getSentDate(), message.getFrom()[0].toString());
     }
     return null;
   }
+
 }

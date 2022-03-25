@@ -24,18 +24,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MailIntegrationSetting {
-  
-  long id;
-  
-  String name;
-  
-  String host;
-  
-  String port; 
-  
-  String userName;
-  
-  String password;
-  
-  String encryption;
+  private long   id;
+
+  private String emailName;
+
+  private String imapUrl;
+
+  private long   port;
+
+  private String encryption;
+
+  private String account;
+
+  private String password;
+
+  private long   userId;
 }

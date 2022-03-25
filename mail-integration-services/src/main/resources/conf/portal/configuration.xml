@@ -19,14 +19,19 @@
                xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
                xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
-  <component>
-    <key>org.exoplatform.mailintegration.service.MailIntegrationService</key>
-    <type>org.exoplatform.mailintegration.service.MailIntegrationServiceImpl</type>
-  </component>
-  
-  <component>
-    <type>org.exoplatform.mailintegration.rest.MailIntegrationRest</type>
-  </component>
+    <component>
+        <type>org.exoplatform.mailintegration.dao.MailIntegrationDAO</type>
+    </component>
+    <component>
+        <key>org.exoplatform.mailintegration.service.MailIntegrationService</key>
+        <type>org.exoplatform.mailintegration.service.MailIntegrationServiceImpl</type>
+    </component>
+    <component>
+        <type>org.exoplatform.mailintegration.storage.MailIntegrationStorage</type>
+    </component>
+    <component>
+        <type>org.exoplatform.mailintegration.rest.MailIntegrationRest</type>
+    </component>
   
   <external-component-plugins>
     <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
@@ -54,5 +59,19 @@
       </init-params>
     </component-plugin>
   </external-component-plugins>
-  
+  <external-component-plugins>
+    <target-component>org.exoplatform.commons.api.persistence.DataInitializer</target-component>
+    <component-plugin>
+      <name>MailIntegrationRDBMSChangeLogsPlugin</name>
+      <set-method>addChangeLogsPlugin</set-method>
+      <type>org.exoplatform.commons.persistence.impl.ChangeLogsPlugin</type>
+        <init-params>
+          <values-param>
+            <name>changelogs</name>
+            <description>Change logs of mail integration RDBMS</description>
+            <value>db/changelog/mail-integration-rdbms.db.changelog-master.xml</value>
+          </values-param>
+        </init-params>
+    </component-plugin>
+  </external-component-plugins>
 </configuration>

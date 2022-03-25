@@ -14,22 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.mailintegration.rest.model;
+import MailIntegrationAlert from './MailIntegrationNotificationAlert.vue';
 
-import java.util.Date;
+const components = {
+  'mail-integration-alert': MailIntegrationAlert,
+};
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class MessageRestEntity {
-  
-  String subject;
-  
-  Date sentDate;
-  
-  String from;
+for (const key in components) {
+  Vue.component(key, components[key]);
 }
