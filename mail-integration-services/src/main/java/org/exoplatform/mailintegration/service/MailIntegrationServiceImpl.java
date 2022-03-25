@@ -88,16 +88,15 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     Properties props = new Properties();
     String usedPort = String.valueOf(mailIntegrationSetting.getPort());
     if (StringUtils.equals(mailIntegrationSetting.getEncryption(), MAIL_SSL)) {
-      props.setProperty("mail.imap.ssl.enable", "true");
+      props.setProperty("mail.imaps.ssl.enable", "true");
+      props.setProperty("mail.store.protocol", MAIL_IMAPS);
+      props.setProperty("mail.imaps.port", usedPort);
     }
-    props.setProperty("mail.store.protocol", MAIL_IMAPS);
-    props.setProperty("mail.imaps.port", usedPort);
-    String provider = MAIL_IMAPS;
     // Connect to the server
     Session session = Session.getDefaultInstance(props, null);
     Store store = null;
     try {
-      store = session.getStore(provider);
+      store = session.getStore();
       store.connect(mailIntegrationSetting.getImapUrl(),
                     (int) mailIntegrationSetting.getPort(),
                     mailIntegrationSetting.getAccount(),

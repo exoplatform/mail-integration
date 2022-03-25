@@ -192,7 +192,7 @@ export default {
       return this.showPassWord ? 'text': 'password';
     },
     saveButtonLabel() {
-      return this.connectionSuccess ? this.$t('mailIntegration.settings.connectMail.confirm'): this.$t('mailIntegration.settings.connectMail.test');
+      return this.connectionSuccess ? this.$t('mailIntegration.settings.connectMail.add'): this.$t('mailIntegration.settings.connectMail.test');
     },
   },
   watch: {
@@ -220,7 +220,7 @@ export default {
     openDrawer(){
       this.connectionSuccess = false;
       if (this.mailIntegrationSetting) {
-        this.emailAccount = this.mailIntegrationSetting.account;
+        this.emailAccount = this.mailIntegrationSetting.emailName;
         this.imapUrl = this.mailIntegrationSetting.imapUrl;
         this.port = this.mailIntegrationSetting.port.toString();
         this.encryption = this.mailIntegrationSetting.encryption;

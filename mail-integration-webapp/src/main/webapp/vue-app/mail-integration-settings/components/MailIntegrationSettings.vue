@@ -29,7 +29,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               {{ $t('mailIntegration.settings.connectMail.description') }}
             </v-list-item-subtitle>
             <v-list-item-subtitle>
-              <a class="my-auto"> {{ account }} </a>
+              <span class="my-auto text-capitalize text-truncate" :title="emailName"> {{ emailName }} </span>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
@@ -57,7 +57,7 @@ export default {
     mailIntegrationEnabled: false,
     displayed: true,
     editMode: false,
-    account: '',
+    emailName: '',
     mailIntegrationSetting: null,
   }),
   created() {
@@ -80,7 +80,7 @@ export default {
     getMailIntegrationSettings() {
       this.$mailIntegrationService.getMailIntegrationSettings().then(setting => {
         this.mailIntegrationSetting = setting[0];
-        this.account = setting[0].account;
+        this.emailName = setting[0].emailName;
         this.editMode = true;
       });
     },
