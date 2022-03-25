@@ -36,6 +36,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <v-btn icon @click="openDrawer">
               <i class="uiIconEdit uiIconLightBlue pb-2"></i>
             </v-btn>
+            <v-btn
+              v-if="editMode"
+              icon
+              class="mt-6">
+              <i class="uiIconTrash uiIconLightBlue"></i>
+            </v-btn>
           </v-list-item-action>
         </v-list-item>
       </v-list>
