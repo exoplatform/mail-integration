@@ -32,4 +32,6 @@ public class MessageRestEntity {
   Date sentDate;
   
   String from;
+
+  String attachFiles;
 }

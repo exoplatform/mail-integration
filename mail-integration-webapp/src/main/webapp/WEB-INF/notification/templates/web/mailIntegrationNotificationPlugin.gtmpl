@@ -3,7 +3,7 @@ int newMessages = NEW_MESSAGES.split(";")[1].split(",").length;
 String mailIntegrationNotificationJobPeriod = String.valueOf(Long.parseLong(System.getProperty("exo.mailIntegration.MailIntegrationNotificationJob.period", "120000")) / 60000);
 %>
 
-<li class="$READ clearfix" data-id="mailIntegration">
+<li class="$READ clearfix" data-id="details-drawer">
   <div class="media">
       <div style="cursor:default;" class="avatarXSmall pull-left">
         <img src="/mail-integration/images/email.png" />
@@ -11,7 +11,9 @@ String mailIntegrationNotificationJobPeriod = String.valueOf(Long.parseLong(Syst
       <div class="media-body">
         <div class="contentSmall" data-link="">
 		  <a class="open-details-drawer" data-notification-details="$NEW_MESSAGES" href="javascript:void(0)">
-            <div class="status" style="color: #333333;">You recieved $newMessages emails within the last $mailIntegrationNotificationJobPeriod minutes</div>
+            <div class="status" style="color: #333333;">
+               <%= _ctx.appRes("UINotification.message.received.MailIntegrationNotificationPlugin", String.valueOf(newMessages), mailIntegrationNotificationJobPeriod) %>
+            </div>
 		  </a>
           <div style="cursor:default;" class="lastUpdatedTime">$LAST_UPDATED_TIME</div>
         </div>

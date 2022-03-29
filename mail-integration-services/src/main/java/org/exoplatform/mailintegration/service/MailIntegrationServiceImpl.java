@@ -16,6 +16,7 @@
  */
 package org.exoplatform.mailintegration.service;
 
+import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -164,6 +165,8 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
       store.close();
     } catch (MessagingException messagingException) {
       LOG.error("unable to get or open folder", messagingException);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
     return messageRestEntity;
   }

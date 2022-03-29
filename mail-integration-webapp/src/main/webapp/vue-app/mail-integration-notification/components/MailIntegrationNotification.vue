@@ -23,20 +23,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       @closed="closeDrawer"
       disable-pull-to-refresh>
       <template slot="title">
-        <div class="flex flex-row">
-          <div class="flex flex-column">
+        <div class="flex d-flex flex-row">
+          <div class="flex flex-column my-auto flex-grow-0">
             <v-btn
-                v-if="isOpened"
-                class="flex flex-column me-1"
-                icon
-                text>
+              v-if="isOpened"
+              class="me-1"
+              icon
+              text>
               <v-icon
-                  @click="closeDrawer">
+                @click="closeDrawer">
                 mdi-keyboard-backspace
               </v-icon>
             </v-btn>
           </div>
-          <div class="flex flex-column">{{ $t('news.list.settings.title') }}</div>
+          <span class="flex flex-column my-auto">{{ $t('UINotification.MailIntegrationNotification.drawer.title') }}</span>
         </div>
       </template>
       <template slot="content">
@@ -67,23 +67,16 @@ export default {
       this.openDrawer();
     });
   },
-  computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.name === 'xs' || this.$vuetify.breakpoint.name === 'sm';
-    },
-    drawerWidth() {
-      return '420';
-    },
-  },
   methods: {
     openDrawer() {
       this.isOpened = true;
+      this.messages = [];
       this.$refs.mailIntegrationNotifDrawer.startLoading();
       this.$refs.mailIntegrationNotifDrawer.open();
     },
     closeDrawer() {
-      this.$refs.mailIntegrationNotifDrawer.close();
       this.messages = [];
+      this.$refs.mailIntegrationNotifDrawer.close();
     },
     retrieveMessages(messagesDetail) {
       const mailntegrationSettingId = messagesDetail.split(';')[0];

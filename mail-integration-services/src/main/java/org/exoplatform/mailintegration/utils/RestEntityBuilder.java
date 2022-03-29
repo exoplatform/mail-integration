@@ -18,10 +18,16 @@ package org.exoplatform.mailintegration.utils;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
+import javax.mail.internet.MimeBodyPart;
 
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingRestEntity;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
+
+import java.io.File;
+import java.io.IOException;
 
 public class RestEntityBuilder {
 
@@ -53,9 +59,34 @@ public class RestEntityBuilder {
     return mailIntegrationSetting;
   }
 
-  public static final MessageRestEntity fromMessage(Message message) throws MessagingException {
+  public static final MessageRestEntity fromMessage(Message message) throws MessagingException, IOException {
     if (message != null) {
-      return new MessageRestEntity(message.getSubject(), message.getSentDate(), message.getFrom()[0].toString());
+      MessageRestEntity messageRestEntity = new MessageRestEntity();
+      messageRestEntity.setSubject(message.getSubject());
+      messageRestEntity.setSentDate(message.getSentDate());
+      messageRestEntity.setFrom(message.getFrom()[0].toString().split("<")[1].split(">")[0]);
+      String contentType = message.getContentType();
+      // store attachment file name, separated by comma
+      StringBuilder attachFiles = new StringBuilder();
+      if (contentType.contains("multipart")) {
+        // content may contain attachments
+        Multipart multiPart = (Multipart) message.getContent();
+        int numberOfParts = multiPart.getCount();
+        for (int partCount = 0; partCount < numberOfParts; partCount++) {
+          MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
+          if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
+            // this part is attachment
+            String fileName = part.getFileName();
+            attachFiles.append(fileName).append(", ");
+          }
+        }
+
+        if (attachFiles.length() > 1) {
+          attachFiles = new StringBuilder(attachFiles.substring(0, attachFiles.length() - 2));
+        }
+        messageRestEntity.setAttachFiles(attachFiles.toString());
+      }
+      return messageRestEntity;
     }
     return null;
   }
