@@ -26,7 +26,6 @@ import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingRestEntity;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
 
-import java.io.File;
 import java.io.IOException;
 
 public class RestEntityBuilder {
