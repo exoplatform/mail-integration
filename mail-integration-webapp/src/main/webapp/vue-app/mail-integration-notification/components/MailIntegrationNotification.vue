@@ -31,7 +31,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               icon
               text>
               <v-icon
-                @click="closeDrawer">
+                @click="backDrawer">
                 mdi-keyboard-backspace
               </v-icon>
             </v-btn>
@@ -44,7 +44,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           class="mailIntegrationNotificationItems"
           v-for="(message, index) in messages"
           :key="index">
-          <mail-integration-notification-content-item :message="message" />
+          <mail-integration-notification-content-item
+            :message="message"
+            @second-step="step = $event"
+            show-message-details="showMessageDetails" />
         </div>
       </template>
     </exo-drawer>
@@ -60,6 +63,8 @@ export default {
       minute: '2-digit',
     },
     isOpened: false,
+    showMessageDetails: false,
+    step: 0,
   }),
   created() {
     document.addEventListener('open-notification-details-drawer', event => {
@@ -70,6 +75,7 @@ export default {
   methods: {
     openDrawer() {
       this.isOpened = true;
+      this.step = 1;
       this.$refs.mailIntegrationNotifDrawer.startLoading();
       this.$refs.mailIntegrationNotifDrawer.open();
     },
@@ -86,6 +92,13 @@ export default {
             this.messages.push(message);
             this.$nextTick(this.$refs.mailIntegrationNotifDrawer.endLoading);
           });
+      }
+    },
+    backDrawer() {
+      if (this.step === 2) {
+        this.showMessageDetails = false;
+      } else {
+        this.closeDrawer();
       }
     }
   }
