@@ -166,7 +166,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     } catch (MessagingException messagingException) {
       LOG.error("unable to get or open folder", messagingException);
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.error("Error when getting folder", e);
     }
     return messageRestEntity;
   }

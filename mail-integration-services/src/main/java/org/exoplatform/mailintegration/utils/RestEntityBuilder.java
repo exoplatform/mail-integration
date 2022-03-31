@@ -66,7 +66,7 @@ public class RestEntityBuilder {
       messageRestEntity.setFrom(message.getFrom()[0].toString().split("<")[1].split(">")[0]);
       String contentType = message.getContentType();
       // store attachment file name, separated by comma
-      StringBuilder attachFiles = new StringBuilder();
+      StringBuilder attachedFiles = new StringBuilder();
       if (contentType.contains("multipart")) {
         // content may contain attachments
         Multipart multiPart = (Multipart) message.getContent();
@@ -76,14 +76,14 @@ public class RestEntityBuilder {
           if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
             // this part is attachment
             String fileName = part.getFileName();
-            attachFiles.append(fileName).append(", ");
+            attachedFiles.append(fileName).append(", ");
           }
         }
 
-        if (attachFiles.length() > 1) {
-          attachFiles = new StringBuilder(attachFiles.substring(0, attachFiles.length() - 2));
+        if (attachedFiles.length() > 1) {
+          attachedFiles = new StringBuilder(attachedFiles.substring(0, attachedFiles.length() - 2));
         }
-        messageRestEntity.setAttachFiles(attachFiles.toString());
+        messageRestEntity.setAttachedFiles(attachedFiles.toString());
       }
       return messageRestEntity;
     }

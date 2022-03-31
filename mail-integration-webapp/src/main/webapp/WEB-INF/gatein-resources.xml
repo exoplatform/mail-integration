@@ -14,7 +14,7 @@
 	xmlns="http://www.exoplatform.org/xml/ns/gatein_resources_1_4">
   <portlet-skin>
     <application-name>mail-integration</application-name>
-    <portlet-name>MailIntegrationSettings</portlet-name>
+    <portlet-name>MailIntegrationNotification</portlet-name>
     <skin-name>Enterprise</skin-name>
     <css-path>/skin/css/mail-integration.css</css-path>
   </portlet-skin>

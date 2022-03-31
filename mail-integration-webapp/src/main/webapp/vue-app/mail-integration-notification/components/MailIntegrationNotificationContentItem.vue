@@ -22,12 +22,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-list-item three-line>
         <v-list-item-content>
           <v-list-item-title>
-            <span class="messageReceivedText black--text">{{ $t('UINotification.messageItems.received.MailIntegrationNotificationPlugin') }}</span>
-            <span class="senderMail black--text" :title="message.from">{{ message.from }}</span>
+            <span class="messageReceivedText black--text">{{ $t('mailIntegration.notification.drawer.message.received.from') }}</span>
+            <span class="messageSender black--text" :title="message.from">{{ message.from }}</span>
           </v-list-item-title>
           <v-list-item-subtitle>
             <div :title="message.subject" class="messageSubject text-truncate">
-              {{ $t('UINotification.messageItems.replied.MailIntegrationNotificationPlugin') }}: {{ message.subject }}
+              {{ message.subject }}
             </div>
           </v-list-item-subtitle>
           <v-list-item-subtitle class="sendDate grey--text">

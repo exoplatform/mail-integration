@@ -36,7 +36,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               </v-icon>
             </v-btn>
           </div>
-          <span class="flex flex-column my-auto">{{ $t('UINotification.MailIntegrationNotification.drawer.title') }}</span>
+          <span class="flex flex-column my-auto">{{ $t('mailIntegration.notification.drawer.title') }}</span>
         </div>
       </template>
       <template slot="content">

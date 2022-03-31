@@ -33,5 +33,5 @@ public class MessageRestEntity {
   
   String from;
 
-  String attachFiles;
+  String attachedFiles;
 }
