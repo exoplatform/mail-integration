@@ -63,7 +63,11 @@ public class RestEntityBuilder {
       MessageRestEntity messageRestEntity = new MessageRestEntity();
       messageRestEntity.setSubject(message.getSubject());
       messageRestEntity.setSentDate(message.getSentDate());
-      messageRestEntity.setFrom(message.getFrom()[0].toString().split("<")[1].split(">")[0]);
+      if (message.getFrom()[0].toString().contains("<") && message.getFrom()[0].toString().contains(">")) {
+        messageRestEntity.setFrom(message.getFrom()[0].toString().split("<")[1].split(">")[0]);
+      } else {
+        messageRestEntity.setFrom(message.getFrom()[0].toString());
+      }
       String contentType = message.getContentType();
       // store attachment file name, separated by comma
       StringBuilder attachedFiles = new StringBuilder();
