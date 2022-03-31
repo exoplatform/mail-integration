@@ -19,19 +19,33 @@ package org.exoplatform.mailintegration.service;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
 
+  private String emailName  = "user1@exo.tn";
+
+  private String imapUrl    = "imap.gmail.com";
+
+  private long   port       = 123;
+
+  private String encryption = "SSL";
+
+  private String account    = "user1@exo.tn";
+
+  private String password   = "123456";
+  
   @Test
-  public void testCreateConnectionInformation() throws IllegalAccessException {
+  public void testCreateMailIntegrationSetting() throws IllegalAccessException {
     MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
-    mailIntegrationSetting.setEmailName("emailName");
-    mailIntegrationSetting.setImapUrl("imapUrl");
-    mailIntegrationSetting.setPort(123);
-    mailIntegrationSetting.setEncryption("encryption");
-    mailIntegrationSetting.setAccount("account");
-    mailIntegrationSetting.setPassword("password");
+    mailIntegrationSetting.setEmailName(emailName);
+    mailIntegrationSetting.setImapUrl(imapUrl);
+    mailIntegrationSetting.setPort(port);
+    mailIntegrationSetting.setEncryption(encryption);
+    mailIntegrationSetting.setAccount(account);
+    mailIntegrationSetting.setPassword(password);
     mailIntegrationSetting.setUserId(Long.parseLong(user1Identity.getId()));
 
     // When
@@ -46,5 +60,30 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
     assertEquals(mailIntegrationSetting.getPassword(), createdMailIntegrationSetting.getPassword());
     assertEquals(mailIntegrationSetting.getUserId(), createdMailIntegrationSetting.getUserId());
 
+  }
+
+  @Test
+  public void testGetMailIntegrationSettingsByUserId() {
+    MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
+    mailIntegrationSetting.setEmailName(emailName);
+    mailIntegrationSetting.setImapUrl(imapUrl);
+    mailIntegrationSetting.setPort(port);
+    mailIntegrationSetting.setEncryption(encryption);
+    mailIntegrationSetting.setAccount(account);
+    mailIntegrationSetting.setPassword(password);
+    mailIntegrationSetting.setUserId(Long.parseLong(user1Identity.getId()));
+    MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting);
+
+    // When
+    List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationService.getMailIntegrationSettingsByUserId(Long.parseLong(user1Identity.getId()));
+
+    MailIntegrationSetting mailIntegrationSetting1 = mailIntegrationSettings.get(0);
+    assertNotNull(mailIntegrationSetting1);
+    assertEquals(mailIntegrationSetting1.getEmailName(), createdMailIntegrationSetting.getEmailName());
+    assertEquals(mailIntegrationSetting1.getImapUrl(), createdMailIntegrationSetting.getImapUrl());
+    assertEquals(mailIntegrationSetting1.getPort(), createdMailIntegrationSetting.getPort());
+    assertEquals(mailIntegrationSetting1.getEncryption(), createdMailIntegrationSetting.getEncryption());
+    assertEquals(mailIntegrationSetting1.getAccount(), createdMailIntegrationSetting.getAccount());
+    assertEquals(mailIntegrationSetting1.getUserId(), createdMailIntegrationSetting.getUserId());
   }
 }

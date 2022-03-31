@@ -35,6 +35,9 @@ import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.utils.EntityMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({ "javax.management.*", "javax.xml.*", "org.xml.*" })
 public class MailIntegrationStorageTest {
@@ -50,7 +53,7 @@ public class MailIntegrationStorageTest {
 
   @PrepareForTest({ EntityMapper.class })
   @Test
-  public void testCreatePoll() throws Exception { // NOSONAR
+  public void testMailIntegrationSetting() throws Exception { // NOSONAR
     // Given
     MailIntegrationSetting mailIntegrationSetting = createMailIntegrationSetting();
     MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
@@ -65,6 +68,21 @@ public class MailIntegrationStorageTest {
     // Then
     assertNotNull(createdMailIntegrationSetting);
     assertEquals(1L, createdMailIntegrationSetting.getId());
+  }
+  
+  @Test
+  public void testGetMailIntegrationSettingsByUserId() throws Exception { // NOSONAR
+    // Given
+    MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
+    List<MailIntegrationSettingEntity> mailIntegrationSettingEntities = new ArrayList<>();
+    mailIntegrationSettingEntities.add(mailIntegrationSettingEntity);
+    when(mailIntegrationDAO.findMailIntegrationSettingsByUserId(1L)).thenReturn(mailIntegrationSettingEntities);
+
+    // When
+    List<MailIntegrationSetting>  createdMailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingsByUserId(1L);
+
+    // Then
+    assertNotNull(createdMailIntegrationSettings);
   }
 
   protected MailIntegrationSetting createMailIntegrationSetting() {
