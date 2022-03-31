@@ -3,7 +3,7 @@ int newMessages = NEW_MESSAGES.split(";")[1].split(",").length;
 String mailIntegrationNotificationJobPeriod = String.valueOf(Long.parseLong(System.getProperty("exo.mailIntegration.MailIntegrationNotificationJob.period", "120000")) / 60000);
 %>
 
-<li class="$READ clearfix" data-id="details-drawer">
+<li class="$READ clearfix" data-id="notification-details-drawer">
   <div class="media">
       <div style="cursor:default;" class="avatarXSmall pull-left">
         <img src="/mail-integration/images/email.png" />

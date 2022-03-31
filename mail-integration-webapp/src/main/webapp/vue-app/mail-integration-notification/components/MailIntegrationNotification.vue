@@ -70,15 +70,14 @@ export default {
   methods: {
     openDrawer() {
       this.isOpened = true;
-      this.messages = [];
       this.$refs.mailIntegrationNotifDrawer.startLoading();
       this.$refs.mailIntegrationNotifDrawer.open();
     },
     closeDrawer() {
-      this.messages = [];
       this.$refs.mailIntegrationNotifDrawer.close();
     },
     retrieveMessages(messagesDetail) {
+      this.messages = [];
       const mailntegrationSettingId = messagesDetail.split(';')[0];
       const messagesIds = messagesDetail.split(';')[1];
       for (let i = 0; i < messagesIds.split(',').length; i++){
