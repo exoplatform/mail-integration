@@ -22,7 +22,14 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
+import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.services.naming.InitialContextInitializer;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MailIntegrationDaoTest extends TestCase {
   private PortalContainer    container;
@@ -70,6 +77,25 @@ public class MailIntegrationDaoTest extends TestCase {
     assertEquals(account, mailIntegrationSettingEntity.getAccount());
     assertEquals(password, mailIntegrationSettingEntity.getPassword());
     assertEquals(userId, mailIntegrationSettingEntity.getUserId());
+  }
+
+  public void testGetMailIntegrationSettingsByUserId() {
+    //Given
+    MailIntegrationSettingEntity createdMailIntegrationSetting = createMailIntegrationSettingEntity();
+    createdMailIntegrationSetting = mailIntegrationDAO.create(createdMailIntegrationSetting);
+
+    // When
+    List<MailIntegrationSettingEntity> mailIntegrationSettingEntities = mailIntegrationDAO.findMailIntegrationSettingsByUserId(createdMailIntegrationSetting.getUserId());
+    MailIntegrationSettingEntity mailIntegrationSetting1 = mailIntegrationSettingEntities.get(0);
+    assertNotNull(mailIntegrationSetting1);
+    assertEquals(emailName, createdMailIntegrationSetting.getEmailName());
+    assertEquals(imapUrl, createdMailIntegrationSetting.getImapUrl());
+    assertEquals(port, createdMailIntegrationSetting.getPort());
+    assertEquals(encryption, createdMailIntegrationSetting.getEncryption());
+    assertEquals(account, createdMailIntegrationSetting.getAccount());
+    assertEquals(password, createdMailIntegrationSetting.getPassword());
+    assertEquals(userId, createdMailIntegrationSetting.getUserId());
+
   }
 
   protected MailIntegrationSettingEntity createMailIntegrationSettingEntity() {
