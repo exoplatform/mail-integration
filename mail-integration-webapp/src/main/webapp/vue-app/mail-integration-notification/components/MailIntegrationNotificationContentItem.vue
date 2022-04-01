@@ -61,7 +61,7 @@ export default {
       return formattedDate;
     },
     hasAttachment() {
-      return this.message && this.message.attachFiles;
+      return this.message && this.message.attachedFiles;
     }
   }
 };
