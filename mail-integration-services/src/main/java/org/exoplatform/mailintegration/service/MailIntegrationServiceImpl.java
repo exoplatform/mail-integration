@@ -102,10 +102,10 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
                     (int) mailIntegrationSetting.getPort(),
                     mailIntegrationSetting.getAccount(),
                     mailIntegrationSetting.getPassword());
-    } catch (NoSuchProviderException nspe) {
-      throw new IllegalArgumentException("invalid provider name");
-    } catch (MessagingException me) {
-      throw new IllegalStateException("messaging exception");
+    } catch (NoSuchProviderException noSuchProviderException) {
+      throw new IllegalArgumentException("Invalid provider name", noSuchProviderException);
+    } catch (MessagingException messagingException) {
+      throw new IllegalStateException("Messaging exception", messagingException);
     }
     return store;
   }
