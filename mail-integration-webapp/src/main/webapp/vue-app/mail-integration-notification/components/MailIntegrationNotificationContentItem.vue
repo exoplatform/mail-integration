@@ -16,11 +16,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <div>
-    <v-list v-if="!showMessageDetails" class="pa-0">
-      <v-list-item-group
-        color="primary"
-        multiple>
-        <v-list-item three-line>
+    <v-list v-if="step === 1" class="pa-0">
+      <v-list-item-group>
+        <v-list-item v-if="true" three-line>
           <v-list-item-content @click="switchMessageDetails">
             <v-list-item-title>
               <span class="messageReceivedText black--text">{{ $t('mailIntegration.notification.drawer.message.received.from') }}</span>
@@ -41,7 +39,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item>
       </v-list-item-group>
     </v-list>
-    <mail-integration-notification-content-item-details v-else :message="message" />
   </div>
 </template>
 
@@ -52,13 +49,13 @@ export default {
       type: Object,
       default: null,
     },
-    showMessageDetails: {
-      type: Boolean,
-      default: false,
+    step: {
+      type: Number,
+      default: null,
     }
   },
   data: () => ({
-    step: 0
+    step: 1,
   }),
   computed: {
     dateTimeFormat() {
@@ -74,11 +71,15 @@ export default {
       return this.message && this.message.attachedFiles;
     },
   },
+  created() {
+    this.$root.$on('close-details-item', (step) => {
+      this.step = step;
+    });
+  },
   methods: {
     switchMessageDetails() {
       this.step = 2;
-      this.$emit('second-step', this.step);
-      this.showMessageDetails = !this.showMessageDetails;
+      this.$emit('second-step', this.step, this.message);
     }
   }
 };

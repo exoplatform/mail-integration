@@ -19,4 +19,5 @@ String mailIntegrationNotificationJobPeriod = String.valueOf(Long.parseLong(Syst
         </div>
       </div>
   </div>
+  <span class="remove-item" data-rest=""><i class="uiIconClose uiIconLightGray"></i></span>
 </li>
