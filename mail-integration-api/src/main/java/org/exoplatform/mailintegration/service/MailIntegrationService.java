@@ -35,10 +35,26 @@ public interface MailIntegrationService {
    * Retrieves mail integration setting by its technical user identity identifier.
    *
    * @param userIdentityId User identity owner of the mail integration setting
-   * 
    * @return A {@link List} of {@link MailIntegrationSetting} objects
    */
   List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId);
+  
+  /**
+   * Retrieves mail integration setting by its technical identify and user identity identifier.
+   *
+   * @param mailIntegrationSettingId {@link MailIntegrationSetting} technical identifier to retrieve
+   * @return {@link MailIntegrationSetting} object
+   */
+  MailIntegrationSetting getMailIntegrationSetting(long mailIntegrationSettingId);
+  
+  /**
+   * Deletes a mail integration setting
+   * 
+   * @param mailIntegrationSettingId {@link MailIntegrationSetting} technical identifier to delete
+   * @param userIdentityId User identity owner of the mail integration setting
+   * @throws IllegalAccessException when the user is not authorized to delete mail integration setting
+   */
+  void deleteMailIntegrationSetting(long mailIntegrationSettingId, long userIdentityId) throws IllegalAccessException;;
 
   /**
    * Connect to a mail integration setting

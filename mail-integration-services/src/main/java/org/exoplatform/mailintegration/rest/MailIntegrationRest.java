@@ -23,6 +23,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.mail.MessagingException;
 import javax.mail.Store;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -70,9 +71,8 @@ public class MailIntegrationRest implements ResourceContainer {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
   @ApiOperation(value = "Create a mail integration setting", httpMethod = "POST", response = Response.class, consumes = "application/json")
-  @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),})
+  @ApiResponses(value = {@ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
+          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error")})
   public Response createMailIntegrationSetting(@ApiParam(value = "Mail integration setting object to create", required = true)
                                                           MailIntegrationSettingRestEntity mailIntegrationSettingEntity) {
     if (mailIntegrationSettingEntity == null) {
@@ -94,10 +94,7 @@ public class MailIntegrationRest implements ResourceContainer {
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Get mail integration settings", httpMethod = "GET", response = Response.class, notes = "This gets the mail integration settings of the authenticated user")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"), })
+  @ApiResponses(value = {@ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error")})
   public Response getMailIntegrationSettings() {
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
     try {
@@ -109,6 +106,33 @@ public class MailIntegrationRest implements ResourceContainer {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
+  
+  @DELETE
+  @Path("{id}")
+  @RolesAllowed("users")
+  @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Delete mail integration setting", httpMethod = "DELETE", response = Response.class, notes = "This deletes the mail integration setting of the authenticated user by its id")
+  @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NOT_FOUND, message = "Mail Integration Setting not found"),
+          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
+          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error")})
+  public Response deleteMailIntegrationSetting( @ApiParam(value = "Mail Integration Setting id", required = true) @PathParam("id") String mailIntegrationSettingId) {
+    String currentUser = MailIntegrationUtils.getCurrentUser();
+    try { 
+      MailIntegrationSetting mailIntegrationSetting = mailIntegrationService.getMailIntegrationSetting(Long.parseLong(mailIntegrationSettingId));
+      if (mailIntegrationSetting == null) {
+        return Response.status(Response.Status.NOT_FOUND).build();
+      }
+      long currentUserIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
+      mailIntegrationService.deleteMailIntegrationSetting(Long.parseLong(mailIntegrationSettingId), currentUserIdentityId);
+      return Response.ok().build();
+    } catch (IllegalAccessException e) {
+      LOG.warn("User '{}' is not autorized to delete mail integration setting", currentUser, e);
+      return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
+    } catch (Exception e) {
+      LOG.error("Error when deleting the mail integration setting with id " + mailIntegrationSettingId, e);
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
 
   @Path("connect")
   @POST
@@ -116,10 +140,8 @@ public class MailIntegrationRest implements ResourceContainer {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
   @ApiOperation(value = "Check mail integration connection", httpMethod = "POST", response = Response.class, consumes = "application/json")
-  @ApiResponses(value = {
-          @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),})
+  @ApiResponses(value = {@ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
+          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error")})
   public Response connect(@ApiParam(value = "Connection information object to create", required = true)
                                               MailIntegrationSettingRestEntity mailIntegrationSettingRestEntity) {
     if (mailIntegrationSettingRestEntity == null) {
@@ -143,24 +165,25 @@ public class MailIntegrationRest implements ResourceContainer {
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Get a message", httpMethod = "GET", response = Response.class, notes = "This gets the message with the given id")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
+  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
+          @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "Message not found"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"), })
+          @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error")})
   public Response getMessageById(@ApiParam(value = "Message id", required = true) @PathParam("id") String messageId,
                                  @ApiParam(value = "Message integration setting id", required = true) @PathParam("mailntegrationSettingId") long mailIntegrationSettingId) {
-    long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
+    String currentUser = MailIntegrationUtils.getCurrentUser();
     try {
       if (StringUtils.isBlank(messageId)) {
         return Response.status(Response.Status.BAD_REQUEST).build();
       }
-      MessageRestEntity message = mailIntegrationService.getMessageById(mailIntegrationSettingId, messageId, userIdentityId);
+      long currentUserIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
+      MessageRestEntity message = mailIntegrationService.getMessageById(mailIntegrationSettingId, messageId, currentUserIdentityId);
       if (message == null) {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
       return Response.ok(message).build();
     } catch (IllegalAccessException e) {
-      LOG.warn("User '{}' attempts to get a non authorized message", userIdentityId, e);
+      LOG.warn("User '{}' attempts to get a non authorized message", currentUser, e);
       return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
       LOG.error("Error when getting message ", e);
