@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
+import javax.mail.MessagingException;
+import javax.mail.Store;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -127,15 +129,13 @@ public class MailIntegrationRest implements ResourceContainer {
 
     try {
       MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingRestEntity, userIdentityId);
-      mailIntegrationService.connect(mailIntegrationSetting);
+      Store store = mailIntegrationService.connect(mailIntegrationSetting);
+      store.close();
       return Response.ok().build();
-    } catch (IllegalArgumentException e) {
-      LOG.warn("User '{}' attempts to create a non authorized mail integration", userIdentityId, e);
-      return Response.status(Response.Status.NO_CONTENT).build();
-    } catch (Exception e) {
-      LOG.error("Error when checking mail connection ", e);
+     } catch (MessagingException messagingException) {
+      LOG.error("Error when checking mail connection ", messagingException);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-    }
+     }
   }
 
   @GET

@@ -54,7 +54,7 @@
           <!-- REPEAT_INDEFINITELY -->
           <property name="repeatCount" value="0" />
           <!-- Runs every 30 minutes -->
-          <property name="period" value="${exo.mailIntegration.MailIntegrationNotificationJob.period:120000}"/>
+          <property name="period" value="${exo.mailIntegration.MailIntegrationNotificationJob.period:900000}"/>
         </properties-param>
       </init-params>
     </component-plugin>
