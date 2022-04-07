@@ -35,5 +35,5 @@ public class MessageRestEntity {
 
   String attachedFiles;
 
-  String messageContent;
+  String body;
 }

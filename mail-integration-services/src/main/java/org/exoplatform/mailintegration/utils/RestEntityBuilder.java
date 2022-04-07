@@ -71,7 +71,7 @@ public class RestEntityBuilder {
         messageRestEntity.setFrom(message.getFrom()[0].toString());
       }
       String contentType = message.getContentType();
-      String contentMail = "";
+      String body = "";
       // store attachment file name, separated by comma
       StringBuilder attachedFiles = new StringBuilder();
       if (contentType.contains("multipart")) {
@@ -94,11 +94,11 @@ public class RestEntityBuilder {
 
         MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
         try {
-          contentMail = getTextFromMimeMultipart(mimeMultipart);
+          body = getTextFromMimeMultipart(mimeMultipart);
         } catch (Exception e) {
           LOG.error("error when getting body mail content", e);
         }
-        messageRestEntity.setMessageContent(contentMail);
+        messageRestEntity.setBody(body);
         messageRestEntity.setAttachedFiles(attachedFiles.toString());
       }
       return messageRestEntity;
