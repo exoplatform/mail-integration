@@ -53,7 +53,7 @@ public class MailIntegrationStorageTest {
 
   @PrepareForTest({ EntityMapper.class })
   @Test
-  public void testMailIntegrationSetting() throws Exception { // NOSONAR
+  public void testCreateMailIntegrationSetting() throws Exception { // NOSONAR
     // Given
     MailIntegrationSetting mailIntegrationSetting = createMailIntegrationSetting();
     MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
@@ -79,12 +79,29 @@ public class MailIntegrationStorageTest {
     when(mailIntegrationDAO.findMailIntegrationSettingsByUserId(1L)).thenReturn(mailIntegrationSettingEntities);
 
     // When
-    List<MailIntegrationSetting>  createdMailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingsByUserId(1L);
+    List<MailIntegrationSetting> retrievedMailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingsByUserId(1L);
 
     // Then
-    assertNotNull(createdMailIntegrationSettings);
+    assertNotNull(retrievedMailIntegrationSettings);
+    assertEquals(mailIntegrationSettingEntities.size(), retrievedMailIntegrationSettings.size());
   }
+  
+  @Test
+  public void testGetMailIntegrationSettings() throws Exception { // NOSONAR
+    // Given
+    MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
+    List<MailIntegrationSettingEntity> mailIntegrationSettingEntities = new ArrayList<>();
+    mailIntegrationSettingEntities.add(mailIntegrationSettingEntity);
+    when(mailIntegrationDAO.findAll()).thenReturn(mailIntegrationSettingEntities);
 
+    // When
+    List<MailIntegrationSetting> retrievedMailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettings();
+
+    // Then
+    assertNotNull(retrievedMailIntegrationSettings);
+    assertEquals(mailIntegrationSettingEntities.size(), retrievedMailIntegrationSettings.size());
+  }
+  
   protected MailIntegrationSetting createMailIntegrationSetting() {
     MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
     mailIntegrationSetting.setId(1L);

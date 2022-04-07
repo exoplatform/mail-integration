@@ -83,6 +83,21 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   public List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId) {
     return mailIntegrationStorage.getMailIntegrationSettingsByUserId(userIdentityId);
   }
+  
+  @Override
+  public MailIntegrationSetting getMailIntegrationSetting(long mailIntegrationSettingId) {
+    return mailIntegrationStorage.getMailIntegrationSettingById(mailIntegrationSettingId);
+  }
+  
+  
+  @Override
+  public void deleteMailIntegrationSetting(long mailIntegrationSettingId, long currentUserIdentityId) throws IllegalAccessException {
+    List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSettingId, currentUserIdentityId);
+    if (mailIntegrationSettings.isEmpty()) {
+      throw new IllegalAccessException("User " + currentUserIdentityId + " is not allowed to delete mail integration settings with id " + mailIntegrationSettingId);
+    }
+    mailIntegrationStorage.deleteMailIntegrationSetting(mailIntegrationSettingId);
+  }
 
   @Override
   public Store connect(MailIntegrationSetting mailIntegrationSetting) {
@@ -143,14 +158,12 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   @Override
   public MessageRestEntity getMessageById(long mailIntegrationSettingId,
                                           String messageId,
-                                          long identityId) throws IllegalAccessException {
-    List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSettingId,
-                                                                                                                                             identityId);
+                                          long currentUserIdentityId) throws IllegalAccessException {
+    List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSettingId, currentUserIdentityId);
     if (mailIntegrationSettings.isEmpty()) {
-      throw new IllegalAccessException("User " + identityId + " is not allowed to get mail integration settings with id " + mailIntegrationSettingId);
+      throw new IllegalAccessException("User " + currentUserIdentityId + " is not allowed to get mail integration settings with id " + mailIntegrationSettingId);
     }
-    MailIntegrationSetting mailIntegrationSetting =
-                                                  mailIntegrationStorage.getMailIntegrationSettingById(mailIntegrationSettingId);
+    MailIntegrationSetting mailIntegrationSetting = getMailIntegrationSetting(mailIntegrationSettingId);
     mailIntegrationSetting.setPassword(MailIntegrationUtils.decode(mailIntegrationSetting.getPassword()));
     Store store = connect(mailIntegrationSetting);
     Folder inbox;
@@ -170,7 +183,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     }
     return messageRestEntity;
   }
-
+  
   private List<String> getNewMessages(MailIntegrationSetting mailIntegrationSetting) throws MessagingException {
 
     Store store = connect(mailIntegrationSetting);

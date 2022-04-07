@@ -39,6 +39,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
   
   @Test
   public void testCreateMailIntegrationSetting() throws IllegalAccessException {
+    //Given
     MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
     mailIntegrationSetting.setEmailName(emailName);
     mailIntegrationSetting.setImapUrl(imapUrl);
@@ -51,6 +52,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
     // When
     MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting);
 
+    // Then
     assertNotNull(createdMailIntegrationSetting);
     assertEquals(mailIntegrationSetting.getEmailName(), createdMailIntegrationSetting.getEmailName());
     assertEquals(mailIntegrationSetting.getImapUrl(), createdMailIntegrationSetting.getImapUrl());
@@ -64,6 +66,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
 
   @Test
   public void testGetMailIntegrationSettingsByUserId() {
+    //Given
     MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
     mailIntegrationSetting.setEmailName(emailName);
     mailIntegrationSetting.setImapUrl(imapUrl);
@@ -75,15 +78,63 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
     MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting);
 
     // When
-    List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationService.getMailIntegrationSettingsByUserId(Long.parseLong(user1Identity.getId()));
+    List<MailIntegrationSetting> retrievedMailIntegrationSettings = mailIntegrationService.getMailIntegrationSettingsByUserId(Long.parseLong(user1Identity.getId()));
 
-    MailIntegrationSetting mailIntegrationSetting1 = mailIntegrationSettings.get(0);
-    assertNotNull(mailIntegrationSetting1);
-    assertEquals(mailIntegrationSetting1.getEmailName(), createdMailIntegrationSetting.getEmailName());
-    assertEquals(mailIntegrationSetting1.getImapUrl(), createdMailIntegrationSetting.getImapUrl());
-    assertEquals(mailIntegrationSetting1.getPort(), createdMailIntegrationSetting.getPort());
-    assertEquals(mailIntegrationSetting1.getEncryption(), createdMailIntegrationSetting.getEncryption());
-    assertEquals(mailIntegrationSetting1.getAccount(), createdMailIntegrationSetting.getAccount());
-    assertEquals(mailIntegrationSetting1.getUserId(), createdMailIntegrationSetting.getUserId());
+    // Then
+    MailIntegrationSetting retrievedMailIntegrationSetting = retrievedMailIntegrationSettings.get(0);
+    assertNotNull(retrievedMailIntegrationSetting);
+    assertEquals(createdMailIntegrationSetting.getEmailName(), retrievedMailIntegrationSetting.getEmailName());
+    assertEquals(createdMailIntegrationSetting.getImapUrl(), retrievedMailIntegrationSetting.getImapUrl());
+    assertEquals(createdMailIntegrationSetting.getPort(), retrievedMailIntegrationSetting.getPort());
+    assertEquals(createdMailIntegrationSetting.getEncryption(), retrievedMailIntegrationSetting.getEncryption());
+    assertEquals(createdMailIntegrationSetting.getAccount(), retrievedMailIntegrationSetting.getAccount());
+    assertEquals(createdMailIntegrationSetting.getUserId(), retrievedMailIntegrationSetting.getUserId());
+  }
+  
+  @Test
+  public void testGetMailIntegrationSetting() {
+    //Given
+    MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
+    mailIntegrationSetting.setEmailName(emailName);
+    mailIntegrationSetting.setImapUrl(imapUrl);
+    mailIntegrationSetting.setPort(port);
+    mailIntegrationSetting.setEncryption(encryption);
+    mailIntegrationSetting.setAccount(account);
+    mailIntegrationSetting.setPassword(password);
+    mailIntegrationSetting.setUserId(Long.parseLong(user1Identity.getId()));
+    MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting);
+
+    // When
+    MailIntegrationSetting retrievedMailIntegrationSetting = mailIntegrationService.getMailIntegrationSetting(createdMailIntegrationSetting.getId());
+
+    // Then
+    assertNotNull(retrievedMailIntegrationSetting);
+    assertEquals(createdMailIntegrationSetting.getEmailName(), retrievedMailIntegrationSetting.getEmailName());
+    assertEquals(createdMailIntegrationSetting.getImapUrl(), retrievedMailIntegrationSetting.getImapUrl());
+    assertEquals(createdMailIntegrationSetting.getPort(), retrievedMailIntegrationSetting.getPort());
+    assertEquals(createdMailIntegrationSetting.getEncryption(), retrievedMailIntegrationSetting.getEncryption());
+    assertEquals(createdMailIntegrationSetting.getAccount(), retrievedMailIntegrationSetting.getAccount());
+    assertEquals(createdMailIntegrationSetting.getUserId(), retrievedMailIntegrationSetting.getUserId());
+  }
+  
+  @Test
+  public void testDeleteMailIntegrationSetting() throws IllegalAccessException {
+    //Given
+    MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
+    mailIntegrationSetting.setEmailName(emailName);
+    mailIntegrationSetting.setImapUrl(imapUrl);
+    mailIntegrationSetting.setPort(port);
+    mailIntegrationSetting.setEncryption(encryption);
+    mailIntegrationSetting.setAccount(account);
+    mailIntegrationSetting.setPassword(password);
+    mailIntegrationSetting.setUserId(Long.parseLong(user1Identity.getId()));
+    MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting);
+
+    // When
+    mailIntegrationService.deleteMailIntegrationSetting(createdMailIntegrationSetting.getId(), Long.parseLong(user1Identity.getId()));
+    
+    // Then
+    MailIntegrationSetting deletedMailIntegrationSetting = mailIntegrationService.getMailIntegrationSetting(createdMailIntegrationSetting.getId());
+    assertNull(deletedMailIntegrationSetting);
   }
 }

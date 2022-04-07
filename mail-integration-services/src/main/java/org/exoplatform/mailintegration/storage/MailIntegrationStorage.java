@@ -45,6 +45,11 @@ public class MailIntegrationStorage {
                                          .map(EntityMapper::fromMailIntegrationSettingEntity)
                                          .collect(Collectors.toList());
   }
+  
+  public void deleteMailIntegrationSetting(long mailIntegrationSettingId) {
+    MailIntegrationSettingEntity mailIntegrationSettingEntity = mailIntegrationDAO.find(mailIntegrationSettingId);
+    mailIntegrationDAO.delete(mailIntegrationSettingEntity);
+  }
 
   public List<MailIntegrationSetting> getMailIntegrationSettings() {
     List<MailIntegrationSettingEntity> mailIntegrationSettingEntities = mailIntegrationDAO.findAll();
