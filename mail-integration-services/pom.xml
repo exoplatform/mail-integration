@@ -8,7 +8,7 @@
   <artifactId>mail-integration-services</artifactId>
   <name>eXo Mail Integration - Services</name>
   <properties>
-    <exo.test.coverage.ratio>0.19</exo.test.coverage.ratio>
+    <exo.test.coverage.ratio>0.17</exo.test.coverage.ratio>
   </properties>
   <dependencies>
     <dependency>

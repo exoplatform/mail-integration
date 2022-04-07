@@ -23,12 +23,10 @@ import javax.mail.internet.MimeMultipart;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingRestEntity;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
-import org.exoplatform.mailintegration.service.MailIntegrationServiceImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
-import java.util.Locale;
 
 public class RestEntityBuilder {
   private static final Log LOG = ExoLogger.getLogger(RestEntityBuilder.class);
