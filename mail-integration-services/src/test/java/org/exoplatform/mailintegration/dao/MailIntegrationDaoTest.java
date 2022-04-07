@@ -91,7 +91,6 @@ public class MailIntegrationDaoTest extends TestCase {
     assertEquals(port, retrievedMailIntegrationSetting.getPort());
     assertEquals(encryption, retrievedMailIntegrationSetting.getEncryption());
     assertEquals(account, retrievedMailIntegrationSetting.getAccount());
-    assertEquals(password, retrievedMailIntegrationSetting.getPassword());
     assertEquals(userId, retrievedMailIntegrationSetting.getUserId());
 
   }

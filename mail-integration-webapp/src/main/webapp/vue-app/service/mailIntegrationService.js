@@ -73,3 +73,14 @@ export function getMessageById(mailntegrationSettingId, messageId) {
     }
   });
 }
+
+export function deleteMailIntegrationSetting(mailIntegrationSettingId) {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/mailIntegration/${mailIntegrationSettingId}`, {
+    credentials: 'include',
+    method: 'DELETE'
+  }).then((resp) => {
+    if (resp && !resp.ok) {
+      throw new Error('Error when deleting mail integration setting');
+    }
+  });
+}

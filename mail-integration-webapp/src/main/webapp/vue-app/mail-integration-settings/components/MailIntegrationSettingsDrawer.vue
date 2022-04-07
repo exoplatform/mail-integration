@@ -219,7 +219,7 @@ export default {
   methods: {
     openDrawer(){
       this.connectionSuccess = false;
-      if (this.mailIntegrationSetting) {
+      if (this.mailIntegrationSetting && this.mailIntegrationSetting.length > 0) {
         this.emailAccount = this.mailIntegrationSetting.emailName;
         this.imapUrl = this.mailIntegrationSetting.imapUrl;
         this.port = this.mailIntegrationSetting.port.toString();

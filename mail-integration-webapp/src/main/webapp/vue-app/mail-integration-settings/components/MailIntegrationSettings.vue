@@ -39,7 +39,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <v-btn
               v-if="editMode"
               icon
-              class="mt-6">
+              class="mt-6"
+              @click="deleteConfirmDialog">
               <i class="uiIconTrash uiIconLightBlue"></i>
             </v-btn>
           </v-list-item-action>
@@ -52,6 +53,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       :mail-integration-setting="mailIntegrationSetting"
       @display-alert="displayAlert"
       @mail-integration-settings-save-success="getMailIntegrationSettings" />
+    <exo-confirm-dialog
+      ref="deleteConfirmDialog"
+      :message="$t('mailIntegration.settings.message.confirmDeleteMail')"
+      :title="$t('mailIntegration.settings.title.confirmDeleteMail')"
+      :ok-label="$t('mailIntegration.settings.ok')"
+      :cancel-label="$t('mailIntegration.settings.cancel')"
+      @ok="deleteMailIntegrationSetting" />
     <mail-integration-alert />
   </v-app>
 </template>
@@ -85,9 +93,15 @@ export default {
     },
     getMailIntegrationSettings() {
       this.$mailIntegrationService.getMailIntegrationSettings().then(setting => {
-        this.mailIntegrationSetting = setting[0];
-        this.emailName = setting[0].emailName;
-        this.editMode = true;
+        if (setting && setting.length > 0) {
+          this.mailIntegrationSetting = setting[0];
+          this.emailName = setting[0].emailName;
+          this.editMode = true;
+        } else {
+          this.mailIntegrationSetting = setting;
+          this.emailName = '';
+          this.editMode = false;
+        }
       });
     },
     displayAlert(message, type) {
@@ -95,6 +109,15 @@ export default {
         message,
         type: type || 'success',
       });
+    },
+    deleteMailIntegrationSetting() {
+      this.$mailIntegrationService.deleteMailIntegrationSetting(this.mailIntegrationSetting.id)
+        .then(() => {
+          this.getMailIntegrationSettings();
+        });
+    },
+    deleteConfirmDialog() {
+      this.$refs.deleteConfirmDialog.open();
     },
   }
 };
