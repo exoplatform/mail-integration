@@ -54,7 +54,7 @@ public interface MailIntegrationService {
    * @param userIdentityId User identity owner of the mail integration setting
    * @throws IllegalAccessException when the user is not authorized to delete mail integration setting
    */
-  void deleteMailIntegrationSetting(long mailIntegrationSettingId, long userIdentityId) throws IllegalAccessException;;
+  void deleteMailIntegrationSetting(long mailIntegrationSettingId, long userIdentityId) throws IllegalAccessException;
 
   /**
    * Connect to a mail integration setting
