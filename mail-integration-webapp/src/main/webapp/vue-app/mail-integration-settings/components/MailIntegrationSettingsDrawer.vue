@@ -208,15 +208,23 @@ export default {
     },
     imapUrl(newVal, oldVal) {
       this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
     },
     port(newVal, oldVal) {
       this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
     },
     encryption(newVal, oldVal) {
       this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
     },
     password(newVal, oldVal) {
       this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
+    },
+    account(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
     }
   },
   methods: {
