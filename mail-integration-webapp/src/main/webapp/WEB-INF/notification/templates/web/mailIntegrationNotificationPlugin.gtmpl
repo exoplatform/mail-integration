@@ -4,7 +4,7 @@ String mailIntegrationNotificationJobPeriod = String.valueOf(Long.parseLong(Syst
 %>
 
 <li class="$READ clearfix" data-id="$NOTIFICATION_ID" data-details="notification-details-drawer">
-  <div id="mediaDiv" class="media">
+  <div class="media">
       <div style="cursor:default;" class="avatarXSmall pull-left">
         <img src="/mail-integration/images/email.png" />
       </div>
