@@ -264,6 +264,7 @@ export default {
           if (integrationSetting) {
             this.close();
             this.$emit('mail-integration-settings-save-success');
+            this.reset();
           }
         }).catch(() => this.$emit('display-alert',this.$('mailIntegration.settings.connectMail.errorMessage'), 'error'))
           .finally(() => {
@@ -274,6 +275,14 @@ export default {
         this.close();
       }
     },
+    reset() {
+      this.emailAccount = '';
+      this.imapUrl = '';
+      this.port = '';
+      this.encryption = 'SSL';
+      this.account = '';
+      this.password = '';
+    }
   },
 };
 </script>
