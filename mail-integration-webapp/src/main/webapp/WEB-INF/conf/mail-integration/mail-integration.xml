@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <properties-param>
         <name>MailIntegrationFeatureProperties</name>
         <description>Mail integration Feature enablement flag</description>
-        <property name="exo.feature.mailIntegration.enabled" value="${exo.feature.mailIntegration.enabled:false}"/>
+        <property name="exo.feature.mailIntegration.enabled" value="${exo.feature.mailIntegration.enabled:true}"/>
       </properties-param>
     </init-params>
   </component>
