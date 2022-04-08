@@ -100,7 +100,9 @@ export default {
   },
   methods: {
     openDrawer(){
-      this.$refs.mailIntegrationSettingDrawer.openDrawer();
+      if (!this.editMode) {
+        this.$refs.mailIntegrationSettingDrawer.openDrawer();
+      }
     },
     getMailIntegrationSettings() {
       this.$mailIntegrationService.getMailIntegrationSettings().then(setting => {
