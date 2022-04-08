@@ -212,7 +212,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
 
   private boolean isNewMessage(Date messageSentDate, Date now) {
     String mailIntegrationNotificationJobPeriod = System.getProperty("exo.mailIntegration.MailIntegrationNotificationJob.period",
-                                                                     "120000");
+                                                                     "900000");
     return ZonedDateTime.ofInstant(messageSentDate.toInstant(), ZoneOffset.UTC)
                         .isAfter(ZonedDateTime.ofInstant(now.toInstant(), ZoneOffset.UTC)
                                               .minusMinutes(Long.parseLong(mailIntegrationNotificationJobPeriod) / 60000));

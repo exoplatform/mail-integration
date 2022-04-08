@@ -6,6 +6,9 @@
   }
 }
 .VuetifyApp {
+  .emailName {
+    color: @grayDark;
+  }
   #mailIntegrationNotifDrawer {
     .mailIntegrationNotificationItems {
       font-family: Helvetica, arial, sans-serif;
@@ -26,6 +29,23 @@
       }
       .attachmentIcon {
         transform: rotate(-45deg);
+      }
+    }
+    .contentItemDetails {
+      .mailSubject {
+        color: @darkGrey;
+      }
+      .mailBody {
+        color: @grayDark;
+      }
+      .attachmentContent {
+        margin-top: 70px;
+      }
+      .attachmentContentItemIcon {
+        transform: rotate(-45deg);
+      }
+      .attachedFileName {
+        cursor: pointer;
       }
     }
   }

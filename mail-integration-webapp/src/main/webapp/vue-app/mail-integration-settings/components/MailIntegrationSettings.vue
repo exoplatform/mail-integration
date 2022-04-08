@@ -29,7 +29,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               {{ $t('mailIntegration.settings.connectMail.description') }}
             </v-list-item-subtitle>
             <v-list-item-subtitle>
-              <span class="my-auto text-capitalize text-truncate" :title="emailName"> {{ emailName }} </span>
+              <span class="my-auto text-capitalize text-truncate emailName" :title="emailName"> {{ emailName }} </span>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>

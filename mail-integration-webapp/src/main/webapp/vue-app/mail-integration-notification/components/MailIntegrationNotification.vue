@@ -24,18 +24,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       disable-pull-to-refresh>
       <template slot="title">
         <div class="flex d-flex flex-row">
-          <div class="flex flex-column my-auto flex-grow-0">
-            <v-btn
-              v-if="isOpened"
-              class="me-1"
-              icon
-              text>
-              <v-icon
-                @click="closeDrawer">
-                mdi-keyboard-backspace
-              </v-icon>
-            </v-btn>
-          </div>
+          <v-btn
+            v-if="isOpened"
+            icon
+            text>
+            <v-icon
+              @click="backDrawer">
+              mdi-keyboard-backspace
+            </v-icon>
+          </v-btn>
           <span class="flex flex-column my-auto">{{ $t('mailIntegration.notification.drawer.title') }}</span>
         </div>
       </template>
@@ -44,8 +41,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           class="mailIntegrationNotificationItems"
           v-for="(message, index) in messages"
           :key="index">
-          <mail-integration-notification-content-item :message="message" />
+          <mail-integration-notification-content-item
+            v-if="step === 1"
+            :message="message"
+            :step="step"
+            @second-step="updateInformation" />
         </div>
+        <mail-integration-notification-content-item-details v-if="step === 2" :message="selectedMessage" />
       </template>
     </exo-drawer>
   </v-app>
@@ -59,7 +61,9 @@ export default {
       hour: '2-digit',
       minute: '2-digit',
     },
+    selectedMessage: null,
     isOpened: false,
+    step: 0,
   }),
   created() {
     document.addEventListener('open-notification-details-drawer', event => {
@@ -70,6 +74,7 @@ export default {
   methods: {
     openDrawer() {
       this.isOpened = true;
+      this.step = 1;
       this.$refs.mailIntegrationNotifDrawer.startLoading();
       this.$refs.mailIntegrationNotifDrawer.open();
     },
@@ -87,6 +92,18 @@ export default {
             this.$nextTick(this.$refs.mailIntegrationNotifDrawer.endLoading);
           });
       }
+    },
+    backDrawer() {
+      if (this.step === 2) {
+        this.step = 1;
+        this.$root.$emit('close-details-item', this.step);
+      } else {
+        this.closeDrawer();
+      }
+    },
+    updateInformation(step, selectedMessage) {
+      this.step = step;
+      this.selectedMessage = selectedMessage;
     }
   }
 };

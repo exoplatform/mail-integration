@@ -16,10 +16,14 @@
  */
 import MailIntegrationNotification from './components/MailIntegrationNotification.vue';
 import MailIntegrationNotificationContentItem from './components/MailIntegrationNotificationContentItem.vue';
+import MailIntegrationNotificationContentItemDetails from './components/MailIntegrationNotificationContentItemDetails.vue';
+import MailIntegrationNotificationAttachments from './components/MailIntegrationNotificationAttachments.vue';
 
 const components = {
   'mail-integration-notification': MailIntegrationNotification,
   'mail-integration-notification-content-item': MailIntegrationNotificationContentItem,
+  'mail-integration-notification-content-item-details': MailIntegrationNotificationContentItemDetails,
+  'mail-integration-notification-attachments': MailIntegrationNotificationAttachments,
 };
 
 for (const key in components) {

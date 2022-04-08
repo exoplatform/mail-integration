@@ -28,10 +28,12 @@ import lombok.NoArgsConstructor;
 public class MessageRestEntity {
   
   String subject;
-  
-  Date sentDate;
-  
+
+  Date   sentDate;
+
   String from;
 
   String attachedFiles;
+
+  String body;
 }

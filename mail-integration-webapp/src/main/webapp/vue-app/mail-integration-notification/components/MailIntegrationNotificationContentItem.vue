@@ -15,31 +15,31 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <v-list class="pa-0">
-    <v-list-item-group
-      color="primary"
-      multiple>
-      <v-list-item three-line>
-        <v-list-item-content>
-          <v-list-item-title>
-            <span class="messageReceivedText black--text">{{ $t('mailIntegration.notification.drawer.message.received.from') }}</span>
-            <span class="messageSender black--text" :title="message.from">{{ message.from }}</span>
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            <div :title="message.subject" class="messageSubject text-truncate">
-              {{ message.subject }}
-            </div>
-          </v-list-item-subtitle>
-          <v-list-item-subtitle class="sendDate grey--text">
-            {{ dateTimeFormat }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-icon v-if="hasAttachment">
-          <v-icon class="attachmentIcon">mdi-attachment</v-icon>
-        </v-list-item-icon>
-      </v-list-item>
-    </v-list-item-group>
-  </v-list>
+  <div>
+    <v-list v-if="step === 1" class="pa-0">
+      <v-list-item-group>
+        <v-list-item v-if="true" three-line>
+          <v-list-item-content @click="switchMessageDetails">
+            <v-list-item-title>
+              <span class="messageReceivedText black--text">{{ $t('mailIntegration.notification.drawer.message.received.from') }}</span>
+              <span class="messageSender black--text" :title="message.from">{{ message.from }}</span>
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <div :title="message.subject" class="messageSubject text-truncate">
+                {{ message.subject }}
+              </div>
+            </v-list-item-subtitle>
+            <v-list-item-subtitle class="sendDate grey--text">
+              {{ dateTimeFormat }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-list-item-icon v-if="hasAttachment">
+            <v-icon class="attachmentIcon">mdi-attachment</v-icon>
+          </v-list-item-icon>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+  </div>
 </template>
 
 <script>
@@ -48,8 +48,15 @@ export default {
     message: {
       type: Object,
       default: null,
+    },
+    step: {
+      type: Number,
+      default: null,
     }
   },
+  data: () => ({
+    step: 1,
+  }),
   computed: {
     dateTimeFormat() {
       let formattedDate = null;
@@ -62,6 +69,17 @@ export default {
     },
     hasAttachment() {
       return this.message && this.message.attachedFiles;
+    },
+  },
+  created() {
+    this.$root.$on('close-details-item', (step) => {
+      this.step = step;
+    });
+  },
+  methods: {
+    switchMessageDetails() {
+      this.step = 2;
+      this.$emit('second-step', this.step, this.message);
     }
   }
 };
