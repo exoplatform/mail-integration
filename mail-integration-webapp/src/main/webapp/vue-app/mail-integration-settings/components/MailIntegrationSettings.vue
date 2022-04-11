@@ -28,12 +28,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <v-list-item-subtitle class="my-3 text-sub-title font-italic">
               {{ $t('mailIntegration.settings.connectMail.description') }}
             </v-list-item-subtitle>
-            <v-list-item-subtitle>
-              <span class="my-auto text-capitalize text-truncate emailName" :title="emailName"> {{ emailName }} </span>
+            <v-list-item-subtitle :title="displayAccountTooltip">
+              <span class="my-auto text-capitalize text-truncate"> {{ emailName }} </span>
+              <span class="my-auto text-truncate"> {{ account }} </span>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn icon @click="openDrawer">
+            <v-btn
+              icon
+              @click="openDrawer"
+              :disabled="editMode"
+              :style="editMode && 'opacity : 0.5'">
               <i class="uiIconEdit uiIconLightBlue pb-2"></i>
             </v-btn>
             <v-btn
@@ -72,8 +77,14 @@ export default {
     displayed: true,
     editMode: false,
     emailName: '',
+    account: '',
     mailIntegrationSetting: null,
   }),
+  computed: {
+    displayAccountTooltip() {
+      return `${this.emailName} ${this.account}`;
+    }
+  },
   created() {
     this.$featureService.isFeatureEnabled('mailIntegration')
       .then(enabled => this.mailIntegrationEnabled = enabled);
@@ -89,17 +100,21 @@ export default {
   },
   methods: {
     openDrawer(){
-      this.$refs.mailIntegrationSettingDrawer.openDrawer();
+      if (!this.editMode) {
+        this.$refs.mailIntegrationSettingDrawer.openDrawer();
+      }
     },
     getMailIntegrationSettings() {
       this.$mailIntegrationService.getMailIntegrationSettings().then(setting => {
         if (setting && setting.length > 0) {
           this.mailIntegrationSetting = setting[0];
           this.emailName = setting[0].emailName;
+          this.account = `(${  setting[0].account  })`;
           this.editMode = true;
         } else {
           this.mailIntegrationSetting = setting;
           this.emailName = '';
+          this.account = '';
           this.editMode = false;
         }
       });

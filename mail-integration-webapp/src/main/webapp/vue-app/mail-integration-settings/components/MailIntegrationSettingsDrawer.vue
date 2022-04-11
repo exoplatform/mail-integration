@@ -135,7 +135,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-btn>
         <v-btn
           :loading="saving"
-          :disabled="disabled"
+          :disabled="disabled || disableTestButton"
           class="btn btn-primary"
           @click="checkConnection">
           {{ saveButtonLabel }}
@@ -194,6 +194,9 @@ export default {
     saveButtonLabel() {
       return this.connectionSuccess ? this.$t('mailIntegration.settings.connectMail.add'): this.$t('mailIntegration.settings.connectMail.test');
     },
+    disableTestButton() {
+      return this.emailAccount === '' || this.imapUrl === '' || this.port === '' || this.encryption === '' || this.account === '' || this.password === '';
+    }
   },
   watch: {
     saving() {
@@ -205,15 +208,23 @@ export default {
     },
     imapUrl(newVal, oldVal) {
       this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
     },
     port(newVal, oldVal) {
       this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
     },
     encryption(newVal, oldVal) {
       this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
     },
     password(newVal, oldVal) {
       this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
+    },
+    account(newVal, oldVal) {
+      this.disabled = newVal.length === oldVal.length;
+      this.connectionSuccess = false;
     }
   },
   methods: {
@@ -233,47 +244,58 @@ export default {
       this.$refs.mailIntegrationSettingDrawer.close();
     },
     checkConnection() {
-      this.saving = true;
-      const mailIntegrationSetting = {
-        'emailName': this.emailAccount,
-        'imapUrl': this.imapUrl,
-        'port': this.port,
-        'encryption': this.encryption,
-        'account': this.account,
-        'password': this.password,
-      };
-      if (!this.connectionSuccess) {
-        this.$mailIntegrationService.checkConnection(mailIntegrationSetting).then((respStatus) => {
-          if (respStatus === 200) {
-            this.$emit('display-alert', this.$t('mailIntegration.settings.connection.successMessage'));
-            this.connectionSuccess = true;
-          }
-        }).catch(() => {
-          this.error = 'error';
-          this.connectionSuccess = this.error !== 'error';
-          this.disabled = true;
-          this.$emit('display-alert', this.$t('mailIntegration.settings.connection.errorMessage'), this.error);
-        })
-          .finally(() => {
-            window.setTimeout(() => {
+      if (!this.disableTestButton && !this.disabled) {
+        this.saving = true;
+        const mailIntegrationSetting = {
+          'emailName': this.emailAccount,
+          'imapUrl': this.imapUrl,
+          'port': this.port,
+          'encryption': this.encryption,
+          'account': this.account,
+          'password': this.password,
+        };
+        if (!this.connectionSuccess) {
+          this.$mailIntegrationService.checkConnection(mailIntegrationSetting).then((respStatus) => {
+            if (respStatus === 200) {
+              this.$emit('display-alert', this.$t('mailIntegration.settings.connection.successMessage'));
+              this.connectionSuccess = true;
+            }
+          }).catch(() => {
+            this.error = 'error';
+            this.connectionSuccess = this.error !== 'error';
+            this.disabled = true;
+            this.$emit('display-alert', this.$t('mailIntegration.settings.connection.errorMessage'), this.error);
+          })
+            .finally(() => {
+              window.setTimeout(() => {
+                this.saving = false;
+              }, 200);
+            });
+        } else if (!this.editMode) {
+          this.$mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting).then((integrationSetting) => {
+            if (integrationSetting) {
+              this.close();
+              this.$emit('mail-integration-settings-save-success');
+              this.reset();
+            }
+          }).catch(() => this.$emit('display-alert',this.$('mailIntegration.settings.connectMail.errorMessage'), 'error'))
+            .finally(() => {
               this.saving = false;
-            }, 200);
-          });
-      } else if (!this.editMode) {
-        this.$mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting).then((integrationSetting) => {
-          if (integrationSetting) {
-            this.close();
-            this.$emit('mail-integration-settings-save-success');
-          }
-        }).catch(() => this.$emit('display-alert',this.$('mailIntegration.settings.connectMail.errorMessage'), 'error'))
-          .finally(() => {
-            this.saving = false;
-          });
-      } else {
-        this.saving = false;
-        this.close();
+            });
+        } else {
+          this.saving = false;
+          this.close();
+        }
       }
     },
+    reset() {
+      this.emailAccount = '';
+      this.imapUrl = '';
+      this.port = '';
+      this.encryption = 'SSL';
+      this.account = '';
+      this.password = '';
+    }
   },
 };
 </script>
