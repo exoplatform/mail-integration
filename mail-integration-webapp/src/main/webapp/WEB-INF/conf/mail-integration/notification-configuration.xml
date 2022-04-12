@@ -75,7 +75,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               <string>mail-integration</string>
             </field>
             <field name="bundlePath">
-              <string>locale.portlet.MailIntegration</string>
+              <string>locale.notification.MailIntegrationNotification</string>
             </field>
           </object>
         </object-param>
