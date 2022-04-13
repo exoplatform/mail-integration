@@ -86,8 +86,7 @@ public interface MailIntegrationService {
   /**
    *
    * @param mailIntegrationSetting {@link MailIntegrationSetting} object to update
-   * @param userIdentityId User identity update the mail integration setting
    * @return updated an {@link MailIntegrationSetting} object
    */
-  MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting, long userIdentityId) throws IllegalAccessException;
+  MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) throws IllegalAccessException;
 }

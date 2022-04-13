@@ -84,3 +84,20 @@ export function deleteMailIntegrationSetting(mailIntegrationSettingId) {
     }
   });
 }
+
+export function updateMailIntegrationSetting(mailIntegrationSetting) {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/mailIntegration`, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    method: 'PUT',
+    body: JSON.stringify(mailIntegrationSetting)
+  }).then(resp => {
+    if (resp && resp.ok) {
+      return resp.json();
+    } else {
+      throw new Error('Response code indicates a server error', resp);
+    }
+  });
+}

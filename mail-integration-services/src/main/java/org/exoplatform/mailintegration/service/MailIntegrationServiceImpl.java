@@ -185,15 +185,13 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   }
 
   @Override
-  public MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting, long userIdentityId) throws IllegalAccessException {
+  public MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) {
     if (mailIntegrationSetting == null) {
       throw new IllegalArgumentException("mailIntegrationSetting is null");
     }
-    Identity userIdentity = identityManager.getIdentity(String.valueOf(mailIntegrationSetting.getUserId()));
-    if (userIdentity == null) {
-      throw new IllegalAccessException("User '" + userIdentityId + "' doesn't exist");
-    }
-    return null;
+    String encodedPassword = MailIntegrationUtils.encode(mailIntegrationSetting.getPassword());
+    mailIntegrationSetting.setPassword(encodedPassword);
+    return mailIntegrationStorage.updateMailIntegrationSetting(mailIntegrationSetting);
   }
 
   private List<String> getNewMessages(MailIntegrationSetting mailIntegrationSetting) throws MessagingException {

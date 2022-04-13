@@ -146,6 +146,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 </template>
 
 <script>
+
 const MAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default {
@@ -155,11 +156,12 @@ export default {
       default: false,
     },
     mailIntegrationSetting: {
-      type: Object,
+      type: Array,
       default: null,
     }
   },
   data: () => ({
+    mailIntegrationSettingId: '',
     emailAccount: '',
     imapUrl: '',
     port: '',
@@ -192,7 +194,7 @@ export default {
       return this.showPassWord ? 'text': 'password';
     },
     saveButtonLabel() {
-      return this.connectionSuccess ? this.$t('mailIntegration.settings.connectMail.add'): this.$t('mailIntegration.settings.connectMail.test');
+      return this.connectionSuccess && !this.editMode ? this.$t('mailIntegration.settings.connectMail.add'): this.connectionSuccess && this.editMode ? 'edit' : this.$t('mailIntegration.settings.connectMail.test');
     },
     disableTestButton() {
       return this.emailAccount === '' || this.imapUrl === '' || this.port === '' || this.encryption === '' || this.account === '' || this.password === '';
@@ -230,14 +232,13 @@ export default {
   methods: {
     openDrawer(){
       this.connectionSuccess = false;
-      if (this.mailIntegrationSetting && this.mailIntegrationSetting.length > 0) {
-        this.emailAccount = this.mailIntegrationSetting.emailName;
-        this.imapUrl = this.mailIntegrationSetting.imapUrl;
-        this.port = this.mailIntegrationSetting.port.toString();
-        this.encryption = this.mailIntegrationSetting.encryption;
-        this.account = this.mailIntegrationSetting.account;
-        this.password = this.mailIntegrationSetting.password;
-      }
+      this.mailIntegrationSettingId = this.mailIntegrationSetting && this.mailIntegrationSetting.id || '';
+      this.emailAccount = this.mailIntegrationSetting && this.mailIntegrationSetting.emailName || '';
+      this.imapUrl = this.mailIntegrationSetting && this.mailIntegrationSetting.imapUrl || '';
+      this.port = this.mailIntegrationSetting && this.mailIntegrationSetting.port && this.mailIntegrationSetting.port.toString() || '';
+      this.encryption = this.mailIntegrationSetting && this.mailIntegrationSetting.encryption || 'SSL';
+      this.account = this.mailIntegrationSetting && this.mailIntegrationSetting.account || '';
+      this.password = this.mailIntegrationSetting && this.mailIntegrationSetting.password || '';
       this.$refs.mailIntegrationSettingDrawer.open();
     },
     close(){
@@ -247,6 +248,7 @@ export default {
       if (!this.disableTestButton && !this.disabled) {
         this.saving = true;
         const mailIntegrationSetting = {
+          'id': this.mailIntegrationSettingId,
           'emailName': this.emailAccount,
           'imapUrl': this.imapUrl,
           'port': this.port,
@@ -283,8 +285,16 @@ export default {
               this.saving = false;
             });
         } else {
-          this.saving = false;
-          this.close();
+          this.$mailIntegrationService.updateMailIntegrationSetting(mailIntegrationSetting).then((integrationSetting) => {
+            if (integrationSetting) {
+              this.close();
+              this.$emit('mail-integration-settings-save-success');
+              this.reset();
+            }
+          }).catch(() => this.$emit('display-alert',this.$('mailIntegration.settings.connectMail.errorMessage'), 'error'))
+            .finally(() => {
+              this.saving = false;
+            });
         }
       }
     },

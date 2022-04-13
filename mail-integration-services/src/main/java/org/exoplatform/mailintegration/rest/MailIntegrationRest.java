@@ -22,13 +22,7 @@ import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.mail.MessagingException;
 import javax.mail.Store;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -187,6 +181,38 @@ public class MailIntegrationRest implements ResourceContainer {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     } catch (Exception e) {
       LOG.error("Error when getting message ", e);
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @ApiOperation(value = "Update an existing mail integration setting", httpMethod = "PUT", response = Response.class, consumes = "application/json")
+  @ApiResponses(
+          value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
+                  @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "Object not found"),
+                  @ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
+                  @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
+                  @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),
+          }
+  )
+  public Response updateMailIntegrationSetting(
+                                               @ApiParam(value = "Event object to update", required = true)
+                                               MailIntegrationSettingRestEntity mailIntegrationSettingEntity) {
+    if (mailIntegrationSettingEntity == null) {
+      return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
+    try {
+      MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingEntity,
+                                                                                                 userIdentityId);
+      MailIntegrationSetting createdMailIntegrationSetting =
+                                                           mailIntegrationService.updateMailIntegrationSetting(mailIntegrationSetting);
+      return Response.ok(createdMailIntegrationSetting).build();
+    } catch (Exception e) {
+      LOG.error("Error when creating mail integration setting ", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
