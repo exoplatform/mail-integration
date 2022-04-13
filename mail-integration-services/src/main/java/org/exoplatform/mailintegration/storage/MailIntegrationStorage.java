@@ -72,4 +72,11 @@ public class MailIntegrationStorage {
                                          .collect(Collectors.toList());
   }
 
+  public MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) {
+    MailIntegrationSettingEntity mailIntegrationSettingEntity =
+                                                              EntityMapper.toMailIntegrationSettingEntity(mailIntegrationSetting);
+    mailIntegrationSettingEntity = mailIntegrationDAO.update(mailIntegrationSettingEntity);
+    return EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity);
+  }
+
 }

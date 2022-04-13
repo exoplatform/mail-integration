@@ -183,7 +183,19 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     }
     return messageRestEntity;
   }
-  
+
+  @Override
+  public MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting, long userIdentityId) throws IllegalAccessException {
+    if (mailIntegrationSetting == null) {
+      throw new IllegalArgumentException("mailIntegrationSetting is null");
+    }
+    Identity userIdentity = identityManager.getIdentity(String.valueOf(mailIntegrationSetting.getUserId()));
+    if (userIdentity == null) {
+      throw new IllegalAccessException("User '" + userIdentityId + "' doesn't exist");
+    }
+    return null;
+  }
+
   private List<String> getNewMessages(MailIntegrationSetting mailIntegrationSetting) throws MessagingException {
 
     Store store = connect(mailIntegrationSetting);

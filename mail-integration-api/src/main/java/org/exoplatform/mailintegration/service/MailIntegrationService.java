@@ -82,4 +82,12 @@ public interface MailIntegrationService {
   MessageRestEntity getMessageById(long mailIntegrationSettingId,
                                    String messageId,
                                    long userIdentityId) throws IllegalAccessException;
+
+  /**
+   *
+   * @param mailIntegrationSetting {@link MailIntegrationSetting} object to update
+   * @param userIdentityId User identity update the mail integration setting
+   * @return updated an {@link MailIntegrationSetting} object
+   */
+  MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting, long userIdentityId) throws IllegalAccessException;
 }
