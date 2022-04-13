@@ -25,7 +25,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <span class="grey--text caption">{{ sentDate }}</span>
       </div>
     </div>
-    <div class="mt-6 body-2 mailBody" v-sanitized-html="messageContent">
+    <div class="mt-6 body-2 mailBody" v-sanitized-html="messageBody">
     </div>
     <div v-if="attachmentCount" class="flex d-flex flex-row attachmentContent primary--text">
       <v-icon
@@ -71,8 +71,8 @@ export default {
       }
       return '';
     },
-    messageContent() {
-      return this.message && this.message.body && this.message.body;
+    messageBody() {
+      return this.message && this.message.body;
     },
     messageSubject() {
       return this.message && this.message.subject;

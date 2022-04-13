@@ -94,17 +94,11 @@ public class RestEntityBuilder {
 
         MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
         try {
-          body = getTextFromMimeMultipart(mimeMultipart);
+          body = getTextFromMimeMultipart(mimeMultipart).replaceAll("\\n|\\r", "<br>");
         } catch (Exception e) {
           LOG.error("error when getting body mail content", e);
         }
-        String bodySanitised = null;
-        if (body.contains("\n")) {
-          bodySanitised =  body.replace("\n", "<br>");
-        } else {
-          bodySanitised =  body.contains("\r") ? body.replace("\r", "<br>") : body;
-        }
-        messageRestEntity.setBody(bodySanitised);
+        messageRestEntity.setBody(body);
         messageRestEntity.setAttachedFiles(attachedFiles.toString());
       }
       return messageRestEntity;
