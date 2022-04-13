@@ -21,8 +21,27 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <properties-param>
         <name>MailIntegrationFeatureProperties</name>
         <description>Mail integration Feature enablement flag</description>
-        <property name="exo.feature.mailIntegration.enabled" value="${exo.feature.mailIntegration.enabled:false}"/>
+        <property name="exo.feature.mailIntegration.enabled" value="${exo.feature.mailIntegration.enabled:true}"/>
       </properties-param>
     </init-params>
   </component>
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.resources.ResourceBundleService</target-component>
+    <component-plugin>
+      <name>Mail integration Plugin Resource Bundle</name>
+      <set-method>addResourceBundle</set-method>
+      <type>org.exoplatform.services.resources.impl.BaseResourceBundlePlugin</type>
+      <init-params>
+        <values-param>
+          <name>classpath.resources</name>
+          <value>locale.notification.MailIntegrationNotification</value>
+        </values-param>
+        <values-param>
+          <name>portal.resource.names</name>
+          <value>locale.notification.MailIntegrationNotification</value>
+        </values-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
 </configuration>
