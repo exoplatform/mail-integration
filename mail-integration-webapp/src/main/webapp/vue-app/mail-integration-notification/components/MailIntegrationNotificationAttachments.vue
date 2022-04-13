@@ -47,7 +47,7 @@ export default {
       } else if (attachedFileIcon === 'powerpoint') {
         icon.icon = 'fas fa-file-powerpoint';
         icon.color = '#CB4B32';
-      } else if (attachedFileIcon === 'excel') {
+      } else if (attachedFileIcon === 'csv') {
         icon.icon = 'fas fa-file-excel';
         icon.color = '#217345';
       } else if (attachedFileIcon === 'word') {
