@@ -98,7 +98,8 @@ public class RestEntityBuilder {
         } catch (Exception e) {
           LOG.error("error when getting body mail content", e);
         }
-        messageRestEntity.setBody(body);
+        String bodySanitised = body.contains("\n") ? body.replaceAll("\n", "<br>"): body.contains("\r") ? body.replaceAll("\r", "<br>") : body;
+        messageRestEntity.setBody(bodySanitised);
         messageRestEntity.setAttachedFiles(attachedFiles.toString());
       }
       return messageRestEntity;
