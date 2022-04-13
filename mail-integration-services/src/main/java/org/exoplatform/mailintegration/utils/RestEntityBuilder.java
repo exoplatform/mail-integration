@@ -94,7 +94,7 @@ public class RestEntityBuilder {
 
         MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
         try {
-          body = getTextFromMimeMultipart(mimeMultipart);
+          body = getTextFromMimeMultipart(mimeMultipart).replaceAll("\\n|\\r", "<br>");
         } catch (Exception e) {
           LOG.error("error when getting body mail content", e);
         }

@@ -17,16 +17,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <template>
   <div class="contentItemDetails pa-6">
     <div class="flex flex-row text-truncate mailSubject body-2">
-      {{ message.subject }}
+      {{ messageSubject }}
     </div>
     <div class="flex d-flex mt-4 flex-row">
       <div class="flex d-flex flex-column body-2 my-auto">
-        <div>{{ message.from }}</div>
+        <div>{{ messageFrom }}</div>
         <span class="grey--text caption">{{ sentDate }}</span>
       </div>
     </div>
-    <div class="flex d-flex flex-row mt-6 body-2 mailBody">
-      {{ message.body }}
+    <div class="mt-6 body-2 mailBody" v-sanitized-html="messageBody">
     </div>
     <div v-if="attachmentCount" class="flex d-flex flex-row attachmentContent primary--text">
       <v-icon
@@ -72,6 +71,15 @@ export default {
       }
       return '';
     },
+    messageBody() {
+      return this.message && this.message.body;
+    },
+    messageSubject() {
+      return this.message && this.message.subject;
+    },
+    messageFrom() {
+      return this.message && this.message.from;
+    }
   }
 };
 </script>

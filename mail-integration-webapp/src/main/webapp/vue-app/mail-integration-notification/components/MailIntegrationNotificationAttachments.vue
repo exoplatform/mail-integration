@@ -15,17 +15,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
-    <li class="attachedFileName primary--text text-decoration-underline body-2">
-      <v-icon
-        :color="documentIcon.color"
-        class="me-2"
-        size="20">
-        {{ documentIcon.icon }}
-      </v-icon>
-      <span>{{ attachedFileName }}</span>
-    </li>
-  </div>
+  <li class="d-flex flex-row attachedFileName primary--text text-decoration-underline body-2">
+    <v-icon
+      :color="documentIcon.color"
+      class="flex-grow-0 me-2"
+      size="20">
+      {{ documentIcon.icon }}
+    </v-icon>
+    <div class="text-truncate">{{ attachedFileName }}</div>
+  </li>
 </template>
 
 <script>
@@ -49,7 +47,7 @@ export default {
       } else if (attachedFileIcon === 'powerpoint') {
         icon.icon = 'fas fa-file-powerpoint';
         icon.color = '#CB4B32';
-      } else if (attachedFileIcon === 'excel') {
+      } else if (attachedFileIcon === 'csv') {
         icon.icon = 'fas fa-file-excel';
         icon.color = '#217345';
       } else if (attachedFileIcon === 'word') {
