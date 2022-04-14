@@ -99,21 +99,21 @@ public class MailIntegrationDaoTest extends TestCase {
     //Given
     MailIntegrationSettingEntity createdMailIntegrationSettingEntity = createMailIntegrationSettingEntity();
     createdMailIntegrationSettingEntity = mailIntegrationDAO.create(createdMailIntegrationSettingEntity);
+    createdMailIntegrationSettingEntity.setAccount("updatedAccount");
 
     // When
-    createdMailIntegrationSettingEntity.setAccount("updatedAccount");
-    MailIntegrationSettingEntity updatedMailIntegration = mailIntegrationDAO.update(createdMailIntegrationSettingEntity);
+    MailIntegrationSettingEntity updatedMailIntegrationSetting = mailIntegrationDAO.update(createdMailIntegrationSettingEntity);
 
 
     // Then
-    assertNotNull(updatedMailIntegration);
-    assertNotNull(updatedMailIntegration.getId());
-    assertEquals(emailName, updatedMailIntegration.getEmailName());
-    assertEquals(imapUrl, updatedMailIntegration.getImapUrl());
-    assertEquals(port, updatedMailIntegration.getPort());
-    assertEquals(encryption, updatedMailIntegration.getEncryption());
-    assertEquals("updatedAccount", updatedMailIntegration.getAccount());
-    assertEquals(userId, updatedMailIntegration.getUserId());
+    assertNotNull(updatedMailIntegrationSetting);
+    assertNotNull(updatedMailIntegrationSetting.getId());
+    assertEquals(emailName, updatedMailIntegrationSetting.getEmailName());
+    assertEquals(imapUrl, updatedMailIntegrationSetting.getImapUrl());
+    assertEquals(port, updatedMailIntegrationSetting.getPort());
+    assertEquals(encryption, updatedMailIntegrationSetting.getEncryption());
+    assertEquals("updatedAccount", updatedMailIntegrationSetting.getAccount());
+    assertEquals(userId, updatedMailIntegrationSetting.getUserId());
   }
 
   protected MailIntegrationSettingEntity createMailIntegrationSettingEntity() {

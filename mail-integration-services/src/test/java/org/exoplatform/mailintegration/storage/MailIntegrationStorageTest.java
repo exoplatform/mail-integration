@@ -104,7 +104,7 @@ public class MailIntegrationStorageTest {
 
   @PrepareForTest({ EntityMapper.class })
   @Test
-  public void testUpdatedMailIntegrationSetting() throws Exception { // NOSONAR
+  public void testUpdateMailIntegrationSetting() throws Exception { // NOSONAR
     // Given
     MailIntegrationSetting mailIntegrationSetting = createMailIntegrationSetting();
     MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();

@@ -191,28 +191,29 @@ public class MailIntegrationRest implements ResourceContainer {
   @RolesAllowed("users")
   @ApiOperation(value = "Update an existing mail integration setting", httpMethod = "PUT", response = Response.class, consumes = "application/json")
   @ApiResponses(
-          value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-                  @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "Object not found"),
-                  @ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
+          value = {@ApiResponse(code = HTTPStatus.BAD_REQUEST, message = "Invalid query input"),
                   @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
                   @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error"),
           }
   )
   public Response updateMailIntegrationSetting(
-                                               @ApiParam(value = "Event object to update", required = true)
+                                               @ApiParam(value = "Mail integration setting object to update", required = true)
                                                MailIntegrationSettingRestEntity mailIntegrationSettingEntity) {
     if (mailIntegrationSettingEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
+    if (userIdentityId < 0) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
     try {
       MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingEntity,
                                                                                                  userIdentityId);
-      MailIntegrationSetting createdMailIntegrationSetting =
+      MailIntegrationSetting updatedMailIntegrationSetting =
                                                            mailIntegrationService.updateMailIntegrationSetting(mailIntegrationSetting);
-      return Response.ok(createdMailIntegrationSetting).build();
+      return Response.ok(updatedMailIntegrationSetting).build();
     } catch (Exception e) {
-      LOG.error("Error when creating mail integration setting ", e);
+      LOG.error("Error when updating mail integration setting ", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
