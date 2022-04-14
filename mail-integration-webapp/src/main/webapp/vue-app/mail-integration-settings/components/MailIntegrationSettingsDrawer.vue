@@ -23,6 +23,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <template slot="title">
       {{ $t('mailIntegration.settings.connectMail.drawer.title') }}
     </template>
+    <template slot="titleIcons">
+      <v-tooltip
+        max-width="350px"
+        color="grey darken-4"
+        bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            v-bind="attrs"
+            v-on="on">
+            <v-icon class="iconInfo">mdi-information</v-icon>
+          </v-btn>
+        </template>
+        <span>{{ $t('mailIntegration.notification.drawer.message.information') }}</span>
+      </v-tooltip>
+    </template>
     <template slot="content">
       <form ref="form1" class="pa-2 ms-2 mt-4">
         <div class="d-flex flex-column flex-grow-1">
