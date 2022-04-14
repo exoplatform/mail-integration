@@ -95,6 +95,27 @@ public class MailIntegrationDaoTest extends TestCase {
 
   }
 
+  public void testUpdateMailIntegrationSetting() {
+    //Given
+    MailIntegrationSettingEntity createdMailIntegrationSettingEntity = createMailIntegrationSettingEntity();
+    createdMailIntegrationSettingEntity = mailIntegrationDAO.create(createdMailIntegrationSettingEntity);
+
+    // When
+    createdMailIntegrationSettingEntity.setAccount("updatedAccount");
+    MailIntegrationSettingEntity updatedMailIntegration = mailIntegrationDAO.update(createdMailIntegrationSettingEntity);
+
+
+    // Then
+    assertNotNull(updatedMailIntegration);
+    assertNotNull(updatedMailIntegration.getId());
+    assertEquals(emailName, updatedMailIntegration.getEmailName());
+    assertEquals(imapUrl, updatedMailIntegration.getImapUrl());
+    assertEquals(port, updatedMailIntegration.getPort());
+    assertEquals(encryption, updatedMailIntegration.getEncryption());
+    assertEquals("updatedAccount", updatedMailIntegration.getAccount());
+    assertEquals(userId, updatedMailIntegration.getUserId());
+  }
+
   protected MailIntegrationSettingEntity createMailIntegrationSettingEntity() {
     MailIntegrationSettingEntity mailIntegrationSettingEntity = new MailIntegrationSettingEntity();
     mailIntegrationSettingEntity.setEmailName(emailName);

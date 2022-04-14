@@ -194,7 +194,10 @@ export default {
       return this.showPassWord ? 'text': 'password';
     },
     saveButtonLabel() {
-      return this.connectionSuccess && !this.editMode ? this.$t('mailIntegration.settings.connectMail.add'): this.connectionSuccess && this.editMode ? 'edit' : this.$t('mailIntegration.settings.connectMail.test');
+      if (this.connectionSuccess && !this.editMode) {
+        return this.$t('mailIntegration.settings.connectMail.add');
+      }
+      return this.connectionSuccess && this.editMode ? this.$t('mailIntegration.settings.connectMail.confirm') : this.$t('mailIntegration.settings.connectMail.test');
     },
     disableTestButton() {
       return this.emailAccount === '' || this.imapUrl === '' || this.port === '' || this.encryption === '' || this.account === '' || this.password === '';

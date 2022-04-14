@@ -101,6 +101,30 @@ public class MailIntegrationStorageTest {
     assertNotNull(retrievedMailIntegrationSettings);
     assertEquals(mailIntegrationSettingEntities.size(), retrievedMailIntegrationSettings.size());
   }
+
+  @PrepareForTest({ EntityMapper.class })
+  @Test
+  public void testUpdatedMailIntegrationSetting() throws Exception { // NOSONAR
+    // Given
+    MailIntegrationSetting mailIntegrationSetting = createMailIntegrationSetting();
+    MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
+    when(mailIntegrationDAO.create(Mockito.any())).thenReturn(mailIntegrationSettingEntity);
+    PowerMockito.mockStatic(EntityMapper.class);
+    when(EntityMapper.toMailIntegrationSettingEntity(mailIntegrationSetting)).thenReturn(mailIntegrationSettingEntity);
+    when(EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity)).thenReturn(mailIntegrationSetting);
+    MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationStorage.createMailIntegrationSetting(mailIntegrationSetting);
+    createdMailIntegrationSetting.setAccount("updatedAccount");
+    createdMailIntegrationSetting.setEmailName("useraUpdatedMail@exo.tn");
+
+    // When
+    MailIntegrationSetting updatedMailIntegrationSetting = mailIntegrationStorage.updateMailIntegrationSetting(mailIntegrationSetting);
+
+    // Then
+    assertNotNull(updatedMailIntegrationSetting);
+    assertEquals(1L, updatedMailIntegrationSetting.getId());
+    assertEquals("updatedAccount", updatedMailIntegrationSetting.getAccount());
+    assertEquals("useraUpdatedMail@exo.tn", updatedMailIntegrationSetting.getEmailName());
+  }
   
   protected MailIntegrationSetting createMailIntegrationSetting() {
     MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();

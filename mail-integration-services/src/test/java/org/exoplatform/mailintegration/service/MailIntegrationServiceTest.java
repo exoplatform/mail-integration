@@ -137,4 +137,34 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
     MailIntegrationSetting deletedMailIntegrationSetting = mailIntegrationService.getMailIntegrationSetting(createdMailIntegrationSetting.getId());
     assertNull(deletedMailIntegrationSetting);
   }
+
+  @Test
+  public void testUpdateMailIntegrationSetting() throws IllegalAccessException {
+    // Given
+    MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
+    mailIntegrationSetting.setEmailName(emailName);
+    mailIntegrationSetting.setImapUrl(imapUrl);
+    mailIntegrationSetting.setPort(port);
+    mailIntegrationSetting.setEncryption(encryption);
+    mailIntegrationSetting.setAccount(account);
+    mailIntegrationSetting.setPassword(password);
+    mailIntegrationSetting.setUserId(Long.parseLong(user1Identity.getId()));
+    MailIntegrationSetting createdMailIntegrationSetting =
+                                                         mailIntegrationService.createMailIntegrationSetting(mailIntegrationSetting);
+    createdMailIntegrationSetting.setAccount("updatedAccount");
+    createdMailIntegrationSetting.setEmailName("useraUpdatedMail@exo.tn");
+
+    // When
+    MailIntegrationSetting updatedMailIntegrationSetting =
+                                                         mailIntegrationService.updateMailIntegrationSetting(createdMailIntegrationSetting);
+
+    // Then
+    assertNotNull(updatedMailIntegrationSetting);
+    assertEquals("useraUpdatedMail@exo.tn", updatedMailIntegrationSetting.getEmailName());
+    assertEquals(mailIntegrationSetting.getImapUrl(), updatedMailIntegrationSetting.getImapUrl());
+    assertEquals(mailIntegrationSetting.getPort(), updatedMailIntegrationSetting.getPort());
+    assertEquals(mailIntegrationSetting.getEncryption(), updatedMailIntegrationSetting.getEncryption());
+    assertEquals("updatedAccount", updatedMailIntegrationSetting.getAccount());
+    assertEquals(mailIntegrationSetting.getUserId(), updatedMailIntegrationSetting.getUserId());
+  }
 }
