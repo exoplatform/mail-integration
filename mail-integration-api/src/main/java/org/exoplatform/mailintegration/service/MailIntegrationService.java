@@ -91,5 +91,5 @@ public interface MailIntegrationService {
    * @return updated {@link MailIntegrationSetting} object
    * @throws IllegalAccessException when the user is not authorized to update mail integration setting
    */
-  MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting, long userIdentityId) throws IllegalAccessException;;
+  MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting, long userIdentityId) throws IllegalAccessException;
 }
