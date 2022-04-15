@@ -185,9 +185,14 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
   }
 
   @Override
-  public MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) {
-    if (mailIntegrationSetting == null) {
-      throw new IllegalArgumentException("mailIntegrationSetting is null");
+  public MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting,
+                                                             long currentUserIdentityId) throws IllegalAccessException {
+    List<MailIntegrationSetting> mailIntegrationSettings =
+                                                         mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSetting.getId(),
+                                                                                                                                             currentUserIdentityId);
+    if (mailIntegrationSettings.isEmpty()) {
+      throw new IllegalAccessException("User " + currentUserIdentityId
+          + " is not allowed to delete mail integration settings with id " + mailIntegrationSetting.getId());
     }
     String encodedPassword = MailIntegrationUtils.encode(mailIntegrationSetting.getPassword());
     mailIntegrationSetting.setPassword(encodedPassword);

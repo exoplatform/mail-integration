@@ -87,7 +87,9 @@ public interface MailIntegrationService {
    * Update mail integration setting
    *
    * @param mailIntegrationSetting {@link MailIntegrationSetting} object to update
+   * @param userIdentityId User identity getting the message
    * @return updated {@link MailIntegrationSetting} object
+   * @throws IllegalAccessException when the user is not authorized to update mail integration setting
    */
-  MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting);
+  MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting, long userIdentityId) throws IllegalAccessException;;
 }

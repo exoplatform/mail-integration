@@ -199,19 +199,21 @@ public class MailIntegrationRest implements ResourceContainer {
   public Response updateMailIntegrationSetting(
                                                @ApiParam(value = "Mail integration setting object to update", required = true)
                                                MailIntegrationSettingRestEntity mailIntegrationSettingEntity) {
+    String currentUser = MailIntegrationUtils.getCurrentUser();
     if (mailIntegrationSettingEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
     long userIdentityId = MailIntegrationUtils.getCurrentUserIdentityId(identityManager);
-    if (userIdentityId < 0) {
-      return Response.status(Response.Status.UNAUTHORIZED).build();
-    }
     try {
       MailIntegrationSetting mailIntegrationSetting = RestEntityBuilder.toMailIntegrationSetting(mailIntegrationSettingEntity,
                                                                                                  userIdentityId);
       MailIntegrationSetting updatedMailIntegrationSetting =
-                                                           mailIntegrationService.updateMailIntegrationSetting(mailIntegrationSetting);
+                                                           mailIntegrationService.updateMailIntegrationSetting(mailIntegrationSetting,
+                                                                                                               userIdentityId);
       return Response.ok(updatedMailIntegrationSetting).build();
+    } catch (IllegalAccessException e) {
+      LOG.warn("User '{}' is not authorized to update mail integration setting", currentUser, e);
+      return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
     } catch (Exception e) {
       LOG.error("Error when updating mail integration setting ", e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

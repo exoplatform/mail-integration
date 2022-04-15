@@ -156,7 +156,7 @@ public class MailIntegrationServiceTest extends BaseMailIntegrationTest {
 
     // When
     MailIntegrationSetting updatedMailIntegrationSetting =
-                                                         mailIntegrationService.updateMailIntegrationSetting(createdMailIntegrationSetting);
+                                                         mailIntegrationService.updateMailIntegrationSetting(createdMailIntegrationSetting, Long.parseLong(user1Identity.getId()));
 
     // Then
     assertNotNull(updatedMailIntegrationSetting);
