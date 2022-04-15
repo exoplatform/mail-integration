@@ -50,6 +50,9 @@ public class RestEntityBuilder {
   public static final MailIntegrationSetting toMailIntegrationSetting(MailIntegrationSettingRestEntity mailIntegrationSettingRestEntity,
                                                                       long userIdentityId) {
     MailIntegrationSetting mailIntegrationSetting = new MailIntegrationSetting();
+    if (mailIntegrationSettingRestEntity.getId() > 0) {
+      mailIntegrationSetting.setId(mailIntegrationSettingRestEntity.getId());
+    }
     mailIntegrationSetting.setEmailName(mailIntegrationSettingRestEntity.getEmailName());
     mailIntegrationSetting.setImapUrl(mailIntegrationSettingRestEntity.getImapUrl());
     mailIntegrationSetting.setPort(mailIntegrationSettingRestEntity.getPort());

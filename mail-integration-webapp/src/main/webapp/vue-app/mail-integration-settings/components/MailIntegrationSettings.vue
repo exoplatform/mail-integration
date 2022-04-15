@@ -36,9 +36,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <v-list-item-action>
             <v-btn
               icon
-              @click="openDrawer"
-              :disabled="editMode"
-              :style="editMode && 'opacity : 0.5'">
+              @click="openDrawer">
               <i class="uiIconEdit uiIconLightBlue pb-2"></i>
             </v-btn>
             <v-btn
@@ -78,7 +76,7 @@ export default {
     editMode: false,
     emailName: '',
     account: '',
-    mailIntegrationSetting: null,
+    mailIntegrationSetting: [],
   }),
   computed: {
     displayAccountTooltip() {
@@ -100,9 +98,7 @@ export default {
   },
   methods: {
     openDrawer(){
-      if (!this.editMode) {
-        this.$refs.mailIntegrationSettingDrawer.openDrawer();
-      }
+      this.$refs.mailIntegrationSettingDrawer.openDrawer();
     },
     getMailIntegrationSettings() {
       this.$mailIntegrationService.getMailIntegrationSettings().then(setting => {

@@ -34,7 +34,7 @@ public interface MailIntegrationService {
   /**
    * Retrieves mail integration setting by its technical user identity identifier.
    *
-   * @param userIdentityId User identity owner of the mail integration setting
+   * @param userIdentityId User identity getting the mail integration setting
    * @return A {@link List} of {@link MailIntegrationSetting} objects
    */
   List<MailIntegrationSetting> getMailIntegrationSettingsByUserId(long userIdentityId);
@@ -51,7 +51,7 @@ public interface MailIntegrationService {
    * Deletes a mail integration setting
    * 
    * @param mailIntegrationSettingId {@link MailIntegrationSetting} technical identifier to delete
-   * @param userIdentityId User identity owner of the mail integration setting
+   * @param userIdentityId User identity deleting the mail integration setting
    * @throws IllegalAccessException when the user is not authorized to delete mail integration setting
    */
   void deleteMailIntegrationSetting(long mailIntegrationSettingId, long userIdentityId) throws IllegalAccessException;
@@ -82,4 +82,14 @@ public interface MailIntegrationService {
   MessageRestEntity getMessageById(long mailIntegrationSettingId,
                                    String messageId,
                                    long userIdentityId) throws IllegalAccessException;
+
+  /**
+   * Update mail integration setting
+   *
+   * @param mailIntegrationSetting {@link MailIntegrationSetting} object to update
+   * @param userIdentityId User identity updating the mail integration setting
+   * @return updated {@link MailIntegrationSetting} object
+   * @throws IllegalAccessException when the user is not authorized to update mail integration setting
+   */
+  MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting, long userIdentityId) throws IllegalAccessException;
 }

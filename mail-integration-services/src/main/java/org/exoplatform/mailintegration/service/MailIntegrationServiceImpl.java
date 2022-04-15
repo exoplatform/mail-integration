@@ -89,7 +89,6 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     return mailIntegrationStorage.getMailIntegrationSettingById(mailIntegrationSettingId);
   }
   
-  
   @Override
   public void deleteMailIntegrationSetting(long mailIntegrationSettingId, long currentUserIdentityId) throws IllegalAccessException {
     List<MailIntegrationSetting> mailIntegrationSettings = mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSettingId, currentUserIdentityId);
@@ -183,7 +182,22 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
     }
     return messageRestEntity;
   }
-  
+
+  @Override
+  public MailIntegrationSetting updateMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting,
+                                                             long currentUserIdentityId) throws IllegalAccessException {
+    List<MailIntegrationSetting> mailIntegrationSettings =
+                                                         mailIntegrationStorage.getMailIntegrationSettingByMailIntegrationSettingIdAndUserId(mailIntegrationSetting.getId(),
+                                                                                                                                             currentUserIdentityId);
+    if (mailIntegrationSettings.isEmpty()) {
+      throw new IllegalAccessException("User " + currentUserIdentityId
+          + " is not allowed to update mail integration settings with id " + mailIntegrationSetting.getId());
+    }
+    String encodedPassword = MailIntegrationUtils.encode(mailIntegrationSetting.getPassword());
+    mailIntegrationSetting.setPassword(encodedPassword);
+    return mailIntegrationStorage.updateMailIntegrationSetting(mailIntegrationSetting);
+  }
+
   private List<String> getNewMessages(MailIntegrationSetting mailIntegrationSetting) throws MessagingException {
 
     Store store = connect(mailIntegrationSetting);
