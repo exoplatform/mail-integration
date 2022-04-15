@@ -200,7 +200,7 @@ export default {
       return this.connectionSuccess && this.editMode ? this.$t('mailIntegration.settings.connectMail.confirm') : this.$t('mailIntegration.settings.connectMail.test');
     },
     disableTestButton() {
-      return this.emailAccount === '' || this.imapUrl === '' || this.port === '' || this.encryption === '' || this.account === '' || this.password === '';
+      return this.emailAccount === '' || this.imapUrl === '' || this.port === '' || this.encryption === '' || this.account === '' || this.password === '' || (this.emailAccount === this.mailIntegrationSetting.emailName && this.imapUrl === this.mailIntegrationSetting.imapUrl && this.port === String(this.mailIntegrationSetting.port) && this.encryption === this.mailIntegrationSetting.encryption && this.account === this.mailIntegrationSetting.account && this.password === this.mailIntegrationSetting.password);
     }
   },
   watch: {
