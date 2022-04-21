@@ -54,9 +54,6 @@ export default {
       default: null,
     }
   },
-  data: () => ({
-    step: 1,
-  }),
   computed: {
     dateTimeFormat() {
       let formattedDate = null;

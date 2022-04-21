@@ -1,7 +1,10 @@
 const path = require('path');
+const ESLintPlugin = require('eslint-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader')
 
 const config = {
   context: path.resolve(__dirname, '.'),
+  mode: 'production',
   module: {
     rules: [
       {
@@ -9,18 +12,27 @@ const config = {
         exclude: /node_modules/,
         use: [
           'babel-loader',
-          'eslint-loader',
         ]
       },
       {
         test: /\.vue$/,
         use: [
           'vue-loader',
-          'eslint-loader',
         ]
       }
     ]
   },
+  plugins: [
+    new ESLintPlugin({
+      files: [
+        './src/main/webapp/vue-app/*.js',
+        './src/main/webapp/vue-app/*.vue',
+        './src/main/webapp/vue-app/**/*.js',
+        './src/main/webapp/vue-app/**/*.vue',
+      ],
+    }),
+    new VueLoaderPlugin()
+  ],
   entry: {
     mailIntegrationCommonComponents: './src/main/webapp/vue-app/common/main.js',
     mailIntegrationSettings: './src/main/webapp/vue-app/mail-integration-settings/main.js',
