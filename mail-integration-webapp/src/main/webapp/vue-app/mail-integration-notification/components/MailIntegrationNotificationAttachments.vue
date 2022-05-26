@@ -64,7 +64,7 @@ export default {
         icon.color = '#717272';
       } else {
         icon.icon = 'fas fa-file';
-        icon.color = '#578DC9';
+        icon.color = '#476A9C';
       }
       return icon;
     },
