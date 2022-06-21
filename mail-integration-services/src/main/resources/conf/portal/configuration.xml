@@ -19,19 +19,19 @@
                xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
                xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
-    <component>
-        <type>org.exoplatform.mailintegration.dao.MailIntegrationDAO</type>
-    </component>
-    <component>
-        <key>org.exoplatform.mailintegration.service.MailIntegrationService</key>
-        <type>org.exoplatform.mailintegration.service.MailIntegrationServiceImpl</type>
-    </component>
-    <component>
-        <type>org.exoplatform.mailintegration.storage.MailIntegrationStorage</type>
-    </component>
-    <component>
-        <type>org.exoplatform.mailintegration.rest.MailIntegrationRest</type>
-    </component>
+  <component>
+    <type>org.exoplatform.mailintegration.dao.MailIntegrationDAO</type>
+  </component>
+  <component>
+    <key>org.exoplatform.mailintegration.service.MailIntegrationService</key>
+    <type>org.exoplatform.mailintegration.service.MailIntegrationServiceImpl</type>
+  </component>
+  <component>
+    <type>org.exoplatform.mailintegration.storage.MailIntegrationStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.mailintegration.rest.MailIntegrationRest</type>
+  </component>
   
   <external-component-plugins>
     <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>

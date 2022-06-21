@@ -22,6 +22,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="db/changelog/mail-integration-rdbms.db.changelog-1.0.0.xml"/>
+  <include file="db/changelog/mail-integration-rdbms.db.changelog-1.0.0.xml"/>
 
 </databaseChangeLog>

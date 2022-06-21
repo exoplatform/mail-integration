@@ -5,19 +5,19 @@ String mailIntegrationNotificationJobPeriod = String.valueOf(Long.parseLong(Syst
 
 <li class="$READ clearfix" data-id="$NOTIFICATION_ID" data-details="notification-details-drawer">
   <div class="media">
-      <div style="cursor:default;" class="avatarXSmall pull-left">
-        <img src="/mail-integration/images/email.png" />
+    <div style="cursor:default;" class="avatarXSmall pull-left">
+      <img src="/mail-integration/images/email.png" />
+    </div>
+    <div class="media-body">
+      <div class="contentSmall" data-link="">
+		<a class="open-details-drawer" data-notification-details="$NEW_MESSAGES" href="javascript:void(0)">
+          <div class="status" style="color: #333333;">
+            <%= _ctx.appRes("mailIntegration.notification.drawer.message.received", String.valueOf(newMessages), mailIntegrationNotificationJobPeriod) %>
+          </div>
+		</a>
+        <div style="cursor:default;" class="lastUpdatedTime">$LAST_UPDATED_TIME</div>
       </div>
-      <div class="media-body">
-        <div class="contentSmall" data-link="">
-		  <a class="open-details-drawer" data-notification-details="$NEW_MESSAGES" href="javascript:void(0)">
-            <div class="status" style="color: #333333;">
-               <%= _ctx.appRes("mailIntegration.notification.drawer.message.received", String.valueOf(newMessages), mailIntegrationNotificationJobPeriod) %>
-            </div>
-		  </a>
-          <div style="cursor:default;" class="lastUpdatedTime">$LAST_UPDATED_TIME</div>
-        </div>
-      </div>
+    </div>
   </div>
   <span class="remove-item" data-rest=""><i class="uiIconClose uiIconLightGray"></i></span>
 </li>

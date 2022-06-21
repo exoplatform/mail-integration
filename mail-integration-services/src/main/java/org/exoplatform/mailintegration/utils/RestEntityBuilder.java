@@ -31,10 +31,9 @@ import java.io.IOException;
 public class RestEntityBuilder {
   private static final Log LOG = ExoLogger.getLogger(RestEntityBuilder.class);
 
-
   private RestEntityBuilder() {
   }
-  
+
   public static final MailIntegrationSettingRestEntity fromMailIntegrationSetting(MailIntegrationSetting mailIntegrationSetting) {
     MailIntegrationSettingRestEntity mailIntegrationSettingRestEntity = new MailIntegrationSettingRestEntity();
     mailIntegrationSettingRestEntity.setId(mailIntegrationSetting.getId());
@@ -131,17 +130,17 @@ public class RestEntityBuilder {
     String fileExtensionLowerCase = fileExtension.toLowerCase();
     if (fileExtensionLowerCase.contains("pdf")) {
       return "pdf";
-    } else if(fileExtensionLowerCase.contains("image")) {
+    } else if (fileExtensionLowerCase.contains("image")) {
       return "image";
-    } else if(fileExtensionLowerCase.contains("csv")) {
+    } else if (fileExtensionLowerCase.contains("csv")) {
       return "csv";
-    }else if(fileExtensionLowerCase.contains("powerpoint")) {
+    } else if (fileExtensionLowerCase.contains("powerpoint")) {
       return "powerpoint";
-    } else if(fileExtensionLowerCase.contains("opendocument") || fileExtension.toLowerCase().contains("officedocument")) {
+    } else if (fileExtensionLowerCase.contains("opendocument") || fileExtension.toLowerCase().contains("officedocument")) {
       return "word";
-    } else if(fileExtensionLowerCase.contains("zip")) {
+    } else if (fileExtensionLowerCase.contains("zip")) {
       return "archive";
-    } else if(fileExtensionLowerCase.contains("video")) {
+    } else if (fileExtensionLowerCase.contains("video")) {
       return "video";
     }
     return "";

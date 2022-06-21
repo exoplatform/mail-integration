@@ -20,48 +20,48 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <!-- Managing both DB that use sequences and db that use auto increment -->
-    <property name="autoIncrement" value="true" dbms="mysql,mssql,h2,sybase,db2,hsqldb"/>
-    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+  <!-- Managing both DB that use sequences and db that use auto increment -->
+  <property name="autoIncrement" value="true" dbms="mysql,mssql,h2,sybase,db2,hsqldb"/>
+  <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
 
-    <!-- Managing auto generation of timestamp by Database -->
-    <property name="now" value="now()" dbms="mysql,hsqldb,postgresql,h2"/>
-    <property name="now" value="sysdate" dbms="oracle"/>
-    <property name="now" value="CURRENT_TIMESTAMP" dbms="mssql"/>
+  <!-- Managing auto generation of timestamp by Database -->
+  <property name="now" value="now()" dbms="mysql,hsqldb,postgresql,h2"/>
+  <property name="now" value="sysdate" dbms="oracle"/>
+  <property name="now" value="CURRENT_TIMESTAMP" dbms="mssql"/>
 
-    <changeSet author="mail-integration" id="1.0.0-0" dbms="oracle,postgresql,hsql">
-        <createSequence sequenceName="SEQ_MAIL_INTEGRATION_SETTING_ID" startValue="1"/>
-    </changeSet>
+  <changeSet author="mail-integration" id="1.0.0-0" dbms="oracle,postgresql,hsql">
+    <createSequence sequenceName="SEQ_MAIL_INTEGRATION_SETTING_ID" startValue="1"/>
+  </changeSet>
 
-    <changeSet author="mail-integration" id="1.0.0-1">
-        <createTable tableName="MAIL_INTEGRATION_SETTING">
-            <column name="MAIL_INTEGRATION_SETTING_ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_MAIL_INTEGRATION_SETTING"/>
-            </column>
-            <column name="NAME" type="NVARCHAR(2000)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="IMAP_URL" type="NVARCHAR(2000)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="PORT" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ENCRYPTION" type="NVARCHAR(2000)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ACCOUNT" type="NVARCHAR(2000)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="PASSWORD" type="NVARCHAR(2000)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="USER_ID" type="BIGINT">
-                <constraints nullable="false" />
-            </column>
-        </createTable>
-        <modifySql dbms="mysql">
-            <append value=" ENGINE=INNODB CHARSET=UTF8 COLLATE utf8_general_ci"/>
-        </modifySql>
-    </changeSet>
+  <changeSet author="mail-integration" id="1.0.0-1">
+    <createTable tableName="MAIL_INTEGRATION_SETTING">
+      <column name="MAIL_INTEGRATION_SETTING_ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_MAIL_INTEGRATION_SETTING"/>
+      </column>
+      <column name="NAME" type="NVARCHAR(2000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="IMAP_URL" type="NVARCHAR(2000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="PORT" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ENCRYPTION" type="NVARCHAR(2000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ACCOUNT" type="NVARCHAR(2000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="PASSWORD" type="NVARCHAR(2000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="USER_ID" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+    <modifySql dbms="mysql">
+      <append value=" ENGINE=INNODB CHARSET=UTF8 COLLATE utf8_general_ci"/>
+    </modifySql>
+  </changeSet>
 </databaseChangeLog>
