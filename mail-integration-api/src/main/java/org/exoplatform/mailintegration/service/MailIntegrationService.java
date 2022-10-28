@@ -74,9 +74,9 @@ public interface MailIntegrationService {
    * Retrieves message object by its technical identifier and the mail integration setting technical identifier
    *
    * @param mailIntegrationSettingId {@link MailIntegrationSetting} technical identifier
-   * @param messageId {@link Message} technical identifier
+   * @param messageId {@link MessageRestEntity} technical identifier
    * @param userIdentityId User identity getting the message
-   * @return {@link Message} object
+   * @return {@link MessageRestEntity} object
    * @throws IllegalAccessException when the user is not authorized to get message
    */
   MessageRestEntity getMessageById(long mailIntegrationSettingId,
