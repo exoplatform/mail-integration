@@ -26,8 +26,8 @@
   </scm>
   <properties>
     <!-- 3rd party libraries versions -->
-    <org.exoplatform.social.version>6.4.x-exo-SNAPSHOT</org.exoplatform.social.version>
-    <org.exoplatform.platform-ui.version>6.4.x-exo-SNAPSHOT</org.exoplatform.platform-ui.version>
+    <org.exoplatform.social.version>6.4.0-exo-20221204</org.exoplatform.social.version>
+    <org.exoplatform.platform-ui.version>6.4.0-exo-20221204</org.exoplatform.platform-ui.version>
     
     <!-- Sonar properties -->
     <sonar.organization>exoplatform</sonar.organization>
