@@ -28,23 +28,5 @@
   </dependencies>
   <build>
     <finalName>mail-integration-api</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>delombok</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-              <addOutputDirectory>false</addOutputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
   </build>
 </project>
