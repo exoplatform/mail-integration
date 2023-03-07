@@ -21,26 +21,27 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import org.exoplatform.mailintegration.dao.MailIntegrationDAO;
 import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.utils.EntityMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({ "javax.management.*", "javax.xml.*", "org.xml.*" })
+@RunWith(MockitoJUnitRunner.class)
 public class MailIntegrationStorageTest {
+
+  private static final MockedStatic<EntityMapper> ENTITY_MAPPER = Mockito.mockStatic(EntityMapper.class);
+
   private MailIntegrationStorage mailIntegrationStorage;
 
   private MailIntegrationDAO     mailIntegrationDAO;
@@ -51,16 +52,19 @@ public class MailIntegrationStorageTest {
     mailIntegrationStorage = new MailIntegrationStorage(mailIntegrationDAO);
   }
 
-  @PrepareForTest({ EntityMapper.class })
+  @AfterClass
+  public static void afterRunBare() throws Exception { // NOSONAR
+    ENTITY_MAPPER.close();
+  }
+
   @Test
   public void testCreateMailIntegrationSetting() throws Exception { // NOSONAR
     // Given
     MailIntegrationSetting mailIntegrationSetting = createMailIntegrationSetting();
     MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
     when(mailIntegrationDAO.create(Mockito.any())).thenReturn(mailIntegrationSettingEntity);
-    PowerMockito.mockStatic(EntityMapper.class);
-    when(EntityMapper.toMailIntegrationSettingEntity(mailIntegrationSetting)).thenReturn(mailIntegrationSettingEntity);
-    when(EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity)).thenReturn(mailIntegrationSetting);
+    ENTITY_MAPPER.when(() -> EntityMapper.toMailIntegrationSettingEntity(mailIntegrationSetting)).thenAnswer(invocation -> mailIntegrationSettingEntity);
+    ENTITY_MAPPER.when(() -> EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity)).thenAnswer(invocation -> mailIntegrationSetting);
 
     // When
     MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationStorage.createMailIntegrationSetting(mailIntegrationSetting);
@@ -102,16 +106,14 @@ public class MailIntegrationStorageTest {
     assertEquals(mailIntegrationSettingEntities.size(), retrievedMailIntegrationSettings.size());
   }
 
-  @PrepareForTest({ EntityMapper.class })
   @Test
   public void testUpdateMailIntegrationSetting() throws Exception { // NOSONAR
     // Given
     MailIntegrationSetting mailIntegrationSetting = createMailIntegrationSetting();
     MailIntegrationSettingEntity mailIntegrationSettingEntity = createMailIntegrationSettingEntity();
     when(mailIntegrationDAO.create(Mockito.any())).thenReturn(mailIntegrationSettingEntity);
-    PowerMockito.mockStatic(EntityMapper.class);
-    when(EntityMapper.toMailIntegrationSettingEntity(mailIntegrationSetting)).thenReturn(mailIntegrationSettingEntity);
-    when(EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity)).thenReturn(mailIntegrationSetting);
+    ENTITY_MAPPER.when(() -> EntityMapper.toMailIntegrationSettingEntity(mailIntegrationSetting)).thenAnswer(invocation -> mailIntegrationSettingEntity);
+    ENTITY_MAPPER.when(() -> EntityMapper.fromMailIntegrationSettingEntity(mailIntegrationSettingEntity)).thenAnswer(invocation -> mailIntegrationSetting);
     MailIntegrationSetting createdMailIntegrationSetting = mailIntegrationStorage.createMailIntegrationSetting(mailIntegrationSetting);
     createdMailIntegrationSetting.setAccount("updatedAccount");
     createdMailIntegrationSetting.setEmailName("useraUpdatedMail@exo.tn");
