@@ -25,7 +25,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <span class="grey--text caption">{{ sentDate }}</span>
       </div>
     </div>
-    <div class="mt-6 body-2 mailBody" v-sanitized-html="messageBody">
+    <div class="mt-6 body-2 mailBody rich-content-editor" v-sanitized-html-no-embed="messageBody">
     </div>
     <div v-if="attachmentCount" class="flex d-flex flex-row attachmentContent primary--text">
       <v-icon
