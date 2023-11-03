@@ -1,110 +1,68 @@
-<!--
-Copyright (C) 2022 eXo Platform SAS.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
--->
 <template>
-  <v-app>
-    <exo-drawer
-      ref="mailIntegrationNotifDrawer"
-      id="mailIntegrationNotifDrawer"
-      :right="!$vuetify.rtl"
-      @closed="closeDrawer"
-      disable-pull-to-refresh>
-      <template slot="title">
-        <div class="flex d-flex flex-row">
-          <v-btn
-            v-if="isOpened"
-            icon
-            text>
-            <v-icon
-              @click="backDrawer">
-              mdi-keyboard-backspace
-            </v-icon>
-          </v-btn>
-          <span class="flex flex-column my-auto">{{ $t('mailIntegration.notification.drawer.title') }}</span>
-        </div>
-      </template>
-      <template slot="content">
-        <div
-          class="mailIntegrationNotificationItems"
-          v-for="(message, index) in messages"
-          :key="index">
-          <mail-integration-notification-content-item
-            v-if="step === 1"
-            :message="message"
-            :step="step"
-            @second-step="updateInformation" />
-        </div>
-        <mail-integration-notification-content-item-details v-if="step === 2" :message="selectedMessage" />
-      </template>
-    </exo-drawer>
-  </v-app>
+  <div>
+    <div @click="clickMailNotification()">
+      <user-notification-template
+        :notification="notification"
+        :message="message"
+        :loading="loading"
+        url="#">
+        <template #avatar>
+          <v-icon size="36">fa-envelope</v-icon>
+        </template>
+        <template #actions>
+          <div class="mt-1">
+            <v-btn
+              class="btn primary px-2"
+              outlined
+              small
+              @click="clickMailNotification()">
+              Voir
+            </v-btn>
+          </div>
+        </template>
+      </user-notification-template>
+    </div>
+    <div id="mailIntegrationNotifDrawer">
+    </div>
+  </div>
 </template>
-
 <script>
 export default {
-  data: () => ({
-    messages: [],
-    dateTimeFormat: {
-      hour: '2-digit',
-      minute: '2-digit',
+  props: {
+    notification: {
+      type: Object,
+      default: null,
     },
-    selectedMessage: null,
-    isOpened: false,
-    step: 0,
-  }),
-  created() {
-    document.addEventListener('open-notification-details-drawer', event => {
-      this.retrieveMessages(event.detail);
-      this.openDrawer();
-    });
+  },
+  computed: {
+    countNewMessage() {
+      return this.notification?.parameters?.NEW_MESSAGES?.split(';')[1].split(',').length;
+    },
+    message() {
+      return this.$t('mailIntegration.notification.drawer.message.received', {
+        0: this.countNewMessage
+      });
+    },
   },
   methods: {
-    openDrawer() {
-      this.isOpened = true;
-      this.step = 1;
-      this.$refs.mailIntegrationNotifDrawer.startLoading();
-      this.$refs.mailIntegrationNotifDrawer.open();
-    },
-    closeDrawer() {
-      this.$refs.mailIntegrationNotifDrawer.close();
-    },
-    retrieveMessages(messagesDetail) {
-      this.messages = [];
-      const mailntegrationSettingId = messagesDetail.split(';')[0];
-      const messagesIds = messagesDetail.split(';')[1];
-      for (let i = 0; i < messagesIds.split(',').length; i++){
-        this.$mailIntegrationService.getMessageById(mailntegrationSettingId, messagesIds.split(',')[i])
-          .then(message => {
-            this.messages.push(message);
-            this.$nextTick(this.$refs.mailIntegrationNotifDrawer.endLoading);
-          });
+    clickMailNotification() {
+      if (!this.$root.secondLevelMailIntegrationVueInstance) {
+        const VueMailNotificationDrawer = Vue.extend({
+          template: `
+            <mail-integration-notification-item />
+          `,
+        });
+        this.$root.secondLevelMailIntegrationVueInstance = new VueMailNotificationDrawer({
+          i18n: new VueI18n({
+            locale: this.$i18n.locale,
+            messages: this.$i18n.messages,
+          }),
+          vuetify: Vue.prototype.vuetifyOptions,
+        }).$mount('#mailIntegrationNotifDrawer');
       }
-    },
-    backDrawer() {
-      if (this.step === 2) {
-        this.step = 1;
-        this.$root.$emit('close-details-item', this.step);
-      } else {
-        this.closeDrawer();
-      }
-    },
-    updateInformation(step, selectedMessage) {
-      this.step = step;
-      this.selectedMessage = selectedMessage;
+      document.dispatchEvent(new CustomEvent('open-mail-integration-details-drawer',{ detail: this.notification?.parameters?.NEW_MESSAGES }));
+
     }
   }
 };
-</script> 
+</script>

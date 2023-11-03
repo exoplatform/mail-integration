@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <li class="d-flex flex-row attachedFileName primary--text text-decoration-underline body-2">
+  <li class="d-flex flex-row attachedFileName primary--text text-decoration-underline body-2" style="justify-content:inherit;">
     <v-icon
       :color="documentIcon.color"
       class="flex-grow-0 me-2"
