@@ -97,12 +97,15 @@ public class RestEntityBuilder {
 
         MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
         try {
-          body = getTextFromMimeMultipart(mimeMultipart).replaceAll("\\n|\\r", "<br>");
+          body = getTextFromMimeMultipart(mimeMultipart);
         } catch (Exception e) {
           LOG.error("error when getting body mail content", e);
         }
         messageRestEntity.setBody(body);
         messageRestEntity.setAttachedFiles(attachedFiles.toString());
+      } else if (contentType.toLowerCase().contains("text/plain")) {
+        body = message.getContent().toString();
+        messageRestEntity.setBody(body);
       }
       return messageRestEntity;
     }
@@ -110,21 +113,28 @@ public class RestEntityBuilder {
   }
 
   private static String getTextFromMimeMultipart(MimeMultipart mimeMultipart) throws Exception {
+    StringBuilder resultText = new StringBuilder();
+    StringBuilder resultHtml = new StringBuilder();
     StringBuilder result = new StringBuilder();
     int count = mimeMultipart.getCount();
     for (int i = 0; i < count; i++) {
       BodyPart bodyPart = mimeMultipart.getBodyPart(i);
       if (bodyPart.isMimeType("text/plain")) {
-        result.append("\n").append(bodyPart.getContent());
-        break; // without break same text appears twice in my tests
+        resultText.append(bodyPart.getContent());
       } else if (bodyPart.isMimeType("text/html")) {
         String html = (String) bodyPart.getContent();
-        result.append("\n").append(org.jsoup.Jsoup.parse(html).text());
+        resultHtml.append(html);
       } else if (bodyPart.getContent() instanceof MimeMultipart) {
         result.append(getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent()));
       }
     }
+    if (!resultHtml.toString().isEmpty()) {
+      return resultHtml.toString();
+    } else if (!resultText.toString().isEmpty()) {
+      return resultText.toString().replaceAll("\\n|\\r", "<br>");
+    } else {
     return result.toString();
+    }
   }
 
   private static String getExtensionFromPartFile(String fileExtension) {
