@@ -20,6 +20,7 @@ import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 
+import org.apache.commons.io.IOUtils;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
 import org.exoplatform.mailintegration.rest.model.MailIntegrationSettingRestEntity;
 import org.exoplatform.mailintegration.rest.model.MessageRestEntity;
@@ -27,6 +28,10 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RestEntityBuilder {
   private static final Log LOG = ExoLogger.getLogger(RestEntityBuilder.class);
@@ -77,6 +82,7 @@ public class RestEntityBuilder {
       String body = "";
       // store attachment file name, separated by comma
       StringBuilder attachedFiles = new StringBuilder();
+      Map<String,String> inlineAttachments = new HashMap<>();
       if (contentType.contains("multipart")) {
         // content may contain attachments
         Multipart multiPart = (Multipart) message.getContent();
@@ -88,6 +94,12 @@ public class RestEntityBuilder {
             String fileName = part.getFileName();
             String fileExtension = part.getContentType();
             attachedFiles.append(fileName).append("*").append(getExtensionFromPartFile(fileExtension)).append(", ");
+          } else if (Part.INLINE.equalsIgnoreCase(part.getDisposition())) {
+            String contentId = part.getContentID().replaceAll("<","").replaceAll(">","");
+            InputStream content = (InputStream) part.getContent();
+            byte[] sourceBytes = IOUtils.toByteArray(content);
+            String encodedString = part.getContentType()+";base64,"+Base64.getEncoder().encodeToString(sourceBytes);
+            inlineAttachments.put(contentId,encodedString);
           }
         }
 
@@ -101,6 +113,9 @@ public class RestEntityBuilder {
         } catch (Exception e) {
           LOG.error("error when getting body mail content", e);
         }
+        if (!inlineAttachments.isEmpty()) {
+          body = replaceInlineAttachmentsInBody(body,inlineAttachments);
+        }
         messageRestEntity.setBody(body);
         messageRestEntity.setAttachedFiles(attachedFiles.toString());
       } else if (contentType.toLowerCase().contains("text/plain")) {
@@ -110,6 +125,16 @@ public class RestEntityBuilder {
       return messageRestEntity;
     }
     return null;
+  }
+
+  private static String replaceInlineAttachmentsInBody(String body, Map<String, String> inlineAttachments) {
+    for (Map.Entry<String, String> entry : inlineAttachments.entrySet()) {
+      String key = "cid:"+entry.getKey();
+      String value = "data:"+entry.getValue();
+      body=body.replace(key, value);
+    }
+    return body;
+
   }
 
   private static String getTextFromMimeMultipart(MimeMultipart mimeMultipart) throws Exception {
