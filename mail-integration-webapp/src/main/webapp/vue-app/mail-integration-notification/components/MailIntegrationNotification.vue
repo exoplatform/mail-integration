@@ -20,7 +20,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       ref="mailIntegrationNotifDrawer"
       id="mailIntegrationNotifDrawer"
       :right="!$vuetify.rtl"
+      allow-expand
       @closed="closeDrawer"
+      @expand-updated="expanded = $event"
       disable-pull-to-refresh>
       <template slot="title">
         <div class="flex d-flex flex-row">
@@ -64,12 +66,18 @@ export default {
     selectedMessage: null,
     isOpened: false,
     step: 0,
+    expanded: false,
   }),
   created() {
     document.addEventListener('open-notification-details-drawer', event => {
       this.retrieveMessages(event.detail);
       this.openDrawer();
     });
+  },
+  watch: {
+    expanded(newValue) {
+      eXo.openedDrawers.forEach((drawer) => drawer.expand=newValue);
+    },
   },
   methods: {
     openDrawer() {
