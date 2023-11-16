@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>addons-exo-parent-pom</artifactId>
@@ -8,7 +9,7 @@
   </parent>
   <groupId>org.exoplatform.addons.mail-integration</groupId>
   <artifactId>mail-integration-parent</artifactId>
-  <version>1.2.0-20231115</version>
+  <version>1.2.x-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo Mail Integration - Parent POM</name>
   <modules>
@@ -21,11 +22,11 @@
     <connection>scm:git:git://github.com/exoplatform/mail-integration.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/exoplatform/mail-integration.git</developerConnection>
     <url>https://github.com/exoplatform/mail-integration</url>
-    <tag>1.2.0-20231115</tag>
+    <tag>HEAD</tag>
   </scm>
   <properties>
     <!-- 3rd party libraries versions -->
-    <org.exoplatform.commons-exo.version>6.5.0-20231115</org.exoplatform.commons-exo.version>
+    <org.exoplatform.commons-exo.version>6.5.x-SNAPSHOT</org.exoplatform.commons-exo.version>
 
     <!-- Sonar properties -->
     <sonar.organization>exoplatform</sonar.organization>
