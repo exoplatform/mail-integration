@@ -14,11 +14,13 @@
         <template #actions>
           <div class="mt-1">
             <v-btn
-              class="btn primary px-2 elevation-0"
+              class="ignore-vuetify-classes px-2"
               outlined
+              color="primary"
+              elevation="0"
               small
               @click="clickMailNotification()">
-              {{$t('mailIntegration.notification.button.view')}}
+              <span class="text-none">{{$t('mailIntegration.notification.button.view')}}</span>
             </v-btn>
           </div>
         </template>
