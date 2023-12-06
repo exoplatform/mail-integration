@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <template>
   <v-app v-if="mailIntegrationEnabled && displayed">
     <v-card
-      class="border-radius my-4"
+      class="card-border-radius pa-5"
       flat>
       <v-list two-line>
         <v-list-item>
