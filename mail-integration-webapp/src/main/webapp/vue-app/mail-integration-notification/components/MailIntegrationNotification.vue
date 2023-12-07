@@ -7,16 +7,20 @@
         :loading="loading"
         url="#">
         <template #avatar>
-          <v-icon size="36">fa-envelope</v-icon>
+          <div>
+            <v-icon size="36">fa-envelope</v-icon>
+          </div>
         </template>
         <template #actions>
           <div class="mt-1">
             <v-btn
-              class="btn primary px-2"
+              class="ignore-vuetify-classes px-2"
               outlined
+              color="primary"
+              elevation="0"
               small
               @click="clickMailNotification()">
-              Voir
+              <span class="text-none">{{$t('mailIntegration.notification.button.view')}}</span>
             </v-btn>
           </div>
         </template>
