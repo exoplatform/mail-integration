@@ -32,7 +32,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             text>
             <v-icon
               @click="backDrawer">
-              mdi-keyboard-backspace
+              fa solid fa-arrow-left
             </v-icon>
           </v-btn>
           <span class="flex flex-column my-auto">{{ $t('mailIntegration.notification.drawer.title') }}</span>
