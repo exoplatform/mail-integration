@@ -33,7 +33,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.UIDFolder;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.exoplatform.commons.api.notification.NotificationContext;
 import org.exoplatform.commons.api.notification.model.PluginKey;

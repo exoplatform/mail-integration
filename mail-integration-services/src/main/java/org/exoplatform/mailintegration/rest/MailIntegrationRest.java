@@ -26,7 +26,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.mailintegration.model.MailIntegrationSetting;
