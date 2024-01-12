@@ -19,7 +19,7 @@ package org.exoplatform.mailintegration.dao;
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
 import org.exoplatform.mailintegration.entity.MailIntegrationSettingEntity;
 
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
 
