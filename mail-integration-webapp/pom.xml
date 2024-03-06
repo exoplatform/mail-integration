@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.exoplatform.addons.mail-integration</groupId>
     <artifactId>mail-integration-parent</artifactId>
-    <version>1.3.x-SNAPSHOT</version>
+    <version>1.3.0-20240306</version>
   </parent>
   <artifactId>mail-integration-webapp</artifactId>
   <packaging>war</packaging>
