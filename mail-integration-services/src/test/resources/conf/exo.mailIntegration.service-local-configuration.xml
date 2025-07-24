@@ -33,6 +33,10 @@
     <type>org.mortbay.cometd.continuation.EXoContinuationBayeux</type>
   </component>
   
+  <component>
+    <type>org.exoplatform.ws.frameworks.cometd.ContinuationService</type>
+  </component>
+  
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
     <component-plugin>
