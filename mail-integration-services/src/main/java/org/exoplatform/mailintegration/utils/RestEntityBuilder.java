@@ -18,6 +18,7 @@ package org.exoplatform.mailintegration.utils;
 
 import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.io.IOUtils;
@@ -68,8 +69,9 @@ public class RestEntityBuilder {
     return mailIntegrationSetting;
   }
 
-  public static final MessageRestEntity fromMessage(Message message) throws MessagingException, IOException {
-    if (message != null) {
+  public static final MessageRestEntity fromMessage(MimeMessage mimeMessage) throws MessagingException, IOException {
+    if (mimeMessage != null) {
+      MimeMessage message = new MimeMessage(mimeMessage);
       MessageRestEntity messageRestEntity = new MessageRestEntity();
       messageRestEntity.setSubject(message.getSubject());
       messageRestEntity.setSentDate(message.getSentDate());
