@@ -19,7 +19,7 @@
               color="primary"
               elevation="0"
               small
-              @click="clickMailNotification()">
+              @click.stop="clickMailNotification()">
               <span class="text-none">{{ $t('mailIntegration.notification.button.view') }}</span>
             </v-btn>
           </div>

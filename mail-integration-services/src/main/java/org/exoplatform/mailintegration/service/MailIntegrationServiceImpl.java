@@ -32,6 +32,7 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.UIDFolder;
+import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -171,7 +172,7 @@ public class MailIntegrationServiceImpl implements MailIntegrationService {
       inbox = store.getFolder("INBOX");
       inbox.open(Folder.READ_ONLY);
       UIDFolder uidInbox = (UIDFolder) inbox;
-      Message message = uidInbox.getMessageByUID(Long.parseLong(messageId));
+      MimeMessage message = (MimeMessage) uidInbox.getMessageByUID(Long.parseLong(messageId));
       messageRestEntity = RestEntityBuilder.fromMessage(message);
       inbox.close(false);
       store.close();
