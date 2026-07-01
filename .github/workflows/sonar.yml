@@ -7,10 +7,6 @@ on:
       - feature/maintenance
       - develop
       - stable/*
-    branches:
-      - feature/maintenance
-      - develop
-      - stable/*
 
 concurrency:
   group: sonar-${{ github.ref }}
